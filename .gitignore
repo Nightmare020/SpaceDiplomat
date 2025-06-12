@@ -231,3 +231,4 @@ poetry.toml
 # Local scripts
 /run-vim.sh
 /run-chat.sh
+OpenAI-server/.env
