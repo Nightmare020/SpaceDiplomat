@@ -11,6 +11,9 @@ public class ChatManager : MonoBehaviour
     public Transform contentArea; // Parent object for messages in the UI
     public ScrollRect scrollRect; // ScrollRect to manage scrolling
 
+    public Image fillBar; // Fill bar for visual max char feedback
+    public int maxChars = 300; // Maximum number of words allowed in a message
+
     private const string API_URL = "http://127.0.0.1:5000/chat";
 
     // Update is called once per frame
@@ -18,15 +21,45 @@ public class ChatManager : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.Return))
         {
-            string message = inputField.text.Trim();
+            SubmitMessage();
+        }
 
-            if (!string.IsNullOrEmpty(message))
-            {
-                DisplayMessage("YOU", message);
-                StartCoroutine(SendMessageToGroq(message));
-                inputField.text = ""; // Clear input field after sending
-                inputField.ActivateInputField(); // Reactivate input field
-            }
+        UpdateCharacterCountBar();
+    }
+
+    void SubmitMessage()
+    {
+        string message = inputField.text.Trim();
+
+        if (!string.IsNullOrEmpty(message))
+        {
+            DisplayMessage("YOU", message);
+            StartCoroutine(SendMessageToGroq(message));
+            inputField.text = ""; // Clear the input field
+            inputField.ActivateInputField(); // Reactivate the input field for new input
+        }
+    }
+
+    void UpdateCharacterCountBar()
+    {
+        int charCount = inputField.text.Length;
+        float percent = Mathf.Clamp01((float)charCount / maxChars);
+        
+        // Fill the bar
+        fillBar.fillAmount = percent;
+
+        // Set color logic
+        if (charCount == 0)
+            fillBar.color = Color.white; // No input
+        else if (charCount < maxChars)
+            fillBar.color = Color.yellow; // Safe zone
+        else
+        {
+            fillBar.color = Color.red; // At or over limit
+
+            // Trim if exceeding limit
+            inputField.text = inputField.text.Substring(0, maxChars);
+            inputField.caretPosition = inputField.text.Length; // Move caret to end
         }
     }
 
@@ -34,8 +67,13 @@ public class ChatManager : MonoBehaviour
     {
         GameObject msg = Instantiate(messagePrefab, contentArea);
         TMP_Text textComp = msg.GetComponentInChildren<TMP_Text>();
-        textComp.text = $"> {message}";
+        
+        if (sender == "XARNON")
+            StartCoroutine(TypeText(textComp, $"> {message}"));
+        else
+            textComp.text = $"> {message}";
 
+        LayoutRebuilder.ForceRebuildLayoutImmediate((RectTransform)contentArea);
         Canvas.ForceUpdateCanvases(); // Update the canvas to ensure the new message is visible
         scrollRect.verticalNormalizedPosition = 0f; // Scroll to the bottom
     }
@@ -62,6 +100,20 @@ public class ChatManager : MonoBehaviour
         {
             DisplayMessage("SYSTEM", "Error contacting Groq API");
             Debug.LogError("Error: " + request.error);
+        }
+    }
+
+    IEnumerator TypeText(TMP_Text textComponent, string fullText)
+    {
+        textComponent.text = ""; // Clear the text component
+
+        foreach (char c in fullText)
+        {
+            textComponent.text += c; // Append each letter one by one
+            LayoutRebuilder.ForceRebuildLayoutImmediate((RectTransform)textComponent.transform.parent);
+            Canvas.ForceUpdateCanvases(); // Update the canvas to ensure the text is visible
+            scrollRect.verticalNormalizedPosition = 0f; // Scroll to the bottom
+            yield return new WaitForSeconds(0.02f); // Typing speed
         }
     }
 
