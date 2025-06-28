@@ -7,7 +7,7 @@ using System.Collections;
 public class ChatManager : MonoBehaviour
 {
     public TMP_InputField inputField; // Input field for user messages
-    public GameObject messagePrefab; // Prefab for displaying messages
+    public TMP_Text conversationText; // Text for message displaying
     public Transform contentArea; // Parent object for messages in the UI
     public ScrollRect scrollRect; // ScrollRect to manage scrolling
 
@@ -64,18 +64,18 @@ public class ChatManager : MonoBehaviour
     }
 
     void DisplayMessage(string sender, string message)
-    {
-        GameObject msg = Instantiate(messagePrefab, contentArea);
-        TMP_Text textComp = msg.GetComponentInChildren<TMP_Text>();
-        
+    {        
         if (sender == "XARNON")
-            StartCoroutine(TypeText(textComp, $"> {message}"));
+            StartCoroutine(TypeText($"\n> {message}\n\n"));
         else
-            textComp.text = $"> {message}";
+        {
+            string formattedMessage = $"> {message}\n";
+            conversationText.text += formattedMessage;
 
-        LayoutRebuilder.ForceRebuildLayoutImmediate((RectTransform)contentArea);
-        Canvas.ForceUpdateCanvases(); // Update the canvas to ensure the new message is visible
-        scrollRect.verticalNormalizedPosition = 0f; // Scroll to the bottom
+            LayoutRebuilder.ForceRebuildLayoutImmediate((RectTransform)conversationText.transform);
+            Canvas.ForceUpdateCanvases(); // Update the canvas to ensure the new message is visible
+            StartCoroutine(ScrollToBottomNextFrame()); // Scroll to the bottom
+        }
     }
 
     IEnumerator SendMessageToGroq(string playerInput)
@@ -103,18 +103,25 @@ public class ChatManager : MonoBehaviour
         }
     }
 
-    IEnumerator TypeText(TMP_Text textComponent, string fullText)
+    IEnumerator TypeText(string fullText)
     {
-        textComponent.text = ""; // Clear the text component
+        string temp = ""; // Clear the text component
 
         foreach (char c in fullText)
         {
-            textComponent.text += c; // Append each letter one by one
-            LayoutRebuilder.ForceRebuildLayoutImmediate((RectTransform)textComponent.transform.parent);
+            temp += c; // Append each letter one by one
+            conversationText.text += c; // Update the text component with the new character
+            LayoutRebuilder.ForceRebuildLayoutImmediate((RectTransform)conversationText.transform);
             Canvas.ForceUpdateCanvases(); // Update the canvas to ensure the text is visible
             scrollRect.verticalNormalizedPosition = 0f; // Scroll to the bottom
             yield return new WaitForSeconds(0.02f); // Typing speed
         }
+    }
+
+    IEnumerator ScrollToBottomNextFrame()
+    {
+        yield return null; // Wait for the end of the frame to ensure UI updates
+        scrollRect.verticalNormalizedPosition = 0f; // Scroll to the bottom
     }
 
     [System.Serializable]
