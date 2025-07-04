@@ -1,6 +1,3 @@
-from http import client
-from pyexpat import model
-from urllib import response
 from flask import Flask, request, jsonify
 import os
 import requests
@@ -12,7 +9,11 @@ from transformers import pipeline
 # Load environment variables from .env file
 load_dotenv()
 groq_api_key = os.getenv("GROQ_API_KEY")
-print("API Key:", groq_api_key)
+max_tokens = int(os.getenv("MAX_TOKENS", 150))
+randomness = float(os.getenv("TEMPERATURE", 0.7))
+print(f"API Key:", groq_api_key)
+print(f"MAX TOKENS:", max_tokens)
+print(f"RANDOMNESS:", randomness)
 
 # Load SpaCy for NER
 nlp_spacy = spacy.load("en_core_web_sm")
@@ -79,14 +80,34 @@ def chat():
     print(f"Polarity: {polarity}")
     print(f"Emotion: {top_emotion} ({emotion_score})")
 
+    # Create behavior instruction
+    if top_emotion == "joy" and emotion_score > 0.7:
+        behavior_instruction = "You should answer with joy and agreement, sounding cheerful and optimistic!"
+    elif top_emotion == "sadness":
+        behavior_instruction = "You should respond with empathy and gentle reassurance."
+    elif top_emotion == "anger":
+        behavior_instruction = "You should sound cautious, defensive and wary."
+    elif top_emotion == "fear":
+        behavior_instruction = "Express concern and emphasize caution and distrust of humans."
+    elif top_emotion == "surprise":
+        behavior_instruction = "Sound surprised, curious, and ask clarifying questions."
+    else:
+        behavior_instruction = "Maintain a calm, balanced diplomatic tone."
+
     # Compose the system prompt
     system_prompt = f"""
     You are Xarnon, the alien leader of the planet Vireth. 
     Player emotion detected: {top_emotion} with a score of {emotion_score}.
     Player sentiment polarity: {polarity} and subjectivity: {subjectivity}.
     Player text was: {redacted_input}.
+    {behavior_instruction}
     Respond as Xarnin, in-character, diplomatic, wary of humans, collectivist culture.
+    Keep your answer concise and very briefly. Use up to {max_tokens} tokens. 
+    Always end your response with a complete sentence.
     """
+    
+    print(f"Expeceted behavior:\n {system_prompt}")
+
 
     # --- Sens to Groq API ---
     headers = {
@@ -100,8 +121,8 @@ def chat():
             {"role": "system", "content": system_prompt},
             {"role": "user", "content": redacted_input}
         ],
-        "temperature": 0.7,
-        "max_tokens": 150
+        "temperature": randomness,
+        "max_tokens": max_tokens
     }
 
     try:
