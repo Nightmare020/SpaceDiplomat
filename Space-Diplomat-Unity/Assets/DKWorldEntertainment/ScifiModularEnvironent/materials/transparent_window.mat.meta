@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: a9a4b52260bcccd478d4d82ca9dd1fce
+timeCreated: 1448364429
+licenseType: Store
+NativeFormatImporter:
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 320016
+  packageName: SciFi Modular Scenario Pack
+  packageVersion: 1.0
+  assetPath: Assets/DKWorldEntertainment/ScifiModularEnvironent/materials/transparent_window.mat
+  uploadId: 761798

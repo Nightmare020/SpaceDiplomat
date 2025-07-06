@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: b0cab3023df7bb949a53cbbc91d53022
+timeCreated: 1448364427
+licenseType: Store
+NativeFormatImporter:
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 320016
+  packageName: SciFi Modular Scenario Pack
+  packageVersion: 1.0
+  assetPath: Assets/DKWorldEntertainment/ScifiModularEnvironent/materials/bars.mat
+  uploadId: 761798

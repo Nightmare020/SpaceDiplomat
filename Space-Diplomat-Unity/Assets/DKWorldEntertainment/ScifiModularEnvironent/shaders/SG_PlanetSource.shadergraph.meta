@@ -1,0 +1,17 @@
+fileFormatVersion: 2
+guid: 2ef71b1c83df1be4bbdb952f6f85b7a4
+ScriptedImporter:
+  internalIDToNameTable: []
+  externalObjects: {}
+  serializedVersion: 2
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+  script: {fileID: 11500000, guid: 625f186215c104763be7675aa2d941aa, type: 3}
+AssetOrigin:
+  serializedVersion: 1
+  productId: 320016
+  packageName: SciFi Modular Scenario Pack
+  packageVersion: 1.0
+  assetPath: Assets/DKWorldEntertainment/ScifiModularEnvironent/shaders/SG_PlanetSource.shadergraph
+  uploadId: 761798

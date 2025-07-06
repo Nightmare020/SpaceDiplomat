@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: af1fd2f6dd3047b4c92ae3d4da359ad4
+timeCreated: 1448364430
+licenseType: Store
+NativeFormatImporter:
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 320016
+  packageName: SciFi Modular Scenario Pack
+  packageVersion: 1.0
+  assetPath: Assets/DKWorldEntertainment/ScifiModularEnvironent/materials/door.mat
+  uploadId: 761798

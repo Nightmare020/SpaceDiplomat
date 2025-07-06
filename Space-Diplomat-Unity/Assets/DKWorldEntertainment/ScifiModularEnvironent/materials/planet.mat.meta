@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 771a015dbea941c4b9d53991f189aba8
+timeCreated: 1448364429
+licenseType: Store
+NativeFormatImporter:
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 320016
+  packageName: SciFi Modular Scenario Pack
+  packageVersion: 1.0
+  assetPath: Assets/DKWorldEntertainment/ScifiModularEnvironent/materials/planet.mat
+  uploadId: 761798

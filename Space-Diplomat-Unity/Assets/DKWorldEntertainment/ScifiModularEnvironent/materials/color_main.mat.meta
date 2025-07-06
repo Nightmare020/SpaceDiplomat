@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 60d5714805ff97e43a7389d0afaec849
+timeCreated: 1448364427
+licenseType: Store
+NativeFormatImporter:
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 320016
+  packageName: SciFi Modular Scenario Pack
+  packageVersion: 1.0
+  assetPath: Assets/DKWorldEntertainment/ScifiModularEnvironent/materials/color_main.mat
+  uploadId: 761798

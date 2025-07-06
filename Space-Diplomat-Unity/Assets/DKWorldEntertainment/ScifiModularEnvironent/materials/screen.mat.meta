@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 4dc4e576ca60f9b48970e76400d85e6a
+timeCreated: 1448364429
+licenseType: Store
+NativeFormatImporter:
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 320016
+  packageName: SciFi Modular Scenario Pack
+  packageVersion: 1.0
+  assetPath: Assets/DKWorldEntertainment/ScifiModularEnvironent/materials/screen.mat
+  uploadId: 761798

@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: 0c70f05c02c690249978ef43461e352a
+PrefabImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 320016
+  packageName: SciFi Modular Scenario Pack
+  packageVersion: 1.0
+  assetPath: Assets/DKWorldEntertainment/ScifiModularEnvironent/prefabs/wall_cell_door.prefab
+  uploadId: 761798

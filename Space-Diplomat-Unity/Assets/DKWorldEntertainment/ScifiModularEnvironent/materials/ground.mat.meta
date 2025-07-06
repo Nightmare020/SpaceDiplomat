@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: d631d748d8d45b5479449d38387c2673
+timeCreated: 1448364426
+licenseType: Store
+NativeFormatImporter:
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 320016
+  packageName: SciFi Modular Scenario Pack
+  packageVersion: 1.0
+  assetPath: Assets/DKWorldEntertainment/ScifiModularEnvironent/materials/ground.mat
+  uploadId: 761798

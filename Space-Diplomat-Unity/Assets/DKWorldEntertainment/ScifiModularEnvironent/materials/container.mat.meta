@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 2cb1bf7eb8400b44fb0dccb112acc433
+timeCreated: 1448364429
+licenseType: Store
+NativeFormatImporter:
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 320016
+  packageName: SciFi Modular Scenario Pack
+  packageVersion: 1.0
+  assetPath: Assets/DKWorldEntertainment/ScifiModularEnvironent/materials/container.mat
+  uploadId: 761798

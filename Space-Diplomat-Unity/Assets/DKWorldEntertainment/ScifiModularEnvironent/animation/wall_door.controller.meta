@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 3eeb44e0dccf0af46b56a447c3e8a024
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 9100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 320016
+  packageName: SciFi Modular Scenario Pack
+  packageVersion: 1.0
+  assetPath: Assets/DKWorldEntertainment/ScifiModularEnvironent/animation/wall_door.controller
+  uploadId: 761798
