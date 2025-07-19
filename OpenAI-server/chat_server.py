@@ -24,6 +24,14 @@ emotion_classifier = pipeline(
     top_k=None
 )
 
+player_personality_sate = {
+    "extraversion": 0.5,  # Neutral
+    "neuroticism": 0.5,  # Neutral
+    "agreeableness": 0.5,  # Neutral
+    "openness": 0.5,  # Neutral
+    "conscientiousness": 0.5  # Neutral
+}
+
 app = Flask(__name__)
 
 
@@ -134,6 +142,23 @@ def chat():
         response.raise_for_status()
         reply = response.json()["choices"][0]["message"]["content"]
 
+        if polarity > 0:
+            player_personality_sate["extraversion"] += 0.05
+        else:
+            player_personality_sate["neuroticism"] += 0.05
+
+        if top_emotion == "joy":
+            player_personality_sate["agreeableness"] += 0.05
+        elif top_emotion in ["anger", "fear"]:
+            player_personality_sate["agreeableness"] -= 0.05
+
+        # Clamp peronality state values between 0 and 1
+        for key in player_personality_sate:
+            player_personality_sate[key] = max(
+                0, min(1, player_personality_sate[key]))
+            
+        print(f"Human personality: {player_personality_sate}")
+
         return jsonify({
             "reply": reply,
             "analysis": {
@@ -141,7 +166,8 @@ def chat():
                 "emotion": top_emotion,
                 "emotion_score": emotion_score,
                 "polarity": polarity,
-                "subjectivity": subjectivity
+                "subjectivity": subjectivity,
+                "player_personality": player_personality_sate
             }
         })
     except requests.exceptions.HTTPError as err:

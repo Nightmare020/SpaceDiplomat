@@ -3,6 +3,7 @@ using TMPro;
 using UnityEngine.UI;
 using UnityEngine.Networking;
 using System.Collections;
+using UnityEngine.SceneManagement;
 
 public class ChatManager : MonoBehaviour
 {
@@ -16,6 +17,12 @@ public class ChatManager : MonoBehaviour
 
     private const string API_URL = "http://127.0.0.1:5000/chat";
 
+    // Start is called before the first frame update
+    void Start()
+    {
+        StartCoroutine(FocusInput());
+    }
+
     // Update is called once per frame
     void Update()
     {
@@ -24,7 +31,21 @@ public class ChatManager : MonoBehaviour
             SubmitMessage();
         }
 
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            // Load the spaceship scene
+            SceneManager.LoadScene("SpaceshipMovementScene");
+        }
+
         UpdateCharacterCountBar();
+    }
+
+    IEnumerator FocusInput()
+    {
+        yield return null; // Wait for the end of the frame to ensure UI is ready
+
+        inputField.Select(); // Select the input field
+        inputField.ActivateInputField(); // Activate the input field for user input
     }
 
     void SubmitMessage()

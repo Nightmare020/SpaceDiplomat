@@ -8,6 +8,15 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/FinalGameScene.unity
     guid: 99c9720ab356a0642a771bea13969a05
+  - enabled: 1
+    path: Assets/Scenes/Spaceship Interior/SpaceshipMovementScene.unity
+    guid: f5eda744b7086544987709dbc8ebe332
+  - enabled: 1
+    path: Assets/Scenes/Planet System Navigation/PlanetSystemScene.unity
+    guid: d47fe07a779c1c64d9da35de2a044a79
+  - enabled: 1
+    path: Assets/Scenes/Chat Alien Bot/UICommunicationScene.unity
+    guid: 6b052934dc9a1f845afef131f448ec84
   m_configObjects:
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 052faaac586de48259a63d0c4782560b, type: 3}
   m_UseUCBPForAssetBundles: 0
