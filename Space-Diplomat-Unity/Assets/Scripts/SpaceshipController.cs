@@ -14,6 +14,9 @@ public class SpaceshipController : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
+        Cursor.lockState = CursorLockMode.Locked; // Lock the cursor to the center of the screen
+        Cursor.visible = false; // Hide the cursor
+
         rb = GetComponent<Rigidbody>(); // Get the Rigidbody component attached to the spaceship
     }
 

@@ -16,6 +16,10 @@ public class InteractObject : MonoBehaviour
         // Check if the player is in range and presses the interaction key (E)
         if (playerInRange && Input.GetKeyDown(KeyCode.E))
         {
+            PlayerData.savedPosition = GameObject.FindWithTag("Player").transform.position; // Save the player's position
+            PlayerData.savedRotation = GameObject.FindWithTag("Player").transform.rotation; // Save the player's rotation
+            PlayerData.hasSavedPosition = true;
+
             // Load the specified scene
             SceneManager.LoadScene(sceneToLoad);
         }
