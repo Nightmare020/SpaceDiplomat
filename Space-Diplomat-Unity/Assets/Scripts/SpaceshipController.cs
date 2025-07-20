@@ -7,7 +7,7 @@ public class SpaceshipController : MonoBehaviour
     public float maxSpeed = 20f; // Maximum speed of the spaceship
     public float rotationSpeed = 100f; // Speed of rotation for the spaceship
 
-    public ParticleSystem engineFlares; // Reference to the particle system for engine flares
+    public ParticleSystem[] engineFlares; // Reference to the particle system for engine flares
 
     private Rigidbody rb; // Reference to the Rigidbody component
 
@@ -38,16 +38,22 @@ public class SpaceshipController : MonoBehaviour
 
         if (Mathf.Abs(thrust) > 0.1f)
         {
-            if (!engineFlares.isPlaying) // Check if the engine flares are not already playing
+            foreach (var flare in engineFlares) // Loop through each engine flare particle system
             {
-                engineFlares.Play(); // Start the engine flares particle system
+                if (!flare.isPlaying) // Check if the particle system is not already playing
+                {
+                    flare.Play(); // Start the particle system
+                }
             }
         }
         else
         {
-            if (engineFlares.isPlaying)
+            foreach (var flare in engineFlares) // Loop through each engine flare particle system
             {
-                engineFlares.Stop(); // Stop the engine flares particle system if thrust is zero
+                if (flare.isPlaying) // Check if the particle system is currently playing
+                {
+                    flare.Stop(); // Stop the particle system
+                }
             }
         }
 
@@ -62,7 +68,17 @@ public class SpaceshipController : MonoBehaviour
 
         // Left/right rotation
         float turnInput = Input.GetAxis("Horizontal"); // Get input for rotation
-        rb.MoveRotation(rb.rotation * Quaternion.Euler(Vector3.up * turnInput * rotationSpeed * Time.fixedDeltaTime)); // Rotate the spaceship
+
+        if (Mathf.Abs(turnInput) > 0.01f)
+        {
+            Debug.Log("Turning spaceship: " + turnInput); // Log the turning input
+        }
+
+        // Apply rotation around Y (up) axis, relative to the spaceship's current rotation
+        Quaternion rotationDelta = Quaternion.Euler(0f, turnInput * rotationSpeed * Time.fixedDeltaTime, 0f);
+
+        // Apply the rotation to the Rigidbody
+        rb.MoveRotation(rb.rotation * rotationDelta); // Rotate the spaceship
     }
 
     private void OnTriggerEnter(Collider other)
