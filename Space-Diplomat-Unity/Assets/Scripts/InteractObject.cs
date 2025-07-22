@@ -21,7 +21,7 @@ public class InteractObject : MonoBehaviour
             PlayerData.hasSavedPosition = true;
 
             // Load the specified scene
-            SceneManager.LoadScene(sceneToLoad);
+            SceneChanger.instance.ChangeScene(sceneToLoad);
         }
     }
 

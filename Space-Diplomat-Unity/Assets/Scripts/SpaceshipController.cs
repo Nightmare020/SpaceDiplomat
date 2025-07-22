@@ -1,12 +1,12 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
+[RequireComponent(typeof(Rigidbody))]
 public class SpaceshipController : MonoBehaviour
 {
-    public float acceleration = 10f; // Acceleration of the spaceship
+    public float acceleration = 10f; // Acceleration speed of the spaceship
     public float maxSpeed = 20f; // Maximum speed of the spaceship
     public float rotationSpeed = 100f; // Speed of rotation for the spaceship
-
     public ParticleSystem[] engineFlares; // Reference to the particle system for engine flares
 
     private Rigidbody rb; // Reference to the Rigidbody component
@@ -18,6 +18,8 @@ public class SpaceshipController : MonoBehaviour
         Cursor.visible = false; // Hide the cursor
 
         rb = GetComponent<Rigidbody>(); // Get the Rigidbody component attached to the spaceship
+        rb.constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationZ | RigidbodyConstraints.FreezePositionY; // Freeze rotation on X and Z axes and position on Y axis to prevent unwanted movement
+
     }
 
     // Update is called once per frame
@@ -35,6 +37,20 @@ public class SpaceshipController : MonoBehaviour
     {
         // Forward/backward thrust
         float thrust = Input.GetAxis("Vertical"); // Get input for thrust
+        float turn = Input.GetAxis("Horizontal"); // Get input for turning
+
+        // Apply forward/backward force
+        rb.AddForce(transform.forward * thrust * acceleration);
+
+        // Apply rotation (around Y axis only)
+        Quaternion deltaRotation = Quaternion.Euler(0f, turn * rotationSpeed * Time.fixedDeltaTime, 0f);
+        rb.MoveRotation(rb.rotation * deltaRotation);
+
+        // Limit the spaceship's speed
+        if (rb.linearVelocity.magnitude > maxSpeed)
+        {
+            rb.linearVelocity = rb.linearVelocity.normalized * maxSpeed; // Normalize the velocity and multiply by max speed
+        }
 
         if (Mathf.Abs(thrust) > 0.1f)
         {
@@ -56,43 +72,62 @@ public class SpaceshipController : MonoBehaviour
                 }
             }
         }
+    }
 
-        Vector3 force = transform.forward * thrust * acceleration; // Calculate the force based on input and acceleration
-        rb.AddForce(force); // Apply the force to the Rigidbody
+    // LateUpdate is called once per frame after all Update methods have been called
+    void LateUpdate()
+    {
+        Vector3 pos = transform.position; // Get the current position of the spaceship
 
-        // Clamp speed
-        if (rb.linearVelocity.magnitude > maxSpeed)
-        {
-            rb.linearVelocity = rb.linearVelocity.normalized * maxSpeed; // Limit the speed to maxSpeed
-        }
+        bool hitXEdge = false; // Flag to check if the spaceship has hit the X edge
+        bool hitZEdge = false; // Flag to check if the spaceship has hit the Z edge
 
-        // Left/right rotation
-        float turnInput = Input.GetAxis("Horizontal"); // Get input for rotation
-
-        if (Mathf.Abs(turnInput) > 0.01f)
-        {
-            Debug.Log("Turning spaceship: " + turnInput); // Log the turning input
-        }
-
-        // Apply rotation around Y (up) axis, relative to the spaceship's current rotation
-        Quaternion rotationDelta = Quaternion.Euler(0f, turnInput * rotationSpeed * Time.fixedDeltaTime, 0f);
-
-        // Apply the rotation to the Rigidbody
-        rb.MoveRotation(rb.rotation * rotationDelta); // Rotate the spaceship
+        
     }
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.CompareTag("Planet")) // Check if the spaceship collides with an asteroid
+        if (other.CompareTag("Planet")) // Check if the collider has the tag "Finish"
         {
-            Debug.Log("Collision with asteroid detected!"); // Log the collision
-            // Handle collision logic here, e.g., damage the spaceship or destroy the asteroid
+            Debug.Log("Planet reached!"); // Log a message to the console
         }
 
-        if (other.CompareTag("Sun")) // Check if the spaceship collides with an asteroid
+        if (other.CompareTag("Sun")) // Check if the collider has the tag "Finish"
         {
-            Debug.Log("Collision with sun detected!"); // Log the collision
-            // Handle collision logic here, e.g., damage the spaceship or destroy the asteroid
+            Debug.Log("Oh no, watch out, sun!"); // Log a message to the console
+        }
+
+        if (other.CompareTag("Boundaries")) // Check if the collider is a boundary
+        {
+            Debug.Log("Inside boundaries!");
+        }
+    }
+
+    private void OnTriggerStay(Collider other)
+    {
+        if (other.CompareTag("Boundaries")) // Check if the collider is a boundary
+        {
+            Debug.Log("Inside boundaries!");
+        }
+    }
+
+    private void OnTriggerExit(Collider other)
+    {
+        if (other.CompareTag("Planet")) // Check if the collider has the tag "Finish"
+        {
+            Debug.Log("Left the planet!"); // Log a message to the console
+        }
+
+        if (other.CompareTag("Sun")) // Check if the collider has the tag "Finish"
+        {
+            Debug.Log("Left the sun!"); // Log a message to the console
+        }
+
+        if (other.CompareTag("Boundaries")) // Check if the collider is a boundary
+        {
+            rb.linearVelocity = Vector3.zero; // Stop the spaceship's movement
+            rb.angularVelocity = Vector3.zero; // Stop the spaceship's rotation
+            Debug.Log("Out of bounds!"); // Log a message to the console
         }
     }
 }
