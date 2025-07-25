@@ -4,6 +4,7 @@ using UnityEngine.UI;
 using UnityEngine.Networking;
 using System.Collections;
 using UnityEngine.SceneManagement;
+using Unity.VisualScripting;
 
 public class ChatManager : MonoBehaviour
 {
@@ -14,6 +15,7 @@ public class ChatManager : MonoBehaviour
 
     public Image fillBar; // Fill bar for visual max char feedback
     public int maxChars = 300; // Maximum number of words allowed in a message
+    public Image alienEmotionImage; // Image to display alien emotion
 
     private const string API_URL = "http://127.0.0.1:5000/chat";
 
@@ -113,9 +115,13 @@ public class ChatManager : MonoBehaviour
 
         if (request.result == UnityWebRequest.Result.Success)
         {
-            string jsonResponse = request.downloadHandler.text;
-            string reply = JsonUtility.FromJson<ChatResponse>(jsonResponse).reply;
-            DisplayMessage("XARNON", reply);
+            ChatResponse response = JsonUtility.FromJson<ChatResponse>(request.downloadHandler.text);
+            DisplayMessage("XARNON", response.reply);
+
+            if (response.analysis != null)
+            {
+                UpdateAlienEmotion(response.analysis.emotion);
+            }
         }
         else
         {
@@ -139,6 +145,42 @@ public class ChatManager : MonoBehaviour
         }
     }
 
+    private void UpdateAlienEmotion(string emotion)
+    {
+        string emotionKey = emotion.ToLower();
+
+        switch (emotionKey)
+        {
+            case "joy":
+                alienEmotionImage.sprite = Resources.Load<Sprite>("AlienEmotions/Introvert_Joy");
+                break;
+
+            case "happy":
+                alienEmotionImage.sprite = Resources.Load<Sprite>("AlienEmotions/Introvert_Happy");
+                break;
+            
+            case "neutral":
+                alienEmotionImage.sprite = Resources.Load<Sprite>("AlienEmotions/Introvert_Neutral");
+                break;
+
+            case "sadness":
+                alienEmotionImage.sprite = Resources.Load<Sprite>("AlienEmotions/Introvert_Sad");
+                break;
+
+            case "anger":
+                alienEmotionImage.sprite = Resources.Load<Sprite>("AlienEmotions/Introvert_Rage");
+                break;
+            
+            case "surprise":
+                alienEmotionImage.sprite = Resources.Load<Sprite>("AlienEmotions/Introvert_Surprise");
+                break;
+
+            default:
+                alienEmotionImage.sprite = Resources.Load<Sprite>("AlienEmotions/Introvert_Neutral"); // Default emotion
+                break;
+        }
+    }
+
     IEnumerator ScrollToBottomNextFrame()
     {
         yield return null; // Wait for the end of the frame to ensure UI updates
@@ -149,5 +191,13 @@ public class ChatManager : MonoBehaviour
     public class ChatResponse
     {
         public string reply; // The reply from the Groq API
+        public Analysis analysis; // Analysis data from the Groq API
+
+        [System.Serializable]
+        public class Analysis
+        {
+            public string emotion; // Sentiment analysis result
+            public string emotion_score; // Intent analysis result
+        }
     }
 }

@@ -2,18 +2,23 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
+using System.Collections;
 
 [RequireComponent(typeof(Rigidbody))]
 public class SpaceshipController : MonoBehaviour
 {
-    public float acceleration = 10f; // Acceleration speed of the spaceship
-    public float maxSpeed = 20f; // Maximum speed of the spaceship
-    public float rotationSpeed = 100f; // Speed of rotation for the spaceship
+    public float acceleration = 20f; // Acceleration speed of the spaceship
+    public float maxSpeed = 25f; // Maximum speed of the spaceship
+    public float rotationSpeed = 80f; // Speed of rotation for the spaceship
+    public float brakeForce = 5f; // Force applied when braking the spaceship
+
     public ParticleSystem[] engineFlares; // Reference to the particle system for engine flares
     public TextMeshProUGUI messageText; // Reference to the UI element that displays interaction messages
     public BoxCollider boundaryBox; // Reference to the boundary box collider limiter
+    public GameObject sunWarning; // Reference to the sun warning UI element
+    public Transform respawnPoint; // Reference to the respawn point in space
 
-    private Rigidbody rb; // Reference to the Rigidbody component
+    public Rigidbody rb; // Reference to the Rigidbody component
     private Bounds bounds;
     private bool playerInPlanetRange = false; // Flag to check if the player is in range to interact with planet
 
@@ -39,6 +44,16 @@ public class SpaceshipController : MonoBehaviour
         // Check if the player is in range and presses the interaction key (E)
         if (playerInPlanetRange && Input.GetKeyDown(KeyCode.E))
         {
+            // Get the planet near you
+            GameObject planet = GameObject.FindWithTag("Planet");
+
+            // Get its material and texture
+            Material planetMat = planet.GetComponent<Renderer>().material; // Get the material of the planet
+            Texture2D planetTexture = planetMat.GetTexture("_PlanetTexture") as Texture2D; // Get the texture from the material
+
+            // Store it globally for later use
+            PlanetTextureTransfer.currentPlanetTexture = planetTexture; // Assign the texture to the static variable
+
             PlayerData.savedPositionSpace = GameObject.FindWithTag("Player").transform.position; // Save the player's position
             PlayerData.savedRotationSpace = GameObject.FindWithTag("Player").transform.rotation; // Save the player's rotation
             PlayerData.hasSavedPositionSpace = true;
@@ -64,35 +79,45 @@ public class SpaceshipController : MonoBehaviour
     void FixedUpdate()
     {
         // Forward/backward thrust
-        float thrust = Input.GetAxis("Vertical"); // Get input for thrust
-        float turn = Input.GetAxis("Horizontal"); // Get input for turning
+        float thrustInput = Input.GetKey(KeyCode.W) ? 1f : 0f; // Get input for thrust
+        float brakeInput = Input.GetKey(KeyCode.S) ? 1f : 0f; // Get input for braking
+        float turnInput = Input.GetAxis("Horizontal"); // Get input for turning
 
-        // Apply forward/backward force
-        rb.AddForce(transform.forward * thrust * acceleration);
+        // Forward thrust only
+        if (thrustInput > 0f)
+        {
+            // Apply forward/backward force
+            rb.AddForce(transform.forward * thrustInput * acceleration);
 
-        // Apply rotation (around Y axis only)
-        Quaternion deltaRotation = Quaternion.Euler(0f, turn * rotationSpeed * Time.fixedDeltaTime, 0f);
-        rb.MoveRotation(rb.rotation * deltaRotation);
+            // Apply rotation (around Y axis only) only while moving forward
+            transform.Rotate(Vector3.up, turnInput * rotationSpeed * Time.fixedDeltaTime); // Rotate the spaceship based on input
+        }
 
-        // Limit the spaceship's speed
+        // Brake (reduce velocity)
+        if (brakeInput > 0f)
+        {
+            // Apply brake force
+            rb.linearVelocity = Vector3.Lerp(rb.linearVelocity, Vector3.zero, brakeForce * Time.fixedDeltaTime); // Gradually reduce the velocity
+            rb.angularVelocity = Vector3.zero; // Reset angular velocity to prevent rotation while braking
+        }
+
+        // Clamp spaceship's speed
         if (rb.linearVelocity.magnitude > maxSpeed)
         {
             rb.linearVelocity = rb.linearVelocity.normalized * maxSpeed; // Normalize the velocity and multiply by max speed
         }
 
-        if (Mathf.Abs(thrust) > 0.1f)
+        // Engine flares control
+        foreach (var flare in engineFlares) // Loop through each engine flare particle system
         {
-            foreach (var flare in engineFlares) // Loop through each engine flare particle system
+            if (thrustInput > 0f)
             {
                 if (!flare.isPlaying) // Check if the particle system is not already playing
                 {
                     flare.Play(); // Start the particle system
                 }
             }
-        }
-        else
-        {
-            foreach (var flare in engineFlares) // Loop through each engine flare particle system
+            else
             {
                 if (flare.isPlaying) // Check if the particle system is currently playing
                 {
@@ -132,13 +157,32 @@ public class SpaceshipController : MonoBehaviour
             // Set the playerInRange flag to true
             playerInPlanetRange = true;
 
+            rb.angularVelocity = Vector3.zero; // Reset the angular velocity to prevent rotation when planet reached
+
             // Show the interaction message
             messageText.gameObject.SetActive(true);
         }
 
+        if (other.CompareTag("SunProximities")) // Check if the collider has the tag "Finish"
+        {
+            Debug.Log("Oh no, watch out, sunclose!"); // Log a message to the console
+
+            sunWarning.SetActive(true); // Show the sun warning UI element
+        }
+
         if (other.CompareTag("Sun")) // Check if the collider has the tag "Finish"
         {
-            Debug.Log("Oh no, watch out, sun!"); // Log a message to the console
+            foreach (var flare in engineFlares) // Loop through each engine flare particle system
+            {
+                if (flare.isPlaying) // Check if the particle system is currently playing
+                {
+                    flare.Stop(); // Stop the particle system
+                }
+            }
+
+            gameObject.SetActive(false); // Deactivate the spaceship game object
+
+            FindFirstObjectByType<SpaceshipRespawner>().Respawn(0.5f); // Call the Respawn method on the SpaceshipRespawner component with a delay of 2 seconds
         }
     }
 
@@ -155,9 +199,11 @@ public class SpaceshipController : MonoBehaviour
             messageText.gameObject.SetActive(false);
         }
 
-        if (other.CompareTag("Sun")) // Check if the collider has the tag "Finish"
+        if (other.CompareTag("SunProximities")) // Check if the collider has the tag "Finish"
         {
-            Debug.Log("Left the sun!"); // Log a message to the console
+            Debug.Log("You left the sun proximities!"); // Log a message to the console
+
+            sunWarning.SetActive(false); // Hide the sun warning UI element
         }
     }
 }

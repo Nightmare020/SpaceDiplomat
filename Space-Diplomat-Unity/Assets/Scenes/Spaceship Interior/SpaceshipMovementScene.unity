@@ -2387,7 +2387,7 @@ PrefabInstance:
     - target: {fileID: 6899021696462408636, guid: 0544c03b754c15b459d28e8ab1e948fe, type: 3}
       propertyPath: 'm_Materials.Array.data[3]'
       value: 
-      objectReference: {fileID: 2100000, guid: 771a015dbea941c4b9d53991f189aba8, type: 2}
+      objectReference: {fileID: 2100000, guid: 9220c26ceaa597a48bdf9d6b8c7af314, type: 2}
     - target: {fileID: 7778196251034651905, guid: 0544c03b754c15b459d28e8ab1e948fe, type: 3}
       propertyPath: m_Name
       value: _prop_comm_hologram
@@ -2395,13 +2395,34 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 7778196251034651905, guid: 0544c03b754c15b459d28e8ab1e948fe, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 818114700}
   m_SourcePrefab: {fileID: 100100000, guid: 0544c03b754c15b459d28e8ab1e948fe, type: 3}
 --- !u!4 &818114698 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4288520163901063050, guid: 0544c03b754c15b459d28e8ab1e948fe, type: 3}
   m_PrefabInstance: {fileID: 818114697}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &818114699 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 7778196251034651905, guid: 0544c03b754c15b459d28e8ab1e948fe, type: 3}
+  m_PrefabInstance: {fileID: 818114697}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &818114700
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 818114699}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 22289e1bb1084d843ade05e56d06dde5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  basePlanetMaterial: {fileID: 2100000, guid: a913a5f01430ef54a9fb460c373faa64, type: 2}
 --- !u!1 &821497572
 GameObject:
   m_ObjectHideFlags: 0
@@ -2557,8 +2578,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 26, y: -161}
-  m_SizeDelta: {x: 438.6576, y: 50}
+  m_AnchoredPosition: {x: 44.5453, y: -161}
+  m_SizeDelta: {x: 475.7483, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &830077519
 MonoBehaviour:
@@ -2582,8 +2603,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: Press 'E' to explore galaxy
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 5302535af1044152a457ed104f1f4b91, type: 2}
-  m_sharedMaterial: {fileID: 2164040, guid: 5302535af1044152a457ed104f1f4b91, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: dc36b3fdc14f47ebb36fd484a67e268a, type: 2}
+  m_sharedMaterial: {fileID: 2140032, guid: dc36b3fdc14f47ebb36fd484a67e268a, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -2607,8 +2628,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 36
-  m_fontSizeBase: 36
+  m_fontSize: 28
+  m_fontSizeBase: 28
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
@@ -4472,8 +4493,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 26, y: -161}
-  m_SizeDelta: {x: 355.7436, y: 50}
+  m_AnchoredPosition: {x: 13.194504, y: -161}
+  m_SizeDelta: {x: 413.049, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1355264539
 MonoBehaviour:
@@ -4497,8 +4518,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: Press 'E' to start chat
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 5302535af1044152a457ed104f1f4b91, type: 2}
-  m_sharedMaterial: {fileID: 2164040, guid: 5302535af1044152a457ed104f1f4b91, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: dc36b3fdc14f47ebb36fd484a67e268a, type: 2}
+  m_sharedMaterial: {fileID: 2140032, guid: dc36b3fdc14f47ebb36fd484a67e268a, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -4522,8 +4543,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 36
-  m_fontSizeBase: 36
+  m_fontSize: 28
+  m_fontSizeBase: 28
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18

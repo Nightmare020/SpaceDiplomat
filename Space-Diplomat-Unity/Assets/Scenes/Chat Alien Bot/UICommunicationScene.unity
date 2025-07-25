@@ -1526,8 +1526,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0.5}
   m_AnchorMax: {x: 0, y: 0.5}
-  m_AnchoredPosition: {x: 138.18, y: 0.0000047684}
-  m_SizeDelta: {x: 245.13, y: 301.3522}
+  m_AnchoredPosition: {x: 137.88, y: -13.271}
+  m_SizeDelta: {x: 245.74, y: 327.89}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1212812773
 MonoBehaviour:
@@ -1549,7 +1549,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: d884fe3c8a943794dae120fe3fc2627f, type: 3}
+  m_Sprite: {fileID: 21300000, guid: ffa0c9efb9b0f5343b26206baa1813b0, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -1812,7 +1812,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -239, y: 151}
+  m_AnchoredPosition: {x: -275, y: 172}
   m_SizeDelta: {x: 274.5571, y: 22.9482}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1453377421
@@ -1983,7 +1983,7 @@ Canvas:
   m_GameObject: {fileID: 1478448433}
   m_Enabled: 1
   serializedVersion: 3
-  m_RenderMode: 0
+  m_RenderMode: 1
   m_Camera: {fileID: 0}
   m_PlaneDistance: 100
   m_PixelPerfect: 0
@@ -2038,6 +2038,7 @@ MonoBehaviour:
   scrollRect: {fileID: 1692972083}
   fillBar: {fileID: 297037421}
   maxChars: 100
+  alienEmotionImage: {fileID: 1212812773}
 --- !u!1 &1692972081
 GameObject:
   m_ObjectHideFlags: 0
@@ -2075,8 +2076,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 98.139404, y: 45}
-  m_SizeDelta: {x: 474.7788, y: 200}
+  m_AnchoredPosition: {x: 98.139404, y: 2.9636}
+  m_SizeDelta: {x: 474.7788, y: 191.9636}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1692972083
 MonoBehaviour:
@@ -2611,7 +2612,7 @@ SceneRoots:
   - {fileID: 437210233}
   - {fileID: 1422250051}
   - {fileID: 1478448437}
-  - {fileID: 610606074}
   - {fileID: 1758044357}
   - {fileID: 1123678637}
   - {fileID: 884964177}
+  - {fileID: 610606074}
