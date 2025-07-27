@@ -149,7 +149,7 @@ Transform:
   m_GameObject: {fileID: 136857357}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -868, y: 0, z: -44.276}
+  m_LocalPosition: {x: -904, y: 0, z: -44.276}
   m_LocalScale: {x: 316.192, y: 316.192, z: 316.192}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -436,7 +436,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   target: {fileID: 907679791}
-  offset: {x: 0, y: 800, z: 0}
+  positionOffset: {x: 0, y: 1736, z: -2137}
+  rotationOffset: {x: 34, y: 0, z: 0}
   smoothSpeed: 5
 --- !u!1 &317240679
 GameObject:
@@ -450,7 +451,7 @@ GameObject:
   - component: {fileID: 317240681}
   m_Layer: 0
   m_Name: Planet1_OrbitCenter
-  m_TagString: Untagged
+  m_TagString: Planet
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -537,7 +538,7 @@ GameObject:
   - component: {fileID: 450464966}
   m_Layer: 0
   m_Name: Planet3 Clouds
-  m_TagString: Untagged
+  m_TagString: Planet
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -551,7 +552,7 @@ Transform:
   m_GameObject: {fileID: 450464961}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -2262, y: 0, z: 24.763}
+  m_LocalPosition: {x: -2279, y: 0, z: 24.763}
   m_LocalScale: {x: 391.35504, y: 391.35504, z: 391.35504}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -644,7 +645,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -222, y: 170}
+  m_AnchoredPosition: {x: -311, y: 195}
   m_SizeDelta: {x: 274.5571, y: 22.9482}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &465818895
@@ -866,7 +867,7 @@ GameObject:
   - component: {fileID: 720176711}
   m_Layer: 0
   m_Name: Planet1 Clouds
-  m_TagString: Untagged
+  m_TagString: Planet
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -880,7 +881,7 @@ Transform:
   m_GameObject: {fileID: 720176706}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -868, y: 0, z: -44.026}
+  m_LocalPosition: {x: -904, y: 0, z: -44.026}
   m_LocalScale: {x: 321.1589, y: 321.1589, z: 321.1589}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -951,7 +952,7 @@ GameObject:
   - component: {fileID: 736052339}
   m_Layer: 0
   m_Name: Planet3_OrbitCenter
-  m_TagString: Untagged
+  m_TagString: Planet
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1290,7 +1291,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 298b2c4e5f34b584a83f3933ab73debe, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -1213.5073
+      value: -1994
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 298b2c4e5f34b584a83f3933ab73debe, type: 3}
       propertyPath: m_LocalRotation.w
@@ -1365,9 +1366,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cd099d7b6c2fd1443b0b3ace3338dfed, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  acceleration: 75
-  maxSpeed: 120
-  rotationSpeed: 20
+  acceleration: 250
+  maxSpeed: 500
+  rotationSpeed: 100
   brakeForce: 10
   engineFlares:
   - {fileID: 2083611810}
@@ -1376,7 +1377,7 @@ MonoBehaviour:
   boundaryBox: {fileID: 1108572428}
   sunWarning: {fileID: 405360721}
   respawnPoint: {fileID: 1352148474}
-  rb: {fileID: 0}
+  rb: {fileID: 907679789}
 --- !u!54 &907679789
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -1862,7 +1863,7 @@ GameObject:
   - component: {fileID: 1163977011}
   m_Layer: 0
   m_Name: Planet2 Clouds
-  m_TagString: Untagged
+  m_TagString: Planet
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1876,7 +1877,7 @@ Transform:
   m_GameObject: {fileID: 1163977006}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -1493, y: 0, z: -42.717}
+  m_LocalPosition: {x: -1509, y: 0, z: -42.717}
   m_LocalScale: {x: 340.11258, y: 340.11258, z: 340.11258}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1965,7 +1966,7 @@ Transform:
   m_GameObject: {fileID: 1204163030}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -1493, y: 0, z: -42.588}
+  m_LocalPosition: {x: -1509, y: 0, z: -42.588}
   m_LocalScale: {x: 335.3837, y: 335.3837, z: 335.3837}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -7514,7 +7515,7 @@ GameObject:
   - component: {fileID: 1839738778}
   m_Layer: 0
   m_Name: Planet2_OrbitCenter
-  m_TagString: Untagged
+  m_TagString: Planet
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -7870,7 +7871,7 @@ Transform:
   m_GameObject: {fileID: 2007202620}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -2262, y: 0, z: 24.577}
+  m_LocalPosition: {x: -2279, y: 0, z: 24.577}
   m_LocalScale: {x: 385.91367, y: 385.91367, z: 385.91367}
   m_ConstrainProportionsScale: 0
   m_Children: []

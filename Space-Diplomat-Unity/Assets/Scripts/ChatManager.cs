@@ -8,6 +8,8 @@ using Unity.VisualScripting;
 
 public class ChatManager : MonoBehaviour
 {
+    [SerializeField] private string currentAlienName = "Z1A-X0N"; // Name of the alien character
+
     public TMP_InputField inputField; // Input field for user messages
     public TMP_Text conversationText; // Text for message displaying
     public Transform contentArea; // Parent object for messages in the UI
@@ -67,7 +69,7 @@ public class ChatManager : MonoBehaviour
     {
         int charCount = inputField.text.Length;
         float percent = Mathf.Clamp01((float)charCount / maxChars);
-        
+
         // Fill the bar
         fillBar.fillAmount = percent;
 
@@ -87,7 +89,7 @@ public class ChatManager : MonoBehaviour
     }
 
     void DisplayMessage(string sender, string message)
-    {        
+    {
         if (sender == "XARNON")
             StartCoroutine(TypeText($"\n> {message}\n\n"));
         else
@@ -103,9 +105,11 @@ public class ChatManager : MonoBehaviour
 
     IEnumerator SendMessageToGroq(string playerInput)
     {
-        string json = "{\"message\":\"" + playerInput.Replace("\"", "\\\"") + "\"}";
-        byte[] bodyRaw = System.Text.Encoding.UTF8.GetBytes(json);
+        // Build a typed payload so JsonUtility makes correct JSON
+        var payload = new ChatRequest { message = playerInput, alienName = currentAlienName };
+        string json = JsonUtility.ToJson(payload);
 
+        byte[] bodyRaw = System.Text.Encoding.UTF8.GetBytes(json);
         UnityWebRequest request = new UnityWebRequest(API_URL, "POST");
         request.uploadHandler = new UploadHandlerRaw(bodyRaw);
         request.downloadHandler = new DownloadHandlerBuffer();
@@ -120,7 +124,7 @@ public class ChatManager : MonoBehaviour
 
             if (response.analysis != null)
             {
-                UpdateAlienEmotion(response.analysis.emotion);
+                UpdateAlienEmotion(response.analysis.emotion, response.analysis.emotionScore);
             }
         }
         else
@@ -145,20 +149,20 @@ public class ChatManager : MonoBehaviour
         }
     }
 
-    private void UpdateAlienEmotion(string emotion)
+    private void UpdateAlienEmotion(string emotion, float score)
     {
         string emotionKey = emotion.ToLower();
 
         switch (emotionKey)
         {
             case "joy":
-                alienEmotionImage.sprite = Resources.Load<Sprite>("AlienEmotions/Introvert_Joy");
+                if (score >= 0.8f)
+                    alienEmotionImage.sprite = Resources.Load<Sprite>("AlienEmotions/Introvert_Joy");
+                else
+                    alienEmotionImage.sprite = Resources.Load<Sprite>("AlienEmotions/Introvert_Happy");
+
                 break;
 
-            case "happy":
-                alienEmotionImage.sprite = Resources.Load<Sprite>("AlienEmotions/Introvert_Happy");
-                break;
-            
             case "neutral":
                 alienEmotionImage.sprite = Resources.Load<Sprite>("AlienEmotions/Introvert_Neutral");
                 break;
@@ -170,7 +174,7 @@ public class ChatManager : MonoBehaviour
             case "anger":
                 alienEmotionImage.sprite = Resources.Load<Sprite>("AlienEmotions/Introvert_Rage");
                 break;
-            
+
             case "surprise":
                 alienEmotionImage.sprite = Resources.Load<Sprite>("AlienEmotions/Introvert_Surprise");
                 break;
@@ -188,6 +192,13 @@ public class ChatManager : MonoBehaviour
     }
 
     [System.Serializable]
+    private class ChatRequest
+    {
+        public string message; // The message from the player
+        public string alienName; // The name of the alien character
+    }
+
+    [System.Serializable]
     public class ChatResponse
     {
         public string reply; // The reply from the Groq API
@@ -196,8 +207,8 @@ public class ChatManager : MonoBehaviour
         [System.Serializable]
         public class Analysis
         {
-            public string emotion; // Sentiment analysis result
-            public string emotion_score; // Intent analysis result
+            public string emotion; // Emotion detected by the Groq API
+            public float emotionScore; // Emotion score from the Groq API
         }
     }
 }

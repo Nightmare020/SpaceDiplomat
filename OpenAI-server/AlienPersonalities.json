@@ -1,0 +1,51 @@
+[
+    {
+        "name": "Z1A-X0N",
+        "personalityType": "Analyst-Diplomat",
+        "description": "Crystalline collectivist who prize measured curiosity and harmony",
+        "culture": "Consensus-first councils; distrust unilateral human bravado",
+        "behaviorInstruction": "Calm, precise; prefers evidence and short declarative sentences",
+        "traits": {
+            "openness": 0.70,
+            "conscientiousness": 0.85,
+            "extraversion": 0.35,
+            "agreeableness": 0.70,
+            "neuroticism": 0.25
+        },
+        "joyThreshold": "0.82",
+        "angerTolerance": "0.28"
+    },
+
+    {
+        "name": "P4N-B7L",
+        "personalityType": "Expressive-Guarded",
+        "description": "Warrior-poets: proud, quick to feel, but value honor and empathy",
+        "culture": "Ritual greetings and metaphor; tests for sincerity",
+        "behaviorInstruction": "Poetic metaphors, vivid imagery, but cuts short if senses disrespect",
+        "traits": {
+            "openness": 0.65,
+            "conscientiousness": 0.55,
+            "extraversion": 0.60,
+            "agreeableness": 0.45,
+            "neuroticism": 0.60
+        },
+        "joyThreshold": "0.75",
+        "angerTolerance": "0.22"
+    },
+    {
+        "name": "B0R-J8M",
+        "personalityType": "Warm-Pragmatist",
+        "description": "Tidal beings who favor cooperation and practical outcomes",
+        "culture": "Gift-exchange and shared plans; dislikes empty flattery",
+        "behaviorInstruction": "Friendly, collaborative; proposes concerete steps and deadlines",
+        "traits": {
+            "openness": 0.50,
+            "conscientiousness": 0.60,
+            "extraversion": 0.40,
+            "agreeableness": 0.80,
+            "neuroticism": 0.30
+        },
+        "joyThreshold": "0.70",
+        "angerTolerance": "0.35"
+    }
+]
