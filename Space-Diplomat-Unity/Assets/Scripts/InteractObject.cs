@@ -5,49 +5,49 @@ using UnityEngine.SceneManagement;
 
 public class InteractObject : MonoBehaviour
 {
-    public TextMeshProUGUI messageText; // Reference to the UI element that displays interaction messages
-    public string sceneToLoad; // Name of the scene to load when the player interacts with the object
+    [Header("UI / Scene")]
+    [SerializeField] private TextMeshProUGUI messageText; // Reference to the UI element that displays interaction messages
+    [SerializeField] private string sceneToLoad = ""; // Name of the scene to load when the player interacts with the object
 
-    private bool playerInRange = false; // Flag to check if the player is in range to interact
+    private bool playerInRange; // Flag to check if the player is in range to interact
 
-    // Update is called once per frame
-    void Update()
+    // ----------------------- Public API called from PlayerController -----------------------
+    public void PerformInteraction()
     {
-        // Check if the player is in range and presses the interaction key (E)
-        if (playerInRange && Input.GetKeyDown(KeyCode.E))
-        {
-            PlayerData.savedPositionShip = GameObject.FindWithTag("Player").transform.position; // Save the player's position
-            PlayerData.savedRotationShip = GameObject.FindWithTag("Player").transform.rotation; // Save the player's rotation
-            PlayerData.hasSavedPositionShip = true;
+        if (!playerInRange) return; // If the player is not in range, do nothing
 
-            // Load the specified scene
-            SceneChanger.instance.ChangeScene(sceneToLoad);
-        }
+        // Save position/rotation of the player
+        var player = GameObject.FindWithTag("Player").transform;
+        PlayerData.savedPositionShip = player.position; // Save the player's position
+        PlayerData.savedRotationShip = player.rotation; // Save the player's rotation
+        PlayerData.hasSavedPositionShip = true; // Set the flag indicating the position has been saved
+
+        // Load the specified scene
+        SceneChanger.instance.ChangeScene(sceneToLoad);
     }
 
+    // ----------------------- Trigger bookkeeping -----------------------
     private void OnTriggerEnter(Collider other)
     {
-        // Check if the player enters the trigger area
-        if (other.CompareTag("Player"))
-        {
-            // Set the playerInRange flag to true
-            playerInRange = true;
+        if (!other.CompareTag("Player")) return; // If the collider is not the player, do nothing
 
-            // Show the interaction message
-            messageText.gameObject.SetActive(true);
-        }
+        // Set the playerInRange flag to true
+        playerInRange = true;
+
+        // Show the interaction message
+        messageText?.gameObject.SetActive(true);
     }
 
     private void OnTriggerExit(Collider other)
     {
-        // Check if the player exits the trigger area
-        if (other.CompareTag("Player"))
-        {
-            // Set the playerInRange flag to false
-            playerInRange = false;
+        if (!other.CompareTag("Player")) return; // If the collider is not the player, do nothing
 
-            // Hide the interaction message
-            messageText.gameObject.SetActive(false);
-        }
+        // Set the playerInRange flag to false
+        playerInRange = false;
+
+        // Hide the interaction message
+        messageText?.gameObject.SetActive(false);
+
+        other.GetComponent<PlayerController>()?.ClearInteractable(this); // Clear the interactable reference in the player controller
     }
 }

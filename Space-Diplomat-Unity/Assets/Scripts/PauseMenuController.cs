@@ -1,0 +1,159 @@
+using UnityEngine;
+using UnityEngine.UI;
+using UnityEngine.EventSystems;
+using UnityEngine.Audio;
+
+public class PauseMenuController : MonoBehaviour
+{
+    [Header("UI")]
+    [SerializeField] private GameObject rootCanvas; // Reference to the root canvas of the pause menu
+    [SerializeField] private Slider volumeSlider; // Slider for adjusting the volume
+    [SerializeField] private Button resumeButton; // Button to resume the game
+    [SerializeField] private Button quitButton; // Button to quit the game
+
+    [Header("Audio")]
+    [SerializeField] private AudioMixer audioMixer; // Reference to the audio mixer for volume control
+
+    private bool isOpen;
+    private GameInputContext previousContext; // Store the previous input context before opening the pause menu
+
+    // Awake is called when the script instance is being loaded
+    void Awake()
+    {
+        if (!rootCanvas)
+        {
+            rootCanvas = gameObject;
+        }
+        rootCanvas.SetActive(false); // Initially hide the pause menu
+
+        // Hook UI buttons to their respective actions
+        if (resumeButton)
+        {
+            resumeButton.onClick.AddListener(Close);
+        }
+
+        if (quitButton)
+        {
+            quitButton.onClick.AddListener(QuitGame);
+        }
+
+        // Hook the volume slider to the audio mixer
+        if (volumeSlider)
+        {
+            volumeSlider.onValueChanged.AddListener(SetVolumeFromSlider);
+        }
+
+        // initialize slider from current value
+        InitVolumeSlider();
+
+        // Subscribe to inputs
+        InputService.Instance.Pause += OnPauseToggle;
+        InputService.Instance.menuReturn += OnReturnToGame;
+    }
+
+    // OnDestroy is called when the script instance is being destroyed
+    void OnDestroy()
+    {
+        // Unsubscribe from inputs
+        if (InputService.Instance == null) return;
+        InputService.Instance.Pause -= OnPauseToggle;
+        InputService.Instance.menuReturn -= OnReturnToGame;
+    }
+
+    // ---------------- Open/Close -----------------
+    public void OnPauseToggle()
+    {
+        if (isOpen)
+        {
+            Close();
+        }
+        else
+        {
+            Open();
+        }
+    }
+
+    private void Open()
+    {
+        if (isOpen) return;
+        isOpen = true;
+
+        previousContext = InputService.Instance.CurrentContext; // Store the previous context
+        InputService.Instance.SwitchContext(GameInputContext.PauseMenu); // Switch to pause menu context
+
+        Time.timeScale = 0f; // Pause the game time
+
+        rootCanvas.SetActive(true); // Show the pause menu
+
+        // Device-aware cursor/selection
+        bool gamepadUsed = InputService.Instance.LastUsedDevice == LastDeviceKind.Gamepad;
+        if (gamepadUsed)
+        {
+            Cursor.visible = false; // Hide cursor for gamepad users
+            Cursor.lockState = CursorLockMode.Locked; // Lock cursor for gamepad users
+
+            // Focus "Resume" so D-pad/left stick works immediately
+            if (resumeButton)
+            {
+                EventSystem.current?.SetSelectedGameObject(resumeButton.gameObject);
+            }
+        }
+        else
+        {
+            Cursor.visible = true; // Show cursor if no resume button
+            Cursor.lockState = CursorLockMode.None; // Unlock cursor if no resume button
+
+            // Still safe to set selection so WASD/arrows also work
+            if (resumeButton)
+            {
+                EventSystem.current.SetSelectedGameObject(resumeButton.gameObject);
+            }
+        }
+    }
+
+    private void Close()
+    {
+        if (!isOpen) return;
+        isOpen = false;
+
+        rootCanvas.SetActive(false); // Hide the pause menu
+        Time.timeScale = 1f; // Resume game time
+
+        // Restore previous gameplay context
+        InputService.Instance.SwitchContext(previousContext); // Switch back to the previous context
+
+        // Restore cursor state
+        Cursor.visible = false; // Hide cursor when closing pause menu
+        Cursor.lockState = CursorLockMode.Locked; // Lock cursor when closing pause menu
+    }
+
+    private void OnReturnToGame()
+    {
+        if (isOpen)
+        {
+            Close(); // Close the pause menu if it's open
+        }
+    }
+
+    // ---------------- Volume -----------------
+    private void InitVolumeSlider()
+    {
+        if (!volumeSlider) return;
+        volumeSlider.SetValueWithoutNotify(AudioManager.audioInstance.GetNormalizedMusicVolume()); // Initialize the slider with the current volume
+    }
+
+    private void SetVolumeFromSlider(float t)
+    {
+        AudioManager.audioInstance.SetNormalizedMusicVolume(t); // Set the volume in the audio manager based on the slider value
+    }
+
+    // ---------------- Quit Game -----------------
+    private void QuitGame()
+    {
+#if UNITY_EDITOR
+        UnityEditor.EditorApplication.isPlaying = false; // Stop playing in the editor
+#else
+        Application.Quit(); // Quit the application
+#endif
+    }
+}
