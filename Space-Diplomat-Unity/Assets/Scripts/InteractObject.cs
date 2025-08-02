@@ -36,6 +36,9 @@ public class InteractObject : MonoBehaviour
 
         // Show the interaction message
         messageText?.gameObject.SetActive(true);
+
+        // Set this interactable as the current one in the player controller
+        other.GetComponent<PlayerController>()?.SetCurrentInteractable(this);
     }
 
     private void OnTriggerExit(Collider other)

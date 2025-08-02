@@ -50,12 +50,15 @@ public class SpaceshipController : MonoBehaviour
 
     private void OnEnable()
     {
+        // Hide the mouse cursor and lock it to the center of the screen
+        Cursor.lockState = CursorLockMode.Locked; // Lock the cursor to the center of the screen
+        Cursor.visible = false; // Hide the cursor
+
         // Ensure we're using spaceship inputs when this script is enabled
         InputService.Instance.SwitchContext(GameInputContext.Spaceship); // Switch the input context to spaceship controls
 
         // Shared inputs
         InputService.Instance.Interact += HandleInteract; // Subscribe to the Interact event
-        InputService.Instance.Pause += HandlePause; // Subscribe to the Pause event
 
         // Ship-only
         InputService.Instance.shipReturnToShip += HandleReturnToShip; // Subscribe to the ship return event
@@ -67,7 +70,6 @@ public class SpaceshipController : MonoBehaviour
 
         // Unsubscribe from all events when this script is disabled
         InputService.Instance.Interact -= HandleInteract; // Unsubscribe from the Interact event
-        InputService.Instance.Pause -= HandlePause; // Unsubscribe from the Pause event
         InputService.Instance.shipReturnToShip -= HandleReturnToShip; // Unsubscribe from the ship return event
     }
 
@@ -115,6 +117,9 @@ public class SpaceshipController : MonoBehaviour
 
             // Apply brake force
             rb.AddForce(decel, ForceMode.Acceleration); // Apply the deceleration force to the Rigidbody
+
+            // Bring angular velocity down as well so spaceship doesn't spin out of control
+            rb.angularVelocity = Vector3.zero;
         }
 
         // Rotation (yaw only), smoothed toward target rate
@@ -132,6 +137,11 @@ public class SpaceshipController : MonoBehaviour
         {
             rb.linearVelocity = rb.linearVelocity.normalized * maxSpeed; // Normalize the velocity and scale it to the maximum speed
         }
+
+        // Hard-clamp any accidental pitch/roll that may leak through
+        var rot = rb.rotation; // Get the current rotation of the spaceship
+        rot.eulerAngles = new Vector3(0f, rot.eulerAngles.y, 0f); // Set the pitch and roll to zero while keeping the yaw intact
+        rb.MoveRotation(rot); // Apply the modified rotation back to the Rigidbody
 
         // Boundary clamp
         if (boundaryBox == null) return; // If no boundary box is set, skip the boundary check
@@ -227,11 +237,6 @@ public class SpaceshipController : MonoBehaviour
 
         // Load the ship interior scene
         SceneManager.LoadScene("SpaceshipMovementScene"); // Load the ShipInterior scene, replacing the current scene
-    }
-
-    private void HandlePause()
-    {
-        FindFirstObjectByType<PauseMenuController>(FindObjectsInactive.Include)?.OnPauseToggle(); // Toggle the pause menu
     }
 
     private void HandleReturnToShip()

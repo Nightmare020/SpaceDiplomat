@@ -14,19 +14,37 @@ public enum LastDeviceKind { Unknown, KeyboardMouse, Gamepad }
 
 public class InputService : MonoBehaviour
 {
+    private static InputService _instance; // Singleton instance of InputService
+    private static bool _applicationIsQuitting = false; // Flag to check if the application is quitting
+
     public static InputService Instance
     {
         get 
-        { 
-            if (_instance != null) return _instance;
-            GameObject gameObject = new GameObject("InputService");
-            _instance = gameObject.AddComponent<InputService>();
-            DontDestroyOnLoad(gameObject); // Ensure the InputService persists across scenes
+        {
+            // If the application is quitting, return null to avoid creating a new instance
+            if (_applicationIsQuitting)
+            {
+                return null;
+            }
+
+            // If an instance does not exist, create a new one
+            if (_instance == null)
+            {
+                _instance = FindFirstObjectByType<InputService>();
+            }
+
+            // Create a new one if it still doesn't exist
+            if (_instance == null)
+            {
+                GameObject gameObject = new GameObject("InputService");
+                _instance = gameObject.AddComponent<InputService>();
+                DontDestroyOnLoad(gameObject); // Ensure the InputService persists across scenes
+            }
+
+            // Return the existing or newly created instance
             return _instance;
         }
     }
-
-    private static InputService _instance;
 
     private SpaceshipInputs shipControls; // Input actions for spaceship controls
     private AstronautInputs astroControls; // Input actions for astronaut controls
@@ -116,6 +134,11 @@ public class InputService : MonoBehaviour
         shipControls?.Dispose();
         astroControls?.Dispose();
         pauseControls?.Dispose();
+
+        if (_instance == this)
+        {
+            _instance = null; // Clear the instance if this is the one being destroyed
+        }
     }
 
     // ---------------- Context Switching ----------------
@@ -183,6 +206,11 @@ public class InputService : MonoBehaviour
         pauseControls.Move.Disable();
         pauseControls.Submit.Disable();
         pauseControls.Cancel.Disable();
+    }
+
+    private void OnApplicationQuit()
+    {
+        _applicationIsQuitting = true; // Set the flag to true when the application is quitting
     }
 
     private void SetLastDevice (InputDevice device)

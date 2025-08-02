@@ -16,6 +16,7 @@ public class PauseMenuController : MonoBehaviour
 
     private bool isOpen;
     private GameInputContext previousContext; // Store the previous input context before opening the pause menu
+    private static PauseMenuController _instance; // Singleton instance of PauseMenuController
 
     // Awake is called when the script instance is being loaded
     void Awake()
@@ -54,6 +55,8 @@ public class PauseMenuController : MonoBehaviour
     // OnDestroy is called when the script instance is being destroyed
     void OnDestroy()
     {
+        if (InputService.Instance == null) return; // Check if InputService is available
+
         // Unsubscribe from inputs
         if (InputService.Instance == null) return;
         InputService.Instance.Pause -= OnPauseToggle;

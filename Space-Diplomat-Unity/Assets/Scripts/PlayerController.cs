@@ -34,7 +34,6 @@ public class PlayerController : MonoBehaviour
         // Subscribe to input events
         InputService.Instance.astroJump += OnJump;
         InputService.Instance.Interact += OnInteract;
-        InputService.Instance.Pause += OnPause;
     }
 
     // OnDisable is called when the script instance is being unloaded
@@ -45,7 +44,6 @@ public class PlayerController : MonoBehaviour
         // Unsubscribe from input events
         InputService.Instance.astroJump -= OnJump;
         InputService.Instance.Interact -= OnInteract;
-        InputService.Instance.Pause -= OnPause;
     }
 
     // Update is called once per frame
@@ -89,11 +87,6 @@ public class PlayerController : MonoBehaviour
     private void OnInteract()
     {
         currentInteractable?.PerformInteraction(); // Call the interaction method on the current interactable object
-    }
-
-    private void OnPause()
-    {
-        FindFirstObjectByType<PauseMenuController>(FindObjectsInactive.Include)?.OnPauseToggle(); // Toggle the pause menu
     }
 
     // --------------- Interactable Management ---------------
