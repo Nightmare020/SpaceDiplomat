@@ -8,7 +8,7 @@ using Unity.VisualScripting;
 
 public class ChatManager : MonoBehaviour
 {
-    [SerializeField] private string currentAlienName = "Z1A-X0N"; // Name of the alien character
+    private string currentAlienName = "Z1A-X0N"; // Name of the alien character
 
     public TMP_InputField inputField; // Input field for user messages
     public TMP_Text conversationText; // Text for message displaying
@@ -20,6 +20,12 @@ public class ChatManager : MonoBehaviour
     public Image alienEmotionImage; // Image to display alien emotion
 
     private const string API_URL = "http://127.0.0.1:5000/chat";
+
+    // Awake is called when the script instance is being loaded
+    void Awake()
+    {
+        currentAlienName = PlayerData.SelectedAlienName; // Get the selected alien name from PlayerData
+    }
 
     // Start is called before the first frame update
     void Start()
@@ -157,32 +163,42 @@ public class ChatManager : MonoBehaviour
         {
             case "joy":
                 if (score >= 0.8f)
-                    alienEmotionImage.sprite = Resources.Load<Sprite>("AlienEmotions/Introvert_Joy");
+                    emotionKey = "Joyful";
                 else
-                    alienEmotionImage.sprite = Resources.Load<Sprite>("AlienEmotions/Introvert_Happy");
+                    emotionKey = "Happy";
 
                 break;
 
-            case "neutral":
-                alienEmotionImage.sprite = Resources.Load<Sprite>("AlienEmotions/Introvert_Neutral");
+            case "fear":
+                emotionKey = "Scared";
                 break;
 
             case "sadness":
-                alienEmotionImage.sprite = Resources.Load<Sprite>("AlienEmotions/Introvert_Sad");
+                emotionKey = "Sad";
                 break;
 
             case "anger":
-                alienEmotionImage.sprite = Resources.Load<Sprite>("AlienEmotions/Introvert_Rage");
+                emotionKey = "Angry";
                 break;
 
             case "surprise":
-                alienEmotionImage.sprite = Resources.Load<Sprite>("AlienEmotions/Introvert_Surprise");
+                emotionKey = "Surprised";
                 break;
 
             default:
-                alienEmotionImage.sprite = Resources.Load<Sprite>("AlienEmotions/Introvert_Neutral"); // Default emotion
+                emotionKey = "Neutral"; // Default emotion
                 break;
         }
+
+        alienEmotionImage.sprite = LoadEmotion(currentAlienName, emotionKey); // Load the appropriate emotion sprite
+    }
+
+    // Path would look like for example "AlienEmotions/ZAXIN/Joy
+    private Sprite LoadEmotion(string alienName, string emotion)
+    {
+        // Capitalise the first letter
+        string capitalizedEmotion = char.ToUpper(emotion[0]) + emotion.Substring(1).ToLower();
+        return Resources.Load<Sprite>($"AlienEmotions/{alienName}/{capitalizedEmotion}");
     }
 
     IEnumerator ScrollToBottomNextFrame()

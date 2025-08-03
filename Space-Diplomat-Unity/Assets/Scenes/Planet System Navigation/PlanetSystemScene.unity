@@ -133,6 +133,7 @@ GameObject:
   - component: {fileID: 136857359}
   - component: {fileID: 136857362}
   - component: {fileID: 136857363}
+  - component: {fileID: 136857364}
   m_Layer: 0
   m_Name: Planet1
   m_TagString: Planet
@@ -286,6 +287,19 @@ MonoBehaviour:
   - {fileID: 2800000, guid: ebd1149da3cc26649a5d81e1a49c8541, type: 3}
   - {fileID: 2800000, guid: e4991ec6f094e13499a2890b1b74053c, type: 3}
   planetMaterialTemplate: {fileID: 2100000, guid: a913a5f01430ef54a9fb460c373faa64, type: 2}
+--- !u!114 &136857364
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 136857357}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 39524eb4eb01e98489cdd2b1c7965f61, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  alienName: PENBOL
 --- !u!1 &256560840
 GameObject:
   m_ObjectHideFlags: 0
@@ -2002,6 +2016,7 @@ GameObject:
   - component: {fileID: 1204163032}
   - component: {fileID: 1204163035}
   - component: {fileID: 1204163036}
+  - component: {fileID: 1204163037}
   m_Layer: 0
   m_Name: Planet2
   m_TagString: Planet
@@ -2156,6 +2171,19 @@ MonoBehaviour:
   - {fileID: 2800000, guid: 1605e46afdba6bf4fa9889af40267fc4, type: 3}
   - {fileID: 2800000, guid: 1605e46afdba6bf4fa9889af40267fc4, type: 3}
   planetMaterialTemplate: {fileID: 2100000, guid: a913a5f01430ef54a9fb460c373faa64, type: 2}
+--- !u!114 &1204163037
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1204163030}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 39524eb4eb01e98489cdd2b1c7965f61, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  alienName: BRAJIM
 --- !u!1 &1249431036
 GameObject:
   m_ObjectHideFlags: 0
@@ -7924,6 +7952,7 @@ GameObject:
   - component: {fileID: 2007202622}
   - component: {fileID: 2007202625}
   - component: {fileID: 2007202626}
+  - component: {fileID: 2007202627}
   m_Layer: 0
   m_Name: Planet3
   m_TagString: Planet
@@ -8092,6 +8121,19 @@ MonoBehaviour:
   - {fileID: 2800000, guid: e43367c17b0abd241a48ea2894478fcf, type: 3}
   - {fileID: 2800000, guid: d291c77f9bfd4cc45847adca0098175e, type: 3}
   planetMaterialTemplate: {fileID: 2100000, guid: a913a5f01430ef54a9fb460c373faa64, type: 2}
+--- !u!114 &2007202627
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2007202620}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 39524eb4eb01e98489cdd2b1c7965f61, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  alienName: ZAXIN
 --- !u!1 &2056935135
 GameObject:
   m_ObjectHideFlags: 0

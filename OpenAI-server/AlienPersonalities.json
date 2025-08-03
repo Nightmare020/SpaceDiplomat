@@ -17,7 +17,7 @@
     },
 
     {
-        "name": "PENBOL",
+        "name": "BRAJIM",
         "personalityType": "Expressive-Guarded",
         "description": "Warrior-poets: proud, quick to feel, but value honor and empathy",
         "culture": "Ritual greetings and metaphor; tests for sincerity",
@@ -33,7 +33,7 @@
         "angerTolerance": "0.22"
     },
     {
-        "name": "BRAJIM",
+        "name": "PENBOL",
         "personalityType": "Warm-Pragmatist",
         "description": "Tidal beings who favor cooperation and practical outcomes",
         "culture": "Gift-exchange and shared plans; dislikes empty flattery",

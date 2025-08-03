@@ -220,6 +220,14 @@ public class SpaceshipController : MonoBehaviour
     {
         if (!playerInPlanetRange || !currentPlanet) return; // If the player is not in range or there is no current planet, exit the method
 
+        // Which planet do we interact with?
+        PlanetInfo planetInfo = currentPlanet.GetComponent<PlanetInfo>(); // Get the PlanetInfo component from the current planet
+
+        if ( planetInfo != null)
+        {
+            PlayerData.SelectedAlienName = planetInfo.alienName;
+        }
+
         var renderer = currentPlanet.GetComponentInChildren<Renderer>(); // Get the Renderer component of the current planet
         
         if (renderer != null)
