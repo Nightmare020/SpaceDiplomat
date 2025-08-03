@@ -26,6 +26,11 @@ public class InteractObject : MonoBehaviour
         // If the interaction goes to the galaxy map, set the flag and return
         PlayerData.IsInGalaxyMap = goesToGalaxyMap;
 
+        if (goesToGalaxyMap)
+        {
+            PlayerData.SelectedAlienName = ""; // Clear the selected alien name
+        }
+
         // Load the specified scene
         SceneChanger.instance.ChangeScene(sceneToLoad);
     }

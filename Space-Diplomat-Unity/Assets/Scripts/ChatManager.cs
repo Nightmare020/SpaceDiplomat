@@ -8,7 +8,7 @@ using Unity.VisualScripting;
 
 public class ChatManager : MonoBehaviour
 {
-    private string currentAlienName = "Z1A-X0N"; // Name of the alien character
+    private string currentAlienName; // Name of the alien character
 
     public TMP_InputField inputField; // Input field for user messages
     public TMP_Text conversationText; // Text for message displaying
@@ -25,6 +25,17 @@ public class ChatManager : MonoBehaviour
     void Awake()
     {
         currentAlienName = PlayerData.SelectedAlienName; // Get the selected alien name from PlayerData
+        
+        if (string.IsNullOrEmpty(currentAlienName))
+        {
+            // No planet selected -> Hide the image completely
+            alienEmotionImage.enabled = false;
+        }
+        else
+        {
+            alienEmotionImage.enabled = true; // Show the image if a planet is selected
+            SetInitialAlienSprite(); // Set the initial alien emotion sprite
+        }
     }
 
     // Start is called before the first frame update
@@ -48,6 +59,12 @@ public class ChatManager : MonoBehaviour
         }
 
         UpdateCharacterCountBar();
+    }
+
+    private void SetInitialAlienSprite()
+    {
+        // Load the initial alien emotion sprite based on the selected alien name
+        alienEmotionImage.sprite = LoadEmotion(currentAlienName, "Neutral");
     }
 
     IEnumerator FocusInput()
@@ -157,6 +174,11 @@ public class ChatManager : MonoBehaviour
 
     private void UpdateAlienEmotion(string emotion, float score)
     {
+        if (!alienEmotionImage.enabled)
+        {
+            alienEmotionImage.enabled = true; // Ensure the image is enabled
+        }
+
         string emotionKey = emotion.ToLower();
 
         switch (emotionKey)

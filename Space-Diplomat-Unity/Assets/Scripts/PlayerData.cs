@@ -13,5 +13,5 @@ public static class PlayerData
     public static bool hasSavedPositionSpace = false; // Flag to check if the player has a saved position
 
     public static bool IsInGalaxyMap = false; // Flag to check if the player is in the space exploration map
-    public static string SelectedAlienName = "ZAXIN"; // Name of the selected alien, default is "ZAXIN"
+    public static string SelectedAlienName = ""; // Name of the selected alien
 }
