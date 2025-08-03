@@ -9,6 +9,7 @@ public class InteractObject : MonoBehaviour
     [SerializeField] private TextMeshProUGUI messageText; // Reference to the UI element that displays interaction messages
     [SerializeField] private string sceneToLoad = ""; // Name of the scene to load when the player interacts with the object
 
+    [SerializeField] private bool goesToGalaxyMap = false; // Flag to check if the interaction goes to the galaxy map
     private bool playerInRange; // Flag to check if the player is in range to interact
 
     // ----------------------- Public API called from PlayerController -----------------------
@@ -21,6 +22,9 @@ public class InteractObject : MonoBehaviour
         PlayerData.savedPositionShip = player.position; // Save the player's position
         PlayerData.savedRotationShip = player.rotation; // Save the player's rotation
         PlayerData.hasSavedPositionShip = true; // Set the flag indicating the position has been saved
+
+        // If the interaction goes to the galaxy map, set the flag and return
+        PlayerData.IsInGalaxyMap = goesToGalaxyMap;
 
         // Load the specified scene
         SceneChanger.instance.ChangeScene(sceneToLoad);
