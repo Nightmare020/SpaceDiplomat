@@ -3,6 +3,7 @@ using TMPro;
 using UnityEngine.UI;
 using UnityEngine.Networking;
 using System.Collections;
+using System.Linq;
 using UnityEngine.SceneManagement;
 using Unity.VisualScripting;
 
@@ -21,6 +22,8 @@ public class ChatManager : MonoBehaviour
 
     private const string API_URL = "http://127.0.0.1:5000/chat";
 
+    private GameState.AlienData alienData => GameState.Instance.GetAlienData(currentAlienName); // Get the alien data for the current alien
+
     // Awake is called when the script instance is being loaded
     void Awake()
     {
@@ -30,11 +33,13 @@ public class ChatManager : MonoBehaviour
         {
             // No planet selected -> Hide the image completely
             alienEmotionImage.enabled = false;
+            return;
         }
         else
         {
             alienEmotionImage.enabled = true; // Show the image if a planet is selected
             SetInitialAlienSprite(); // Set the initial alien emotion sprite
+            RestoreHistory(); // Restore chat history for the selected alien
         }
     }
 
@@ -61,10 +66,34 @@ public class ChatManager : MonoBehaviour
         UpdateCharacterCountBar();
     }
 
+    // Call once when the scene opens
+    private void RestoreHistory()
+    {
+        foreach (string line in alienData.chatHistory)
+        {
+            conversationText.text += line + "\n"; // Display each line from the chat history
+        }
+    }
+
+    // Call every time player or alien speaks
+    private void RecordLine(string sender, string message)
+    {
+        string line = $"{sender}: {message}"; // Format the line with sender and message
+        alienData.chatHistory.Add(line); // Add the line to the chat history
+    }
+
     private void SetInitialAlienSprite()
     {
+        // Grab whatever emotion we left this alien in
+        string lastEmotionKey = alienData.lastEmotionKey;
+
+        if (string.IsNullOrEmpty(lastEmotionKey))
+        {
+            lastEmotionKey = "Neutral"; // Default to Neutral if no emotion is set
+        }
+
         // Load the initial alien emotion sprite based on the selected alien name
-        alienEmotionImage.sprite = LoadEmotion(currentAlienName, "Neutral");
+        alienEmotionImage.sprite = LoadEmotion(currentAlienName, lastEmotionKey);
     }
 
     IEnumerator FocusInput()
@@ -77,6 +106,12 @@ public class ChatManager : MonoBehaviour
 
     void SubmitMessage()
     {
+        if (string.IsNullOrEmpty(currentAlienName))
+        {
+            DisplayMessage("SYSTEM", "You haven't started any alien communication yet.");
+            return; // Exit if no alien is selected
+        }
+
         string message = inputField.text.Trim();
 
         if (!string.IsNullOrEmpty(message))
@@ -113,11 +148,15 @@ public class ChatManager : MonoBehaviour
 
     void DisplayMessage(string sender, string message)
     {
-        if (sender == "XARNON")
-            StartCoroutine(TypeText($"\n> {message}\n\n"));
+        RecordLine(sender, message); // Record the line in the chat history
+
+        bool isAlien = sender != "YOU" && sender != "SYSTEM"; // Check if the sender is an alien
+
+        if (isAlien)
+            StartCoroutine(TypeText($"\n> {sender}: {message}\n\n"));
         else
         {
-            string formattedMessage = $"> {message}\n";
+            string formattedMessage = $"> {sender}: {message}\n";
             conversationText.text += formattedMessage;
 
             LayoutRebuilder.ForceRebuildLayoutImmediate((RectTransform)conversationText.transform);
@@ -143,7 +182,26 @@ public class ChatManager : MonoBehaviour
         if (request.result == UnityWebRequest.Result.Success)
         {
             ChatResponse response = JsonUtility.FromJson<ChatResponse>(request.downloadHandler.text);
-            DisplayMessage("XARNON", response.reply);
+            DisplayMessage(currentAlienName, response.reply);
+
+            // Update counts using full vector
+            if (!string.IsNullOrEmpty(response.analysis.distributionJson))
+            {
+                var wrapper = JsonUtility.FromJson<DistributionWrapper>(response.analysis.distributionJson);
+
+                for (int i = 0; i < wrapper.keys.Length; i++)
+                {
+                    string key = wrapper.keys[i];
+                    float value = wrapper.values[i];
+
+                    if (!alienData.emotionCounts.ContainsKey(key))
+                    {
+                        alienData.emotionCounts[key] = 0; // Initialize if the key doesn't exist
+                    }
+
+                    alienData.emotionCounts[key] += value; // Increment the count for the emotion
+                }
+            }
 
             if (response.analysis != null)
             {
@@ -152,8 +210,8 @@ public class ChatManager : MonoBehaviour
         }
         else
         {
-            DisplayMessage("SYSTEM", "Error contacting Groq API");
-            Debug.LogError("Error: " + request.error);
+            DisplayMessage(currentAlienName.ToUpper(), "is occupied at the moment. Come back later.");
+            Debug.LogError("GROQ Error: " + request.error);
         }
     }
 
@@ -213,6 +271,11 @@ public class ChatManager : MonoBehaviour
         }
 
         alienEmotionImage.sprite = LoadEmotion(currentAlienName, emotionKey); // Load the appropriate emotion sprite
+
+        // Persist so it survives scene change
+        alienData.lastEmotionKey = emotionKey; // Update the last emotion key for the alien
+        alienData.emotionCounts.TryGetValue(emotionKey, out float currentCount);
+        alienData.emotionCounts[emotionKey] = currentCount + score; // Update the emotion count with the score
     }
 
     // Path would look like for example "AlienEmotions/ZAXIN/Joy
@@ -247,6 +310,14 @@ public class ChatManager : MonoBehaviour
         {
             public string emotion; // Emotion detected by the Groq API
             public float emotionScore; // Emotion score from the Groq API
+            public string distributionJson; // Emotion distribution as a JSON string
         }
+    }
+
+    [System.Serializable]
+    public class DistributionWrapper
+    {
+        public string[] keys; // Array of emotion keys
+        public float[] values; // Corresponding array of emotion values
     }
 }

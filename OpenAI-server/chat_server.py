@@ -1,3 +1,4 @@
+from importlib.metadata import distribution
 import time
 from flask import Flask, request, jsonify
 import os
@@ -199,6 +200,9 @@ def chat():
     print(f"Polarity: {polarity}")
     print(f"Emotion: {top_emotion} ({emotion_score:.3f})")
 
+    # Normalise labels and pass whole vector to Unity
+    dist = {d['label'].capitalize(): float(d['score']) for d in emotion_results[0]}
+
     # --- Persona & style ---
     style_hints, eo, na, c = style_hints_from_traits(profile.get("traits", {}))
     behavior_instruction = behavior_from_emotion(top_emotion, emotion_score)
@@ -307,7 +311,8 @@ def chat():
             "culture": profile.get("culture", ""),
             "behaviorInstruction": profile.get("behaviorInstruction", ""),
             "joyThreshold": joy_threshold,
-            "angerTolerance": anger_tolerance
+            "angerTolerance": anger_tolerance,
+            "distribution": dist
         },
         "state": {
             "joy": alien_affect[alien_name]["joy"],

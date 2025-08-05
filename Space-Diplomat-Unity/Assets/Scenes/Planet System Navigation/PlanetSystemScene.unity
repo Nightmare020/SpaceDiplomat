@@ -264,7 +264,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c8af4719ed7e032418bb958f79074c88, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  planetId: Z1A-X0N
+  planetId: P4N-B7L
   planetTextures:
   - {fileID: 2800000, guid: ed454a5a7ef5201498761cf905bc0d62, type: 3}
   - {fileID: 2800000, guid: 5375d6ae75a5bfc47a7c5657c3807fe8, type: 3}
@@ -2125,7 +2125,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c8af4719ed7e032418bb958f79074c88, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  planetId: P4N-B7L
+  planetId: B0R-J8M
   planetTextures:
   - {fileID: 2800000, guid: 092d08ad0a8a5944c9144069db015c59, type: 3}
   - {fileID: 2800000, guid: a3fadb27a6013954cac1e42a2e735bdb, type: 3}
@@ -8050,7 +8050,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c8af4719ed7e032418bb958f79074c88, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  planetId: B0R-J8M
+  planetId: Z1A-X0N
   planetTextures:
   - {fileID: 2800000, guid: 281a63050b7ef4947be8098c81b6e313, type: 3}
   - {fileID: 2800000, guid: 81b2e69e39fe0574f9a9670792f4fc18, type: 3}
