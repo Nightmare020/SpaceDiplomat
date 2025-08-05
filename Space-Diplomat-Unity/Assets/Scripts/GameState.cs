@@ -11,8 +11,8 @@ public class GameState : MonoBehaviour
         public string lastEmotionKey = "Neutral"; // Default emotion key
         public List<string> chatHistory = new List<string>(); // Chat history for the alien
         public Dictionary<string, float> emotionCounts = new Dictionary<string, float>()
-        {{"Joy", 0 }, {"Sadness", 0 }, {"Anger", 0 },
-            {"Surprise", 0}, {"Fear", 0} }; // Emotion counts for the alien
+        {{"joy", 0 }, {"sadness", 0 }, {"anger", 0 },
+            {"surprise", 0}, {"fear", 0} }; // Emotion counts for the alien
     }
 
     public Dictionary<string, AlienData> aliensData = new Dictionary<string, AlienData>(); // Dictionary to hold alien data

@@ -43,7 +43,8 @@ public class DonutBuilder : MonoBehaviour
         float fillAmount = 0f; // Initialize fill amount
         foreach (var slice in slices)
         {
-            float percentage = counts[slice.emotionKey] / total; // Calculate the percentage for each emotion
+            counts.TryGetValue(slice.emotionKey, out float count); // Get the count for the emotion key
+            float percentage = count / total; // Calculate the percentage for each emotion
             slice.img.fillAmount = percentage; // Set the fill amount for the image
             slice.img.transform.localEulerAngles = new Vector3(0f, 0f, -fillAmount * 360f); // Set the rotation based on the fill amount
             fillAmount += percentage; // Update the fill amount for the next slice

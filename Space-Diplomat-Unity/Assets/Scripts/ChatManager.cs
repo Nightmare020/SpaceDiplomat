@@ -191,15 +191,19 @@ public class ChatManager : MonoBehaviour
 
                 for (int i = 0; i < wrapper.keys.Length; i++)
                 {
-                    string key = wrapper.keys[i];
-                    float value = wrapper.values[i];
+                    string key = (wrapper.keys[i] ?? "").ToLower(); // Normalize the key to lowercase
+                    float value = Mathf.Max(0f, wrapper.values[i]); // Ensure the value is non-negative
 
-                    if (!alienData.emotionCounts.ContainsKey(key))
+                    // Keep only the five canonical emotions
+                    if (key is "joy" or "sadness" or "anger" or "surprise" or "fear")
                     {
-                        alienData.emotionCounts[key] = 0; // Initialize if the key doesn't exist
-                    }
+                        if (!alienData.emotionCounts.ContainsKey(key))
+                        {
+                            alienData.emotionCounts[key] = 0f; // Initialize if the key doesn't exist
+                        }
 
-                    alienData.emotionCounts[key] += value; // Increment the count for the emotion
+                        alienData.emotionCounts[key] += value; // Increment the count for the emotion
+                    }
                 }
             }
 
@@ -237,45 +241,56 @@ public class ChatManager : MonoBehaviour
             alienEmotionImage.enabled = true; // Ensure the image is enabled
         }
 
-        string emotionKey = emotion.ToLower();
+        string statKey = (emotion ?? "").ToLower(); // Normalize the emotion key to lowercase
+        string spriteKey = "";
 
-        switch (emotionKey)
+        switch (statKey)
         {
             case "joy":
-                if (score >= 0.8f)
-                    emotionKey = "Joyful";
+                if (score == 1f)
+                    spriteKey = "Joyful";
                 else
-                    emotionKey = "Happy";
+                    spriteKey = "Happy";
 
                 break;
 
             case "fear":
-                emotionKey = "Scared";
+                spriteKey = "Scared";
                 break;
 
             case "sadness":
-                emotionKey = "Sad";
+                spriteKey = "Sad";
                 break;
 
             case "anger":
-                emotionKey = "Angry";
+                spriteKey = "Angry";
                 break;
 
             case "surprise":
-                emotionKey = "Surprised";
+                spriteKey = "Surprised";
                 break;
 
             default:
-                emotionKey = "Neutral"; // Default emotion
+                spriteKey = "Neutral"; // Default emotion
                 break;
         }
 
-        alienEmotionImage.sprite = LoadEmotion(currentAlienName, emotionKey); // Load the appropriate emotion sprite
+        alienEmotionImage.sprite = LoadEmotion(currentAlienName, spriteKey); // Load the appropriate emotion sprite
 
         // Persist so it survives scene change
-        alienData.lastEmotionKey = emotionKey; // Update the last emotion key for the alien
-        alienData.emotionCounts.TryGetValue(emotionKey, out float currentCount);
-        alienData.emotionCounts[emotionKey] = currentCount + score; // Update the emotion count with the score
+        alienData.lastEmotionKey = spriteKey; // Update the last emotion key for the alien
+
+        // Only accumulate into the five cannonical emotions
+        if (statKey is "joy" or "sadness" or "anger" or "surprise" or "fear")
+        {
+            if (!alienData.emotionCounts.ContainsKey(statKey))
+            {
+                alienData.emotionCounts[statKey] = 0; // Initialize if the key doesn't exist
+            }
+
+            // Add the model's score for this turn
+            alienData.emotionCounts[statKey] += Mathf.Clamp01(score); // Increment the count for the emotion
+        }
     }
 
     // Path would look like for example "AlienEmotions/ZAXIN/Joy
