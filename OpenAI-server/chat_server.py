@@ -45,6 +45,45 @@ emotion_classifier = pipeline(
 )
 
 # ======================================
+# Reinforcement Learning Scafolding
+# ======================================
+INTENTS = [
+    "build_rapport",    # warm, small talk, align values
+    "seek_clarity",     # ask on brief clarifying question
+    "apologize",        # de-escalate via apology/empathy
+    "offer_trade",      # propose a concrete, low-stakes exchange
+    "share_plan",       # outline a practical next step
+    "close_treaty"      # attempt to conclude if mood is right
+]
+
+# Q[state][action] -> value
+Q = defaultdict(lambda: {a: 0.0 for a in INTENTS})
+EPSILON = 0.15
+ALPHA = 0.25
+GAMMA = 0.90
+
+def bin_emotion(x, edges=(0.2, 0.5, 0.8)):
+    # 0: low, 1:med, 2:high, 3:very-high
+    if x < edges[0]: return 0
+    if x < edges[1]: return 1
+    if x < edges[2]: return 2
+    return 3
+
+def encode_state(raw_vec):
+    # state from top-2 emotions + their bins
+    # raw_vec is dict {label->score} normalized
+    items = sorted(raw_vec.items(), key=lambda kv: kv[1], reverse=True)
+    (e1, v1), (e2, v2) = items[0], items[1]
+    return f"{e1}:{bin_emotion(v1)}|{e2}:{bin_emotion(v2)}"
+
+def choose_intent(state):
+    import random
+    if random.random() < EPSILON:
+        return random.choice(INTENTS)
+    # greedy
+    best = max(Q[state], key=lambda a: Q[state][a])
+
+# ======================================
 # Alien Profiles
 # ======================================
 def load_alien_profiles(path: str):

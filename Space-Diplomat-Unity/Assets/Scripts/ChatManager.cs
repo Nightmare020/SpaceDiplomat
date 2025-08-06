@@ -21,8 +21,10 @@ public class ChatManager : MonoBehaviour
     public Image alienEmotionImage; // Image to display alien emotion
 
     private const string API_URL = "http://127.0.0.1:5000/chat";
-
-    private GameState.AlienData alienData => GameState.Instance.GetAlienData(currentAlienName); // Get the alien data for the current alien
+    private bool alienTalking = false;
+    private bool _chatLocked = false;
+    private GameState.AlienData alienData => 
+        string.IsNullOrEmpty(currentAlienName) ? null : GameState.Instance.GetAlienData(currentAlienName); // Get the alien data for the current alien
 
     // Awake is called when the script instance is being loaded
     void Awake()
@@ -53,6 +55,9 @@ public class ChatManager : MonoBehaviour
 
         // Use TMP's submit
         inputField.onSubmit.AddListener((message) => SubmitMessage()); // Add listener for input field submission
+
+        // Ensure enabled initially
+        inputField.interactable = true;
     }
 
     // Update is called once per frame
@@ -93,6 +98,9 @@ public class ChatManager : MonoBehaviour
 
     void SubmitMessage()
     {
+        // Block whule alien is sending message
+        if (alienTalking) return;
+
         // Capture and clear immediately so nothing lingers in the input box
         string message = inputField.text.Trim();
         inputField.text = ""; // Clear the input field immediately
@@ -111,6 +119,7 @@ public class ChatManager : MonoBehaviour
         {
             DisplayMessage("YOU", message);
             StartCoroutine(SendMessageToLlama(message));
+            inputField.interactable = false; // Lock immediately after sending
         }
     }
 
@@ -139,7 +148,10 @@ public class ChatManager : MonoBehaviour
 
     void DisplayMessage(string sender, string message)
     {
-        RecordLine(sender, message); // Record the line in the chat history
+        if (!string.IsNullOrEmpty(currentAlienName) && alienData != null)
+        {
+            RecordLine(sender, message); // Record the line in the chat history
+        }
 
         bool isAlien = sender != "YOU" && sender != "SYSTEM"; // Check if the sender is an alien
 
@@ -173,6 +185,23 @@ public class ChatManager : MonoBehaviour
         if (request.result == UnityWebRequest.Result.Success)
         {
             ChatResponse response = JsonUtility.FromJson<ChatResponse>(request.downloadHandler.text);
+
+            // Check end condition from the server
+            if (response.negotiationSuccess)
+            {
+                DisplayMessage("SYSTEM", "Diplomatic solution reached. Talks Concluded.");
+                LockChatPermanently();
+                yield break;
+            }
+
+            if (response.negotiationFailure)
+            {
+                DisplayMessage("SYSTEM", "Negotiation failed. The alien refuses to continue.");
+                LockChatPermanently();
+                yield break;
+            }
+
+            alienTalking = true;
             DisplayMessage(currentAlienName, response.reply);
 
             // Update counts using full vector
@@ -206,6 +235,7 @@ public class ChatManager : MonoBehaviour
         {
             DisplayMessage(currentAlienName.ToUpper(), "is occupied at the moment. Come back later.");
             Debug.LogError("LLM Error: " + request.error);
+            inputField.interactable = true; // unlock so player can retry
         }
     }
 
@@ -222,6 +252,20 @@ public class ChatManager : MonoBehaviour
             scrollRect.verticalNormalizedPosition = 0f; // Scroll to the bottom
             yield return new WaitForSeconds(0.02f); // Typing speed
         }
+
+        // Tipying is done -> unlock unless chat is permanently locked
+        alienTalking = false;
+        if (!_chatLocked)
+        {
+            inputField.interactable = true;
+        }
+    }
+
+    private void LockChatPermanently()
+    {
+        _chatLocked = true;
+        inputField.text = "";
+        inputField.interactable = false;
     }
 
     private void UpdateAlienEmotion(string emotion, float score)
@@ -293,6 +337,9 @@ public class ChatManager : MonoBehaviour
     {
         public string reply; // The reply from the llama.cpp API
         public Analysis analysis; // Analysis data from the llama.cpp API
+        public bool negotiationSuccess; // System response when alien is joyful and negotiation succeeded
+        public bool negotiationFailure; // System response when alien is angry and negotiation failed
+        public RL reinfrocement;
 
         [System.Serializable]
         public class Analysis
@@ -300,6 +347,14 @@ public class ChatManager : MonoBehaviour
             public string emotion; // Emotion detected by the llama.cpp API
             public float emotionScore; // Emotion score from the llama.cpp API
             public string distributionJson; // Emotion distribution as a JSON string
+        }
+
+        [System.Serializable]
+        public class RL
+        {
+            public string stateKey;
+            public string intent;
+            public float reward;
         }
     }
 

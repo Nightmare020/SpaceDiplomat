@@ -1,6 +1,6 @@
 [
     {
-        "name": "BRAJIM",
+        "name": "BRAXIM",
         "personalityType": "Analyst-Diplomat",
         "description": "Crystalline collectivist who prize measured curiosity and harmony",
         "culture": "Consensus-first councils; distrust unilateral human bravado",
@@ -32,6 +32,7 @@
         "joyThreshold": "0.75",
         "angerTolerance": "0.22"
     },
+
     {
         "name": "PENBOL",
         "personalityType": "Warm-Pragmatist",

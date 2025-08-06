@@ -1298,6 +1298,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 388b32547788fd8458a15f463406fa38, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  enableInThisScenes: 1
   rootCanvas: {fileID: 690352775}
   volumeSlider: {fileID: 0}
   resumeButton: {fileID: 0}
@@ -2161,7 +2162,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 39524eb4eb01e98489cdd2b1c7965f61, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  alienName: BRAJIM
+  alienName: BRAXIM
 --- !u!1 &1249431036
 GameObject:
   m_ObjectHideFlags: 0
