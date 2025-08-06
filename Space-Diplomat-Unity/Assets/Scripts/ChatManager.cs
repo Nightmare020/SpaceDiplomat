@@ -27,6 +27,9 @@ public class ChatManager : MonoBehaviour
     // Awake is called when the script instance is being loaded
     void Awake()
     {
+        Cursor.lockState = CursorLockMode.None;
+        Cursor.visible = true;
+
         currentAlienName = PlayerData.SelectedAlienName; // Get the selected alien name from PlayerData
         
         if (string.IsNullOrEmpty(currentAlienName))
@@ -43,24 +46,12 @@ public class ChatManager : MonoBehaviour
         }
     }
 
-    // Start is called before the first frame update
-    void Start()
-    {
-        StartCoroutine(FocusInput());
-    }
-
     // Update is called once per frame
     void Update()
     {
         if (Input.GetKeyDown(KeyCode.Return))
         {
             SubmitMessage();
-        }
-
-        if (Input.GetKeyDown(KeyCode.Escape))
-        {
-            // Load the spaceship scene
-            SceneManager.LoadScene("SpaceshipMovementScene");
         }
 
         UpdateCharacterCountBar();
@@ -96,19 +87,12 @@ public class ChatManager : MonoBehaviour
         alienEmotionImage.sprite = LoadEmotion(currentAlienName, lastEmotionKey);
     }
 
-    IEnumerator FocusInput()
-    {
-        yield return null; // Wait for the end of the frame to ensure UI is ready
-
-        inputField.Select(); // Select the input field
-        inputField.ActivateInputField(); // Activate the input field for user input
-    }
-
     void SubmitMessage()
     {
         if (string.IsNullOrEmpty(currentAlienName))
         {
             DisplayMessage("SYSTEM", "You haven't started any alien communication yet.");
+            inputField.text.Trim();
             return; // Exit if no alien is selected
         }
 
@@ -189,6 +173,10 @@ public class ChatManager : MonoBehaviour
             {
                 var wrapper = JsonUtility.FromJson<DistributionWrapper>(response.analysis.distributionJson);
 
+                // Reset the five cannonical buckets
+                foreach (var key in new[] { "joy", "sadness", "anger", "surprise", "fear" })
+                    alienData.emotionCounts[key] = 0f;
+
                 for (int i = 0; i < wrapper.keys.Length; i++)
                 {
                     string key = (wrapper.keys[i] ?? "").ToLower(); // Normalize the key to lowercase
@@ -197,12 +185,7 @@ public class ChatManager : MonoBehaviour
                     // Keep only the five canonical emotions
                     if (key is "joy" or "sadness" or "anger" or "surprise" or "fear")
                     {
-                        if (!alienData.emotionCounts.ContainsKey(key))
-                        {
-                            alienData.emotionCounts[key] = 0f; // Initialize if the key doesn't exist
-                        }
-
-                        alienData.emotionCounts[key] += value; // Increment the count for the emotion
+                        alienData.emotionCounts[key] = value; // Increment the count for the emotion
                     }
                 }
             }
@@ -242,16 +225,12 @@ public class ChatManager : MonoBehaviour
         }
 
         string statKey = (emotion ?? "").ToLower(); // Normalize the emotion key to lowercase
-        string spriteKey = "";
+        string spriteKey;
 
         switch (statKey)
         {
             case "joy":
-                if (score == 1f)
-                    spriteKey = "Joyful";
-                else
-                    spriteKey = "Happy";
-
+                spriteKey = (score >= 0.8f) ? "Joyful" : "Happy";
                 break;
 
             case "fear":
@@ -279,18 +258,6 @@ public class ChatManager : MonoBehaviour
 
         // Persist so it survives scene change
         alienData.lastEmotionKey = spriteKey; // Update the last emotion key for the alien
-
-        // Only accumulate into the five cannonical emotions
-        if (statKey is "joy" or "sadness" or "anger" or "surprise" or "fear")
-        {
-            if (!alienData.emotionCounts.ContainsKey(statKey))
-            {
-                alienData.emotionCounts[statKey] = 0; // Initialize if the key doesn't exist
-            }
-
-            // Add the model's score for this turn
-            alienData.emotionCounts[statKey] += Mathf.Clamp01(score); // Increment the count for the emotion
-        }
     }
 
     // Path would look like for example "AlienEmotions/ZAXIN/Joy

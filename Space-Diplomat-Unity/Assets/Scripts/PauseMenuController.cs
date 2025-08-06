@@ -5,6 +5,9 @@ using UnityEngine.Audio;
 
 public class PauseMenuController : MonoBehaviour
 {
+    [Header("Enable in this scene")]
+    [SerializeField] private bool enableInThisScenes = true;
+
     [Header("UI")]
     [SerializeField] private GameObject rootCanvas; // Reference to the root canvas of the pause menu
     [SerializeField] private Slider volumeSlider; // Slider for adjusting the volume
@@ -16,15 +19,25 @@ public class PauseMenuController : MonoBehaviour
 
     private bool isOpen;
     private GameInputContext previousContext; // Store the previous input context before opening the pause menu
-    private static PauseMenuController _instance; // Singleton instance of PauseMenuController
+    private bool _wired; // Singleton instance of PauseMenuController
 
     // Awake is called when the script instance is being loaded
     void Awake()
     {
+        // If disabled for this scene, just bail out early
+        if (!enableInThisScenes)
+        {
+            enabled = false;
+            return;
+        }
+
+        // Rqeuires a canvas to function
         if (!rootCanvas)
         {
-            rootCanvas = gameObject;
+            enabled = false;
+            return;
         }
+
         rootCanvas.SetActive(false); // Initially hide the pause menu
 
         // Hook UI buttons to their respective actions
@@ -47,25 +60,32 @@ public class PauseMenuController : MonoBehaviour
         // initialize slider from current value
         InitVolumeSlider();
 
-        // Subscribe to inputs
-        InputService.Instance.Pause += OnPauseToggle;
-        InputService.Instance.menuReturn += OnReturnToGame;
+        if (InputService.Instance != null)
+        {
+            // Subscribe to inputs
+            InputService.Instance.Pause += OnPauseToggle;
+            InputService.Instance.menuReturn += OnReturnToGame;
+            _wired = true;
+        }
     }
 
     // OnDestroy is called when the script instance is being destroyed
     void OnDestroy()
     {
-        if (InputService.Instance == null) return; // Check if InputService is available
-
         // Unsubscribe from inputs
-        if (InputService.Instance == null) return;
-        InputService.Instance.Pause -= OnPauseToggle;
-        InputService.Instance.menuReturn -= OnReturnToGame;
+        if (_wired && InputService.Instance != null)
+        {
+            InputService.Instance.Pause -= OnPauseToggle;
+            InputService.Instance.menuReturn -= OnReturnToGame;
+        }
+
     }
 
     // ---------------- Open/Close -----------------
     public void OnPauseToggle()
     {
+        if (!enabled) return;
+
         if (isOpen)
         {
             Close();
@@ -81,36 +101,27 @@ public class PauseMenuController : MonoBehaviour
         if (isOpen) return;
         isOpen = true;
 
-        previousContext = InputService.Instance.CurrentContext; // Store the previous context
-        InputService.Instance.SwitchContext(GameInputContext.PauseMenu); // Switch to pause menu context
+        if (InputService.Instance != null)
+        {
+            previousContext = InputService.Instance.CurrentContext; // Store the previous context
+            InputService.Instance.SwitchContext(GameInputContext.PauseMenu); // Switch to pause menu context
+        }
 
         Time.timeScale = 0f; // Pause the game time
 
         rootCanvas.SetActive(true); // Show the pause menu
 
         // Device-aware cursor/selection
-        bool gamepadUsed = InputService.Instance.LastUsedDevice == LastDeviceKind.Gamepad;
-        if (gamepadUsed)
-        {
-            Cursor.visible = false; // Hide cursor for gamepad users
-            Cursor.lockState = CursorLockMode.Locked; // Lock cursor for gamepad users
+        bool gamepadUsed = (InputService.Instance != null &&
+            InputService.Instance.LastUsedDevice == LastDeviceKind.Gamepad);
 
-            // Focus "Resume" so D-pad/left stick works immediately
-            if (resumeButton)
-            {
-                EventSystem.current?.SetSelectedGameObject(resumeButton.gameObject);
-            }
-        }
-        else
-        {
-            Cursor.visible = true; // Show cursor if no resume button
-            Cursor.lockState = CursorLockMode.None; // Unlock cursor if no resume button
+        Cursor.visible = !gamepadUsed; // Hide cursor for gamepad users
+        Cursor.lockState = gamepadUsed ? CursorLockMode.Locked : CursorLockMode.None; // Lock cursor for gamepad users
 
-            // Still safe to set selection so WASD/arrows also work
-            if (resumeButton)
-            {
-                EventSystem.current.SetSelectedGameObject(resumeButton.gameObject);
-            }
+        // Focus "Resume" so D-pad/left stick works immediately
+        if (resumeButton)
+        {
+            EventSystem.current?.SetSelectedGameObject(resumeButton.gameObject);
         }
     }
 
@@ -122,8 +133,11 @@ public class PauseMenuController : MonoBehaviour
         rootCanvas.SetActive(false); // Hide the pause menu
         Time.timeScale = 1f; // Resume game time
 
-        // Restore previous gameplay context
-        InputService.Instance.SwitchContext(previousContext); // Switch back to the previous context
+        if (InputService.Instance != null)
+        {
+            // Restore previous gameplay context
+            InputService.Instance.SwitchContext(previousContext); // Switch back to the previous context
+        }
 
         // Restore cursor state
         Cursor.visible = false; // Hide cursor when closing pause menu
@@ -142,12 +156,17 @@ public class PauseMenuController : MonoBehaviour
     private void InitVolumeSlider()
     {
         if (!volumeSlider) return;
-        volumeSlider.SetValueWithoutNotify(AudioManager.audioInstance.GetNormalizedMusicVolume()); // Initialize the slider with the current volume
+
+        var am = AudioManager.audioInstance;
+        if (am == null) return;
+
+        volumeSlider.SetValueWithoutNotify(am.GetNormalizedMusicVolume()); // Initialize the slider with the current volume
     }
 
     private void SetVolumeFromSlider(float t)
     {
-        AudioManager.audioInstance.SetNormalizedMusicVolume(t); // Set the volume in the audio manager based on the slider value
+        var am = AudioManager.audioInstance;
+        if (am != null) am.SetNormalizedMusicVolume(t); // Set the volume in the audio manager based on the slider value
     }
 
     // ---------------- Quit Game -----------------

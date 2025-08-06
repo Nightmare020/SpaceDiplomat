@@ -1,4 +1,3 @@
-from importlib.metadata import distribution
 import time
 from flask import Flask, request, jsonify
 import os
@@ -200,8 +199,17 @@ def chat():
     print(f"Polarity: {polarity}")
     print(f"Emotion: {top_emotion} ({emotion_score:.3f})")
 
-    # Normalise labels and pass whole vector to Unity
-    dist = {d['label'].capitalize(): float(d['score']) for d in emotion_results[0]}
+    # Build ordered canonical distribution
+    canon_order = ["surprise", "fear", "anger", "sadness", "joy"]
+    raw = {d['label'].lower(): float(d['score']) for d in emotion_results[0]}
+    vals = [raw.get(k, 0.0) for k in canon_order]
+    s = sum(vals) or 1.0
+    vals = [v / s for v in vals]
+
+    distribution_json = json.dumps({
+        "keys": canon_order,
+        "values": vals
+    })
 
     # --- Persona & style ---
     style_hints, eo, na, c = style_hints_from_traits(profile.get("traits", {}))
@@ -301,6 +309,7 @@ def chat():
             "entities": named_entities,
             "emotion": top_emotion,
             "emotionScore": emotion_score,
+            "distributionJson": distribution_json,
             "polarity": polarity,
             "subjectivity": subjectivity,
         },
@@ -312,7 +321,6 @@ def chat():
             "behaviorInstruction": profile.get("behaviorInstruction", ""),
             "joyThreshold": joy_threshold,
             "angerTolerance": anger_tolerance,
-            "distribution": dist
         },
         "state": {
             "joy": alien_affect[alien_name]["joy"],
