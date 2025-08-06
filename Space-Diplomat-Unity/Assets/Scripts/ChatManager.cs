@@ -46,14 +46,18 @@ public class ChatManager : MonoBehaviour
         }
     }
 
+    // Start is called before the first frame update
+    void Start()
+    {
+        inputField.lineType = TMP_InputField.LineType.SingleLine; // Set input field to single line mode
+
+        // Use TMP's submit
+        inputField.onSubmit.AddListener((message) => SubmitMessage()); // Add listener for input field submission
+    }
+
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Return))
-        {
-            SubmitMessage();
-        }
-
         UpdateCharacterCountBar();
     }
 
@@ -89,21 +93,24 @@ public class ChatManager : MonoBehaviour
 
     void SubmitMessage()
     {
+        // Capture and clear immediately so nothing lingers in the input box
+        string message = inputField.text.Trim();
+        inputField.text = ""; // Clear the input field immediately
+        inputField.caretPosition = 0; // Reset caret position to the start
+        inputField.selectionStringAnchorPosition = 0; // Reset selection anchor position to the start
+        inputField.selectionStringFocusPosition = 0; // Reset selection focus position to the start
+        inputField.ActivateInputField(); // Reactivate the input field for new input
+
         if (string.IsNullOrEmpty(currentAlienName))
         {
             DisplayMessage("SYSTEM", "You haven't started any alien communication yet.");
-            inputField.text.Trim();
             return; // Exit if no alien is selected
         }
-
-        string message = inputField.text.Trim();
 
         if (!string.IsNullOrEmpty(message))
         {
             DisplayMessage("YOU", message);
-            StartCoroutine(SendMessageToGroq(message));
-            inputField.text = ""; // Clear the input field
-            inputField.ActivateInputField(); // Reactivate the input field for new input
+            StartCoroutine(SendMessageToLlama(message));
         }
     }
 
@@ -149,7 +156,7 @@ public class ChatManager : MonoBehaviour
         }
     }
 
-    IEnumerator SendMessageToGroq(string playerInput)
+    IEnumerator SendMessageToLlama(string playerInput)
     {
         // Build a typed payload so JsonUtility makes correct JSON
         var payload = new ChatRequest { message = playerInput, alienName = currentAlienName };
@@ -198,7 +205,7 @@ public class ChatManager : MonoBehaviour
         else
         {
             DisplayMessage(currentAlienName.ToUpper(), "is occupied at the moment. Come back later.");
-            Debug.LogError("GROQ Error: " + request.error);
+            Debug.LogError("LLM Error: " + request.error);
         }
     }
 
@@ -284,14 +291,14 @@ public class ChatManager : MonoBehaviour
     [System.Serializable]
     public class ChatResponse
     {
-        public string reply; // The reply from the Groq API
-        public Analysis analysis; // Analysis data from the Groq API
+        public string reply; // The reply from the llama.cpp API
+        public Analysis analysis; // Analysis data from the llama.cpp API
 
         [System.Serializable]
         public class Analysis
         {
-            public string emotion; // Emotion detected by the Groq API
-            public float emotionScore; // Emotion score from the Groq API
+            public string emotion; // Emotion detected by the llama.cpp API
+            public float emotionScore; // Emotion score from the llama.cpp API
             public string distributionJson; // Emotion distribution as a JSON string
         }
     }
