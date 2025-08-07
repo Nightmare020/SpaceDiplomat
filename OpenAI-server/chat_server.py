@@ -1,3 +1,4 @@
+import dis
 import time
 from flask import Flask, request, jsonify
 import os
@@ -82,6 +83,50 @@ def choose_intent(state):
         return random.choice(INTENTS)
     # greedy
     best = max(Q[state], key=lambda a: Q[state][a])
+
+def _valence_arousal(dist):
+    """
+    Map the five emotions (joy, anger, sad, disgust, fear) to continuous valence (pleasure) and arousal.
+    """
+    joy = dist.get("joy", 0.0)
+    disgust = dist.get("disgust", 0.0)
+    anger = dist.get("anger", 0.0)
+    fear = dist.get("fear", 0.0)
+    sadness = dist.get("sadness", 0.0)
+
+    # Valence: how pleasant/unpleasant the mixture is
+    valence = (
+        +1.00 * joy
+        -0.85 * disgust
+        -0.90 * anger
+        -0.75 * fear
+        -1.0 * sadness
+    )
+
+    # Arousal: anger/fear high, joy medium-high, disgust medium, sadness low
+    arousal = (
+        0.70 * joy
+        +0.60 * disgust
+        + 0.90 * anger
+        + 0.80 * fear
+        +0.20 * sadness
+    )
+
+    return max(-1.0, min(1.0, valence)), max(0.0, min(1.0, arousal))
+
+def pair_bonus(top1, v1, top2, v2):
+    """
+
+    """
+
+    return 0.0
+
+def compute_reward(dist):
+    """
+
+    """
+
+    return 0.0
 
 # ======================================
 # Alien Profiles
@@ -193,8 +238,8 @@ def behavior_from_emotion(top_emotion, score):
         return "Sound cautious, defensive, and wary."
     elif top_emotion == "fear":
         return "Express concern and emphasize caution and distrust of humans."
-    elif top_emotion == "surprise":
-        return "Sound surprised, curious, and ask clarifying questions."
+    elif top_emotion == "disgust":
+        return "Sound polite, brief, detached; show discomfort and redirect"
     else:
         return "Maintain a calm, balanced diplomatic tone."
 
@@ -239,7 +284,7 @@ def chat():
     print(f"Emotion: {top_emotion} ({emotion_score:.3f})")
 
     # Build ordered canonical distribution
-    canon_order = ["surprise", "fear", "anger", "sadness", "joy"]
+    canon_order = ["disgust", "fear", "anger", "sadness", "joy"]
     raw = {d['label'].lower(): float(d['score']) for d in emotion_results[0]}
     vals = [raw.get(k, 0.0) for k in canon_order]
     s = sum(vals) or 1.0

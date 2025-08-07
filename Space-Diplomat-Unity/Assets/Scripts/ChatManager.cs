@@ -210,7 +210,7 @@ public class ChatManager : MonoBehaviour
                 var wrapper = JsonUtility.FromJson<DistributionWrapper>(response.analysis.distributionJson);
 
                 // Reset the five cannonical buckets
-                foreach (var key in new[] { "joy", "sadness", "anger", "surprise", "fear" })
+                foreach (var key in new[] { "joy", "sadness", "anger", "disgust", "fear" })
                     alienData.emotionCounts[key] = 0f;
 
                 for (int i = 0; i < wrapper.keys.Length; i++)
@@ -219,7 +219,7 @@ public class ChatManager : MonoBehaviour
                     float value = Mathf.Max(0f, wrapper.values[i]); // Ensure the value is non-negative
 
                     // Keep only the five canonical emotions
-                    if (key is "joy" or "sadness" or "anger" or "surprise" or "fear")
+                    if (key is "joy" or "sadness" or "anger" or "disgust" or "fear")
                     {
                         alienData.emotionCounts[key] = value; // Increment the count for the emotion
                     }
@@ -296,8 +296,8 @@ public class ChatManager : MonoBehaviour
                 spriteKey = "Angry";
                 break;
 
-            case "surprise":
-                spriteKey = "Surprised";
+            case "disgust":
+                spriteKey = "Disgusted";
                 break;
 
             default:

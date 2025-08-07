@@ -24,7 +24,7 @@ public class DonutBuilder : MonoBehaviour
     [SerializeField] float innerHoleRatio = 0.58f; // inner hole = diameter * this
 
     // Fixed order around the circle (clockwise)
-    static readonly string[] Order = { "surprise", "fear", "anger", "sadness", "joy"};
+    static readonly string[] Order = { "disgust", "fear", "anger", "sadness", "joy"};
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()

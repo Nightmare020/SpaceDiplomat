@@ -12,7 +12,7 @@ public class GameState : MonoBehaviour
         public List<string> chatHistory = new List<string>(); // Chat history for the alien
         public Dictionary<string, float> emotionCounts = new Dictionary<string, float>()
         {{"joy", 0 }, {"sadness", 0 }, {"anger", 0 },
-            {"surprise", 0}, {"fear", 0} }; // Emotion counts for the alien
+            {"disgust", 0}, {"fear", 0} }; // Emotion counts for the alien
     }
 
     public Dictionary<string, AlienData> aliensData = new Dictionary<string, AlienData>(); // Dictionary to hold alien data

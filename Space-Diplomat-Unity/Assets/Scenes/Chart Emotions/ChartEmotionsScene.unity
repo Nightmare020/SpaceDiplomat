@@ -368,7 +368,7 @@ GameObject:
   - component: {fileID: 216185386}
   - component: {fileID: 216185385}
   m_Layer: 5
-  m_Name: SurpriseLegendText
+  m_Name: DisgustLegendText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -413,7 +413,9 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Surprise
+  m_text: 'Disgust
+
+'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: dc36b3fdc14f47ebb36fd484a67e268a, type: 2}
   m_sharedMaterial: {fileID: 2140032, guid: dc36b3fdc14f47ebb36fd484a67e268a, type: 2}
@@ -422,8 +424,8 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4278216936
-  m_fontColor: {r: 0.9098039, g: 0.40784314, b: 0, a: 1}
+    rgba: 4278254354
+  m_fontColor: {r: 0.069663756, g: 0.98490566, b: 0, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -1125,7 +1127,7 @@ GameObject:
   - component: {fileID: 624359254}
   - component: {fileID: 624359253}
   m_Layer: 5
-  m_Name: SurpriseColor
+  m_Name: DisgustColor
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1163,7 +1165,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.9098039, g: 0.40784314, b: 0, a: 1}
+  m_Color: {r: 0.07058824, g: 0.9843137, b: 0, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -1472,7 +1474,7 @@ GameObject:
   - component: {fileID: 770205292}
   - component: {fileID: 770205291}
   m_Layer: 5
-  m_Name: SurpriseSlice
+  m_Name: DisgustSlice
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1510,7 +1512,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.9098039, g: 0.4080462, b: 0, a: 1}
+  m_Color: {r: 0.07058824, g: 0.9843137, b: 0, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
