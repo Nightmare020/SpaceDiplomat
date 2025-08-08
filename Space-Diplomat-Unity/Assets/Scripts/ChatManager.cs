@@ -23,6 +23,8 @@ public class ChatManager : MonoBehaviour
     private const string API_URL = "http://127.0.0.1:5000/chat";
     private bool alienTalking = false;
     private bool _chatLocked = false;
+    private float _joyThresholdCache = 0.9f; // Threshold for joy emotion to consider negotiation success
+    private float _angerToleranceCache = 0.9f; // Threshold for anger emotion to consider negotiation failure
     private GameState.AlienData alienData => 
         string.IsNullOrEmpty(currentAlienName) ? null : GameState.Instance.GetAlienData(currentAlienName); // Get the alien data for the current alien
 
@@ -69,10 +71,17 @@ public class ChatManager : MonoBehaviour
     // Call once when the scene opens
     private void RestoreHistory()
     {
+        var sb = new System.Text.StringBuilder(alienData.chatHistory.Count * 32);
         foreach (string line in alienData.chatHistory)
         {
-            conversationText.text += line + "\n"; // Display each line from the chat history
+            sb.AppendLine(line); // Display each line from the chat history
         }
+
+        conversationText.text = sb.ToString();
+
+        // Let the layout rebuild this frame, then snap to bottom
+        LayoutRebuilder.ForceRebuildLayoutImmediate((RectTransform)conversationText.transform);
+        StartCoroutine(ScrollToBottomNextFrame());
     }
 
     // Call every time player or alien speaks
@@ -171,7 +180,12 @@ public class ChatManager : MonoBehaviour
     IEnumerator SendMessageToLlama(string playerInput)
     {
         // Build a typed payload so JsonUtility makes correct JSON
-        var payload = new ChatRequest { message = playerInput, alienName = currentAlienName };
+        var payload = new ChatRequest { 
+            message = playerInput, 
+            alienName = currentAlienName,
+            history = BuildHistoryTurns(15) // Build the chat history for the alien
+        };
+
         string json = JsonUtility.ToJson(payload);
 
         byte[] bodyRaw = System.Text.Encoding.UTF8.GetBytes(json);
@@ -186,19 +200,13 @@ public class ChatManager : MonoBehaviour
         {
             ChatResponse response = JsonUtility.FromJson<ChatResponse>(request.downloadHandler.text);
 
-            // Check end condition from the server
-            if (response.negotiationSuccess)
+            // Cache threshold from server, if present
+            if (response.alienProfile != null && 
+                (response.alienProfile.joyThreshold > 0f && response.alienProfile.joyThreshold <= 1f) &&
+                (response.alienProfile.angerTolerance > 0f && response.alienProfile.angerTolerance <= 1f))
             {
-                DisplayMessage("SYSTEM", "Diplomatic solution reached. Talks Concluded.");
-                LockChatPermanently();
-                yield break;
-            }
-
-            if (response.negotiationFailure)
-            {
-                DisplayMessage("SYSTEM", "Negotiation failed. The alien refuses to continue.");
-                LockChatPermanently();
-                yield break;
+                _joyThresholdCache = response.alienProfile.joyThreshold; // Cache joy threshold for negotiation success
+                _angerToleranceCache = response.alienProfile.angerTolerance; // Cache anger tolerance for negotiation failure
             }
 
             alienTalking = true;
@@ -210,7 +218,7 @@ public class ChatManager : MonoBehaviour
                 var wrapper = JsonUtility.FromJson<DistributionWrapper>(response.analysis.distributionJson);
 
                 // Reset the five cannonical buckets
-                foreach (var key in new[] { "joy", "sadness", "anger", "disgust", "fear" })
+                foreach (var key in new[] { "joy", "sadness", "anger", "fear", "disgust" })
                     alienData.emotionCounts[key] = 0f;
 
                 for (int i = 0; i < wrapper.keys.Length; i++)
@@ -219,16 +227,36 @@ public class ChatManager : MonoBehaviour
                     float value = Mathf.Max(0f, wrapper.values[i]); // Ensure the value is non-negative
 
                     // Keep only the five canonical emotions
-                    if (key is "joy" or "sadness" or "anger" or "disgust" or "fear")
+                    if (key is "joy" or "sadness" or "anger" or "fear" or "disgust")
                     {
                         alienData.emotionCounts[key] = value; // Increment the count for the emotion
                     }
+                }
+
+                // Re-draw the donut so the UI reflects the new distribution
+                DonutBuilder donut = FindFirstObjectByType<DonutBuilder>();
+                if (donut != null)
+                {
+                    donut.Refresh();
                 }
             }
 
             if (response.analysis != null)
             {
                 UpdateAlienEmotion(response.analysis.emotion, response.analysis.emotionScore);
+
+                // -------- GOAP Hard Stop --------
+                if (response.negotiationSuccess || GoapGate.IsSuccess(alienData.emotionCounts["joy"]))
+                {
+                    DisplayMessage("SYSTEM", "Diplomatic solution reached. Talks Concluded.");
+                    LockChatPermanently();
+                }
+
+                if (response.negotiationFailure || GoapGate.IsFailure(alienData.emotionCounts["anger"]))
+                {
+                    DisplayMessage("SYSTEM", "Negotiation failed. The alien refuses to continue.");
+                    LockChatPermanently();
+                }
             }
         }
         else
@@ -275,34 +303,46 @@ public class ChatManager : MonoBehaviour
             alienEmotionImage.enabled = true; // Ensure the image is enabled
         }
 
-        string statKey = (emotion ?? "").ToLower(); // Normalize the emotion key to lowercase
-        string spriteKey;
+        // Find the top emotion from the parsed distribution
+        string topKey = "nautral"; // Default to neutral if no emotion is found
+        float topValue = -1f; // Default value for neutral emotion
 
-        switch (statKey)
+        foreach (var key in new[] { "joy", "sadness", "anger", "fear", "disgust" })
         {
-            case "joy":
-                spriteKey = (score >= 0.8f) ? "Joyful" : "Happy";
-                break;
+            float val = alienData.emotionCounts.TryGetValue(key, out float value) ? value : 0f; // Get the emotion value or default to 0
+            if (val > topValue)
+            {
+                topValue = val; // Update the top value
+                topKey = key; // Update the top emotion key
+            }
+        }
 
-            case "fear":
-                spriteKey = "Scared";
-                break;
-
-            case "sadness":
-                spriteKey = "Sad";
-                break;
-
-            case "anger":
-                spriteKey = "Angry";
-                break;
-
-            case "disgust":
-                spriteKey = "Disgusted";
-                break;
-
-            default:
-                spriteKey = "Neutral"; // Default emotion
-                break;
+        string spriteKey;
+        if (topKey == "joy")
+        {
+            // Use the per-alien threshold when available
+            float threshold = Mathf.Clamp01(_joyThresholdCache <= 0f ? 0.9f : _joyThresholdCache); // Default to 0.9 if no threshold is set
+            spriteKey = (topValue >= threshold) ? "Joyful" : "Happy"; // Determine the sprite key based on the joy threshold
+        }
+        else if (topKey == "fear")
+        {
+            spriteKey = "Scared"; // Use Scared sprite for fear emotion
+        }
+        else if (topKey == "sadness")
+        {
+            spriteKey = "Sad"; // Use Sad sprite for sadness emotion
+        }
+        else if (topKey == "anger")
+        {
+            spriteKey = "Angry"; // Use Angry sprite for anger emotion
+        }
+        else if (topKey == "disgust")
+        {
+            spriteKey = "Disgusted"; // Use Disgusted sprite for disgust emotion
+        }
+        else
+        {
+            spriteKey = "Neutral"; // Default to Neutral if no other emotion matches
         }
 
         alienEmotionImage.sprite = LoadEmotion(currentAlienName, spriteKey); // Load the appropriate emotion sprite
@@ -325,11 +365,54 @@ public class ChatManager : MonoBehaviour
         scrollRect.verticalNormalizedPosition = 0f; // Scroll to the bottom
     }
 
+    private HistoryTurn[] BuildHistoryTurns(int maxTurns = 12)
+    {
+        if (alienData == null || alienData.chatHistory == null || alienData.chatHistory.Count == 0)
+            return new HistoryTurn[0]; // Return empty if no history exists
+
+        // Take the last N turns from the chat history
+        var slice = alienData.chatHistory.Skip(Mathf.Max(0, alienData.chatHistory.Count - maxTurns)).ToList();
+        var list = new System.Collections.Generic.List<HistoryTurn>(slice.Count);
+
+        foreach (var line in slice)
+        {
+            // Expect "SENDER: message" format
+            int idx = line.IndexOf(": ");
+            if (idx <= 0) continue;
+
+            string sender = line.Substring(0, idx).Trim(); // Extract the sender
+            string content = line.Substring(idx + 2).Trim(); // Extract the message content
+
+            string role = sender == "YOU" ? "user" // Determine the role based on sender
+                : sender == "SYSTEM" ? "system"
+                : "assistant"; // Default to assistant for alien messages
+
+            // Skip system lines to avoid confusing LLM
+            if (role == "system") continue;
+
+            list.Add(new HistoryTurn
+            {
+                role = role, // Set the role for the turn
+                content = content // Set the content for the turn
+            });
+        }
+
+        return list.ToArray(); // Return the array of history turns
+    }
+
+    [System.Serializable]
+    public class HistoryTurn
+    {
+        public string role; // The sender of the message (e.g., "YOU", "ALIEN_NAME")
+        public string content; // The message content
+    }
+
     [System.Serializable]
     private class ChatRequest
     {
         public string message; // The message from the player
         public string alienName; // The name of the alien character
+        public HistoryTurn[] history; // Chat history for the alien
     }
 
     [System.Serializable]
@@ -339,7 +422,8 @@ public class ChatManager : MonoBehaviour
         public Analysis analysis; // Analysis data from the llama.cpp API
         public bool negotiationSuccess; // System response when alien is joyful and negotiation succeeded
         public bool negotiationFailure; // System response when alien is angry and negotiation failed
-        public RL reinfrocement;
+        public RL rl;
+        public AlienProfile alienProfile; // Alien profile data from the llama.cpp API
 
         [System.Serializable]
         public class Analysis
@@ -355,6 +439,14 @@ public class ChatManager : MonoBehaviour
             public string stateKey;
             public string intent;
             public float reward;
+        }
+
+        [System.Serializable]
+        public class AlienProfile
+        {
+            public string name; // Name of the alien
+            public float joyThreshold; // Joy threshold for negotiation success
+            public float angerTolerance; // Anger tolerance for negotiation failure
         }
     }
 

@@ -26,12 +26,47 @@ public class DonutBuilder : MonoBehaviour
     // Fixed order around the circle (clockwise)
     static readonly string[] Order = { "disgust", "fear", "anger", "sadness", "joy"};
 
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+    // Awake is called when the script instance is being loaded
+    private void Awake()
     {
         // Normalize rects so they always match
         NormalizeRects();
+    }
 
+    // Start is called once before the first execution of Update after the MonoBehaviour is created
+    void Start()
+    {
+        Refresh();
+    }
+
+    // Force identical anchors/size/position for all chart pieces
+    void NormalizeRects()
+    {
+        if (chartRoot == null)
+        {
+            chartRoot = GetComponent<RectTransform>(); // fallback
+        }
+
+        Vector2 size = new Vector2(diamater, diamater);
+
+        foreach (var sl in slices)
+        {
+            if (sl?.img == null) continue;
+            RectTransform rt = sl.img.rectTransform;
+            SnapToCenter(rt, size);
+            sl.img.preserveAspect = true;
+        }
+
+        if (centerMask != null)
+        {
+            RectTransform rt = centerMask.rectTransform;
+            SnapToCenter(rt, size * innerHoleRatio);
+            centerMask.preserveAspect = true;
+        }
+    }
+
+    public void Refresh()
+    {
         string alien = PlayerData.SelectedAlienName; // Get the selected alien name from PlayerData
         if (string.IsNullOrEmpty(alien))
         {
@@ -39,7 +74,7 @@ public class DonutBuilder : MonoBehaviour
             gameObject.SetActive(false);
             return;
         }
-        
+
         var counts = GameState.Instance.GetAlienData(alien).emotionCounts; // Get the emotion counts for the selected alien
 
         // Lowercase keys for safety
@@ -82,7 +117,7 @@ public class DonutBuilder : MonoBehaviour
 
         foreach (var key in Order)
         {
-            if (!byKey.TryGetValue(key, out var sl) || sl.img == null) 
+            if (!byKey.TryGetValue(key, out var sl) || sl.img == null)
                 continue;
 
             float wedge = Mathf.Clamp01(weights[key]);
@@ -122,32 +157,6 @@ public class DonutBuilder : MonoBehaviour
         if (centerMask != null)
         {
             centerMask.transform.SetAsLastSibling(); // Set the center mask as the last sibling to keep it on top
-        }
-    }
-
-    // Force identical anchors/size/position for all chart pieces
-    void NormalizeRects()
-    {
-        if (chartRoot == null)
-        {
-            chartRoot = GetComponent<RectTransform>(); // fallback
-        }
-
-        Vector2 size = new Vector2(diamater, diamater);
-
-        foreach (var sl in slices)
-        {
-            if (sl?.img == null) continue;
-            RectTransform rt = sl.img.rectTransform;
-            SnapToCenter(rt, size);
-            sl.img.preserveAspect = true;
-        }
-
-        if (centerMask != null)
-        {
-            RectTransform rt = centerMask.rectTransform;
-            SnapToCenter(rt, size * innerHoleRatio);
-            centerMask.preserveAspect = true;
         }
     }
 

@@ -63,6 +63,26 @@ EPSILON = 0.15
 ALPHA = 0.25
 GAMMA = 0.90
 
+PAIR_RULE = {
+    ("joy", "joy"):         +1.00,  # Ectasy
+    ("joy", "sadness"):     +0.55,  # Melancholy
+    ("joy", "disgust"):     +0.45,  # Intrigue
+    ("joy", "fear"):        +0.85,  # Surprise
+    ("joy", "anger"):       +0.30,  # Righteousness
+
+    ("sadness", "sadness"): -0.80,  # Despair
+    ("fear", "fear"):       -0.75,  # Terror
+    ("disgust", "disgust"): -0.50,  # Prejudice
+    ("anger", "anger"):     -1.00,  # Rage
+
+    ("sadness", "fear"):    -0.55,  # Anxiety
+    ("sadness", "disgust"): -0.55,  # Self-loating
+    ("fear", "disgust"):    -0.55,  # Revulsion
+    ("anger", "sadness"):   -0.90,  # Betrayal
+    ("anger", "fear"):      -0.87,  # Hatred
+    ("anger", "disgust"):   -0.60,  # Loathing
+}
+
 def bin_emotion(x, edges=(0.2, 0.5, 0.8)):
     # 0: low, 1:med, 2:high, 3:very-high
     if x < edges[0]: return 0
@@ -83,10 +103,12 @@ def choose_intent(state):
         return random.choice(INTENTS)
     # greedy
     best = max(Q[state], key=lambda a: Q[state][a])
+    return best
 
 def _valence_arousal(dist):
     """
-    Map the five emotions (joy, anger, sad, disgust, fear) to continuous valence (pleasure) and arousal.
+    Map the five emotions (joy, anger, sad, disgust, fear) 
+    to continuous valence (pleasure) and arousal(activation).
     """
     joy = dist.get("joy", 0.0)
     disgust = dist.get("disgust", 0.0)
@@ -114,19 +136,59 @@ def _valence_arousal(dist):
 
     return max(-1.0, min(1.0, valence)), max(0.0, min(1.0, arousal))
 
-def pair_bonus(top1, v1, top2, v2):
+def _pair_bonus(top1, v1, top2, v2):
     """
-
+    Inside Out pair mapping (see disertation or GDD):
+    - Joy+Joy (Ectasy). biggest positive
+    - Joy+Sadness (Melancholy/Pity): positive
+    - Joy+Disgust (Intrigue-ish redirection): positive
+    - Joy+Anger (Righteousness): positive
+    - Sadness+Sadness (Despair): negative
+    - Sadness+Fear or Sadness+Disgust or Disgust+Fear (Anxiety/Revulsion-like): negative
+    - Disgust+Disgust (Prejudice): lower negative
+    - Fear+Fear (Terror): negative
+    - Anger+Sadness (Betrayal): strong negative
+    - Anger with anything except Joy: negative
     """
-
-    return 0.0
+    pair = tuple(sorted([top1, top2])) # order-independent
+    coef = PAIR_RULE.get(pair)
+    if coef is None:
+        #default: anger or disgust with anything else = mild negative
+        coef = -0.35 if ("anger" in pair or "disgust" in pair) else 0.0
+    return coef * 0.5 * (v1 + v2)
 
 def compute_reward(dist):
     """
-
+    dist: dict with keys 'disgust', 'fear', 'anger', 'sadness', 'joy' normalized to 1.0
+    Returns a scalar reward in roughly [-2, +2]
     """
 
-    return 0.0
+    # --------- Base continuous shaping ---------
+    valence, arousal = _valence_arousal(dist)
+
+    # Reward pleasentness; arousal only helps when valence >= 0 (energy in negative hurts)
+    base = (1.20 * valence) + (0.40 * arousal * (1 if valence >= 0 else -0.3))
+
+    # --------- Pair rule on top-2 emotions ---------
+    items = sorted(dist.items(), key=lambda kv: kv[1], reverse=True)
+    (e1, v1), (e2, v2) = items[0], items[1]
+    pair_term = _pair_bonus(e1, v1, e2, v2)
+
+    # --------- Extremes / terminals ---------
+    joy = dist.get("joy", 0.0)
+    anger = dist.get("anger", 0.0)
+    sadness = dist.get("sadness", 0.0)
+
+    if joy >= 0.85:     # Ectasy-ish
+        base += +0.70
+    if anger >= 0.85:   # Rage
+        base += -1.10
+    if sadness >= 0.80 and sadness == max(dist.values()):   # Despair
+        base += -0.60
+    
+    reward = base + pair_term
+    return float(max(-2.0, min(2.0, reward)))
+
 
 # ======================================
 # Alien Profiles
@@ -290,6 +352,13 @@ def chat():
     s = sum(vals) or 1.0
     vals = [v / s for v in vals]
 
+    # ======================================
+    # RL State/Action Update and Round-Trip
+    # ======================================
+    dist_map = dict(zip(canon_order, vals))
+    rl_state = encode_state(dist_map)
+    rl_action = choose_intent(rl_state)
+
     distribution_json = json.dumps({
         "keys": canon_order,
         "values": vals
@@ -312,9 +381,29 @@ def chat():
     Player emotion: {top_emotion} ({emotion_score:.2f}); sentiment polarity: {polarity:.2f}, subjectivity: {subjectivity:.2f}.
     Player said: {redacted_input}.
     {behavior_instruction}
+    Current diplomatic intent: {rl_action}.
     Keep your answer concise and very briefly. Use up to {max_tokens} tokens. 
     Always end your response with a complete sentence.
     """.strip()
+
+    # ---- Conversation history from client ----
+    raw_hist = data.get("history", []) or []
+
+    # Santize and clip (defensive)
+    hist = []
+    if isinstance(raw_hist, (list, tuple)):
+        for t in list(raw_hist)[-16:]:
+            role = (t.get("role") or "").strip()
+            content = (t.get("content") or "").strip()
+            if not content:
+                continue
+            if role not in ("user", "assistant"): # Keep history simple; drop extra roles
+                continue
+            hist.append({"role": role, "content": content})
+
+    messages = [{"role": "system", "content": system_prompt}]
+    messages.extend(hist)
+    messages.append({"role": "user", "content": redacted_input})
     
     print(f"==== System prompt ====")
     print(system_prompt)
@@ -329,10 +418,7 @@ def chat():
 
     payload = {
         "model": "llama3-8b-8192",
-        "messages": [
-            {"role": "system", "content": system_prompt},
-            {"role": "user", "content": redacted_input}
-        ],
+        "messages": messages,
         "temperature": temp,
         "max_tokens": max_tokens
     }
@@ -362,27 +448,58 @@ def chat():
     # ======================================
     # AFFECT DYNAMICS (per alien)
     # ======================================
+
+    # Personality-biased, but modest, steps
+    JOY_STEP = 0.25
+    ANGER_STEP = 0.25
+    DECAY = 0.90
+
     traits = profile.get("traits", {})
     ag = float(traits.get("agreeableness", 0.5))
 
     # Personality-biased gains
-    anger_gain = emotion_score * (1.0 + 0.6 * na - 0.4 * ag) if top_emotion == "anger" else 0.0
-    joy_gain = emotion_score * (1.0 + 0.4 * ag - 0.1 * na) if top_emotion == "joy" else 0.0
+    anger_gain = 0.0
+    if top_emotion == "anger":
+        anger_gain = emotion_score * ANGER_STEP * (0.8 + 0.6 * na - 0.4 * ag)
+
+    joy_gain = 0.0
+    if top_emotion == "joy":
+        joy_gain = emotion_score * JOY_STEP * (0.8 + 0.4 * ag - 0.2 * na)
+
+    # Damp tiny inputs (e.g., "hi") so they don't swing mood
+    if len(user_input.split()) <= 2:
+        anger_gain *= 0.25
+        joy_gain *= 0.25
 
     # Passive decay towards 0 (feelings fade)
-    alien_affect[alien_name]["anger"] = max(0.0, alien_affect[alien_name]["anger"] * 0.85 + anger_gain)
-    alien_affect[alien_name]["joy"] = max(0.0, alien_affect[alien_name]["joy"] * 0.85 + joy_gain)
+    alien_affect[alien_name]["anger"] = min(1.0, max(0.0, alien_affect[alien_name]["anger"] * DECAY + anger_gain))
+    alien_affect[alien_name]["joy"] = min(1.0, max(0.0, alien_affect[alien_name]["joy"] * DECAY + joy_gain))
 
     # Gates
+    # Track momentum
+    aa = alien_affect[alien_name]
+    aa.setdefault("turns", 0)
+    aa.setdefault("joy_streak", 0)
+    aa.setdefault("anger_streak", 0)
+    aa["turns"] += 1
+    aa["joy_streak"] = aa["joy_streak"] + 1 if top_emotion == "joy" and emotion_score >= 0.6 else 0
+    aa["anger_streak"] = aa["anger_streak"] + 1 if top_emotion == "anger" and emotion_score >= 0.6 else 0
+
+    min_turns = int(profile.get("minTurnsToConclude", 3))
     joy_threshold = float(profile.get("joyThreshold", 0.9))
     anger_tolerance = float(profile.get("angerTolerance", 0.3))
-    success = alien_affect[alien_name]["joy"] >= joy_threshold
-    failure = alien_affect[alien_name]["anger"] >= anger_tolerance
+
+    success = (aa["joy"] >= joy_threshold and aa["joy_streak"] >= 2 and aa["turns"] >= min_turns)
+    failure = (aa["anger"] >= anger_tolerance and aa["anger_streak"] >= 2 and aa["turns"] >= min_turns)
 
     # Log current state
     print(f"[{alien_name}] joy={alien_affect[alien_name]['joy']:.3f} / thr={joy_threshold} | "
           f"anger={alien_affect[alien_name]['anger']:.3f} / tol={anger_tolerance} | "
           f"success={success} failure={failure}")
+
+    rl_reward = compute_reward(dist_map)
+    Q_prev = Q[rl_state][rl_action]
+    Q[rl_state][rl_action] = Q_prev + ALPHA * (rl_reward - Q_prev)
 
     # ======================================
     # Response
@@ -413,7 +530,13 @@ def chat():
         "styleHints": style_hints,
         "temperatureUsed": temp,
         "negotiationSuccess": success,
-        "negotiationFailure": failure
+        "negotiationFailure": failure,
+        "rl": {
+            "stateKey": rl_state,
+            "intent": rl_action,
+            "reward": rl_reward,
+            "qForState": Q[rl_state]
+        }
     })
 
 # Endpoint to reset affect during testing

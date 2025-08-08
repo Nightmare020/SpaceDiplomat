@@ -1919,7 +1919,7 @@ MonoBehaviour:
     img: {fileID: 159563025}
   - emotionKey: fear
     img: {fileID: 814734767}
-  - emotionKey: surprise
+  - emotionKey: disgust
     img: {fileID: 770205291}
   centerMask: {fileID: 429873420}
   chartRoot: {fileID: 1175689754}
