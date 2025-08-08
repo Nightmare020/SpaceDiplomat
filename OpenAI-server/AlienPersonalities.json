@@ -47,6 +47,10 @@
             "neuroticism": 0.30
         },
         "joyThreshold": "0.75",
-        "angerTolerance": "0.35"
+        "angerTolerance": "0.35",
+        "relations": {
+            "ZAXIN": 0.7,
+            "BRAXIM": -0.6
+        }
     }
 ]

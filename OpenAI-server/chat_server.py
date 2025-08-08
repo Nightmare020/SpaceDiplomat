@@ -9,6 +9,7 @@ from dotenv import load_dotenv
 from textblob import TextBlob
 from transformers import pipeline
 from collections import defaultdict
+import re, random
 
 # ======================================
 # Bootstrap / Configuration
@@ -21,11 +22,13 @@ groq_api_key = os.getenv("GROQ_API_KEY")
 max_tokens = int(os.getenv("MAX_TOKENS", 150))
 base_temperature = float(os.getenv("TEMPERATURE", 0.7))
 alien_profiles_path = os.getenv("ALIEN_PROFILES_PATH", "AlienPersonalities.json")
+braxim_replies_path = os.getenv("BRAXIM_REPLIES_PATH", "BraximReplies.json")
 
 print(f"API KEY:", groq_api_key)
 print(f"MAX TOKENS:", max_tokens)
 print(f"TEMPERATURE:", base_temperature)
 print(f"ALIEN PROFILES PATH:", alien_profiles_path)
+print(f"BRAXIM REPLIES PATH:", braxim_replies_path)
 
 # ======================================
 # NLP Components
@@ -58,7 +61,7 @@ INTENTS = [
 ]
 
 # Q[state][action] -> value
-Q = defaultdict(lambda: {a: 0.0 for a in INTENTS})
+Q = defaultdict(lambda: {a: random.uniform(-0.05, 0.05) for a in INTENTS})
 EPSILON = 0.15
 ALPHA = 0.25
 GAMMA = 0.90
@@ -221,7 +224,111 @@ def load_alien_profiles(path: str):
         arr = json.load(f)
         return {a["name"]: a for a in arr}
 
+def load_braxim_replies(path):
+    if not os.path.exists(path):
+        return[]
+    try:
+        with open(path, "r", encoding="utf-8") as f:
+            data = json.load(f)
+
+        # Normalize Braxim replies to a list of dictionaries
+        out = []
+        for item in data:
+            intent = (item.get("intent") or "").strip()
+            text = (item.get("text") or "").strip()
+            kw = [k.lower() for k in (item.get("keywords") or [])]
+            if text:
+                out.append({ 
+                    "intent": intent, 
+                    "keywords": kw, 
+                    "text": text
+                })
+
+        print(f"[Braxim] Loaded {len(out)} replies from {path}")
+        return out
+
+    except Exception as e:
+        print(f"Error loading Braxim replies from {path}: {e}")
+        return []
+
 ALIENS = load_alien_profiles(alien_profiles_path)
+BRAXIM_REPLIES = load_braxim_replies(braxim_replies_path)
+
+_braxim_last_idx = None  # Last used Braxim reply index
+
+_world_re = re.compile(r"[a-z']+")
+
+def _tokens(st: str):
+    return set(_world_re.findall((st or "").lower()))
+
+def _guess_intent_from_text(st: str):
+    t = (st or "").lower()
+    if "?" in t or any(w in t for w in ["what","how","why","terms","clarify","explain","specify","conditions","details"]):
+        return "seek_clarity"
+    if any(w in t for w in ["sorry","apologize","regret","mistake","fault","apology","aton","forgive","contrition"]):
+        return "apologize"
+    if any(w in t for w in ["trade","offer","exchange","deal","swap","barter","price","sell","buy","bid","rates"]):
+        return "offer_trade"
+    if any(w in t for w in ["plan","proposal","ceasefire","schedule","timeline","withdraw","inspection","corridor","evacu","patrol","protocol","roadmap"]):
+        return "share_plan"
+    if any(w in t for w in ["sign","treaty","agreement","conclude","finalize","ratify","seal","accord","pact","signature"]):
+        return "close_treaty"
+    if any(w in t for w in ["peace","respect","cooperate","harmony","mutual","trust","culture","values","customs","esteem","friend"]):
+        return "build_rapport"
+    return None
+
+def choose_braxim_reply(user_input: str, rl_intent: str, topk: int = 6):
+    """ 
+    Pick the best static line by (overlap + substring + RL bonus + heuristic guess).
+    Then sample from the top-k best matches.
+    """
+    global _braxim_last_idx
+    if not BRAXIM_REPLIES:
+        return "We will reply formally once your terms are specific."
+
+    U = _tokens(user_input)
+    guess = _guess_intent_from_text(user_input)
+
+    scored = []
+    for i, item in enumerate(BRAXIM_REPLIES):
+        kw = set(item["keywords"])
+
+        #token overlap
+        overlap = len(U & kw)
+
+        # substring hits
+        substr = sum(1 for k in kw if k in (user_input or "").lower())
+
+        # bonuses
+        rl_bonus = 0.4 if item["intent"] and item["intent"] == rl_intent else 0.0
+        guess_bonus = 0.6 if guess and item["intent"] == guess else 0.0
+        score = 1.0 * overlap + 0.3 * substr + rl_bonus + guess_bonus
+        scored.append((score, i))
+
+    scored.sort(key=lambda x: x[0], reverse=True)
+    
+    # Take top-k best matches
+    top = [i for st, i in scored[:max(1, topk)] if st > 0]
+    if not top:
+        # still nothing matched; prefer guessed intent, then RL intent
+        if guess:
+            cand = [i for i, it in enumerate(BRAXIM_REPLIES) if it["intent"] == guess]
+            if cand:
+                top = cand
+        if not top and rl_intent:
+            cand = [i for i, it in enumerate(BRAXIM_REPLIES) if it["intent"] == rl_intent]
+            if cand:
+                top = cand
+
+    if not top:
+        # absolute fallback
+        return "We will reply formally once your terms are specific."
+
+    # avoid repeating the same exact line twice
+    choices = [i for i in top if i != _braxim_last_idx] or [top[0]]
+    idx = random.choice(choices)
+    _braxim_last_idx = idx  # remember last used index
+    return BRAXIM_REPLIES[idx]["text"]
 
 # Running affect per alien
 alien_affect = defaultdict(lambda: {"joy": 0.0, "anger": 0.0})
@@ -336,7 +443,7 @@ def chat():
         joy_threshold = float(profile.get("joyThreshold", 0.9))
         anger_tolerance = float(profile.get("angerTolerance", 0.3))
         return jsonify({
-            "reply": "The council considers this matter sttled.",
+            "reply": "The council considers this matter settled.",
             "analysis": {
                 "entities": [],
                 "emotion": "neutral",
@@ -393,6 +500,9 @@ def chat():
     rl_state = encode_state(dist_map)
     rl_action = choose_intent(rl_state)
 
+    # Braxim uses static replies, while Zaxim/Penbol use LLM
+    is_braxim = alien_name.upper() == "BRAXIM"
+
     distribution_json = json.dumps({
         "keys": canon_order,
         "values": vals
@@ -403,81 +513,84 @@ def chat():
     behavior_instruction = behavior_from_emotion(top_emotion, emotion_score)
     temp = adjusted_temperature(base_temperature, c)
 
-    # --- System prompt ---
-    system_prompt = f"""
-    You are {profile['name']}, the alien leader.
-    Persona: {profile.get('personalityType','')}.
-    Description: {profile.get('description', '')}.
-    Culture: {profile.get('culture', '')}.
-    Stay in-character. {profile.get('behaviorInstruction', '')}
-    Style hints: {", ".join(style_hints)}.
+    if not is_braxim:
+        # --- System prompt ---
+        system_prompt = f"""
+        You are {profile['name']}, the alien leader.
+        Persona: {profile.get('personalityType','')}.
+        Description: {profile.get('description', '')}.
+        Culture: {profile.get('culture', '')}.
+        Stay in-character. {profile.get('behaviorInstruction', '')}
+        Style hints: {", ".join(style_hints)}.
 
-    Player emotion: {top_emotion} ({emotion_score:.2f}); sentiment polarity: {polarity:.2f}, subjectivity: {subjectivity:.2f}.
-    Player said: {redacted_input}.
-    {behavior_instruction}
-    Current diplomatic intent: {rl_action}.
-    Keep your answer concise and very briefly. Use up to {max_tokens} tokens. 
-    Always end your response with a complete sentence.
-    """.strip()
+        Player emotion: {top_emotion} ({emotion_score:.2f}); sentiment polarity: {polarity:.2f}, subjectivity: {subjectivity:.2f}.
+        Player said: {redacted_input}.
+        {behavior_instruction}
+        Current diplomatic intent: {rl_action}.
+        Keep your answer concise and very briefly. Use up to {max_tokens} tokens. 
+        Always end your response with a complete sentence.
+        """.strip()
 
-    # ---- Conversation history from client ----
-    raw_hist = data.get("history", []) or []
+        # ---- Conversation history from client ----
+        raw_hist = data.get("history", []) or []
 
-    # Santize and clip (defensive)
-    hist = []
-    if isinstance(raw_hist, (list, tuple)):
-        for t in list(raw_hist)[-16:]:
-            role = (t.get("role") or "").strip()
-            content = (t.get("content") or "").strip()
-            if not content:
-                continue
-            if role not in ("user", "assistant"): # Keep history simple; drop extra roles
-                continue
-            hist.append({"role": role, "content": content})
+        # Santize and clip (defensive)
+        hist = []
+        if isinstance(raw_hist, (list, tuple)):
+            for t in list(raw_hist)[-16:]:
+                role = (t.get("role") or "").strip()
+                content = (t.get("content") or "").strip()
+                if not content:
+                    continue
+                if role not in ("user", "assistant"): # Keep history simple; drop extra roles
+                    continue
+                hist.append({"role": role, "content": content})
 
-    messages = [{"role": "system", "content": system_prompt}]
-    messages.extend(hist)
-    messages.append({"role": "user", "content": redacted_input})
+        messages = [{"role": "system", "content": system_prompt}]
+        messages.extend(hist)
+        messages.append({"role": "user", "content": redacted_input})
     
-    print(f"==== System prompt ====")
-    print(system_prompt)
-    print(f"=====================")
+        print(f"==== System prompt ====")
+        print(system_prompt)
+        print(f"=====================")
 
 
-    # --- Call Groq API ---
-    headers = {
-        "Authorization": f"Bearer {groq_api_key}",
-        "Content-Type": "application/json"
-    }
+        # --- Call Groq API ---
+        headers = {
+            "Authorization": f"Bearer {groq_api_key}",
+            "Content-Type": "application/json"
+        }
 
-    payload = {
-        "model": "llama3-8b-8192",
-        "messages": messages,
-        "temperature": temp,
-        "max_tokens": max_tokens
-    }
+        payload = {
+            "model": "llama3-8b-8192",
+            "messages": messages,
+            "temperature": temp,
+            "max_tokens": max_tokens
+        }
 
-    response = None
-    try:
-        response = requests.post(
-            "https://api.groq.com/openai/v1/chat/completions",
-            headers=headers,
-            json=payload,
-            timeout=30  # Set a timeout for the request
-        )
-        response.raise_for_status()
-        reply = response.json()["choices"][0]["message"]["content"]
+        response = None
+        try:
+            response = requests.post(
+                "https://api.groq.com/openai/v1/chat/completions",
+                headers=headers,
+                json=payload,
+                timeout=30  # Set a timeout for the request
+            )
+            response.raise_for_status()
+            reply = response.json()["choices"][0]["message"]["content"]
 
         
-    except requests.exceptions.HTTPError as err:
-        # Response may be None if post() itself failed
-        body = response.text if response is not None else ""
-        print("Groq request failed:", err, body)
-        return jsonify({"error": "Failed to contact Groq API"}), 500
-    except Exception as e:
-        print("Groq request error:", e)
-        return jsonify({"error": "Groq request error"}), 500
+        except requests.exceptions.HTTPError as err:
+            # Response may be None if post() itself failed
+            body = response.text if response is not None else ""
+            print("Groq request failed:", err, body)
+            return jsonify({"error": "Failed to contact Groq API"}), 500
+        except Exception as e:
+            print("Groq request error:", e)
+            return jsonify({"error": "Groq request error"}), 500
 
+    else:
+        reply = choose_braxim_reply(user_input, rl_action)
 
     # ======================================
     # AFFECT DYNAMICS (per alien)

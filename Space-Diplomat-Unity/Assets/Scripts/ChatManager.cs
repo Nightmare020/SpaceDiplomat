@@ -143,7 +143,7 @@ public class ChatManager : MonoBehaviour
         if (!string.IsNullOrEmpty(message))
         {
             DisplayMessage("YOU", message);
-            StartCoroutine(SendMessageToLlama(message));
+            StartCoroutine(SendMessageToGroq(message));
             inputField.interactable = false; // Lock immediately after sending
         }
     }
@@ -193,7 +193,7 @@ public class ChatManager : MonoBehaviour
         }
     }
 
-    IEnumerator SendMessageToLlama(string playerInput)
+    IEnumerator SendMessageToGroq(string playerInput)
     {
         // Build a typed payload so JsonUtility makes correct JSON
         var payload = new ChatRequest { 
@@ -465,18 +465,18 @@ public class ChatManager : MonoBehaviour
     [System.Serializable]
     public class ChatResponse
     {
-        public string reply; // The reply from the llama.cpp API
-        public Analysis analysis; // Analysis data from the llama.cpp API
+        public string reply; // The reply from the Groq API
+        public Analysis analysis; // Analysis data from the Groq API
         public bool negotiationSuccess; // System response when alien is joyful and negotiation succeeded
         public bool negotiationFailure; // System response when alien is angry and negotiation failed
         public RL rl;
-        public AlienProfile alienProfile; // Alien profile data from the llama.cpp API
+        public AlienProfile alienProfile; // Alien profile data from the Groq API
 
         [System.Serializable]
         public class Analysis
         {
-            public string emotion; // Emotion detected by the llama.cpp API
-            public float emotionScore; // Emotion score from the llama.cpp API
+            public string emotion; // Emotion detected by the Groq API
+            public float emotionScore; // Emotion score from the Groq API
             public string distributionJson; // Emotion distribution as a JSON string
         }
 

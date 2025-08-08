@@ -1,0 +1,2412 @@
+[
+    {
+        "intent": "build_rapport",
+        "keywords": [
+            "peace",
+            "respect",
+            "cooperate",
+            "harmony",
+            "mutual",
+            "trust",
+            "culture",
+            "values",
+            "customs",
+            "esteem"
+        ],
+        "text": "We favor peaceful exchange and mutual safety."
+    },
+    {
+        "intent": "build_rapport",
+        "keywords": [
+            "peace",
+            "respect",
+            "cooperate",
+            "harmony",
+            "mutual",
+            "trust",
+            "culture",
+            "values",
+            "customs",
+            "esteem"
+        ],
+        "text": "Respect is reciprocated where outcomes remain verifiable."
+    },
+    {
+        "intent": "build_rapport",
+        "keywords": [
+            "peace",
+            "respect",
+            "cooperate",
+            "harmony",
+            "mutual",
+            "trust",
+            "culture",
+            "values",
+            "customs",
+            "esteem"
+        ],
+        "text": "Cooperation is acceptable; outline shared benefits briefly."
+    },
+    {
+        "intent": "build_rapport",
+        "keywords": [
+            "peace",
+            "respect",
+            "cooperate",
+            "harmony",
+            "mutual",
+            "trust",
+            "culture",
+            "values",
+            "customs",
+            "esteem"
+        ],
+        "text": "Harmony follows when both parties honor agreed constraints."
+    },
+    {
+        "intent": "build_rapport",
+        "keywords": [
+            "peace",
+            "respect",
+            "cooperate",
+            "harmony",
+            "mutual",
+            "trust",
+            "culture",
+            "values",
+            "customs",
+            "esteem"
+        ],
+        "text": "We acknowledge your customs and expect the same courtesy."
+    },
+    {
+        "intent": "build_rapport",
+        "keywords": [
+            "peace",
+            "respect",
+            "cooperate",
+            "harmony",
+            "mutual",
+            "trust",
+            "culture",
+            "values",
+            "customs",
+            "esteem"
+        ],
+        "text": "Mutual trust increases when actions match declarations."
+    },
+    {
+        "intent": "build_rapport",
+        "keywords": [
+            "peace",
+            "respect",
+            "cooperate",
+            "harmony",
+            "mutual",
+            "trust",
+            "culture",
+            "values",
+            "customs",
+            "esteem"
+        ],
+        "text": "We welcome dialogue that respects measurable boundaries."
+    },
+    {
+        "intent": "build_rapport",
+        "keywords": [
+            "peace",
+            "respect",
+            "cooperate",
+            "harmony",
+            "mutual",
+            "trust",
+            "culture",
+            "values",
+            "customs",
+            "esteem"
+        ],
+        "text": "Esteem grows from consistent conduct, not declarations alone."
+    },
+    {
+        "intent": "build_rapport",
+        "keywords": [
+            "peace",
+            "respect",
+            "cooperate",
+            "harmony",
+            "mutual",
+            "trust",
+            "culture",
+            "values",
+            "customs",
+            "esteem"
+        ],
+        "text": "We can align values provided enforcement is practical."
+    },
+    {
+        "intent": "build_rapport",
+        "keywords": [
+            "peace",
+            "respect",
+            "cooperate",
+            "harmony",
+            "mutual",
+            "trust",
+            "culture",
+            "values",
+            "customs",
+            "esteem"
+        ],
+        "text": "Your courteous tone is noted; let us keep it productive."
+    },
+    {
+        "intent": "build_rapport",
+        "keywords": [
+            "peace",
+            "respect",
+            "cooperate",
+            "harmony",
+            "mutual",
+            "trust",
+            "culture",
+            "values",
+            "customs",
+            "esteem"
+        ],
+        "text": "We respect cultural variance within a stable framework."
+    },
+    {
+        "intent": "build_rapport",
+        "keywords": [
+            "peace",
+            "respect",
+            "cooperate",
+            "harmony",
+            "mutual",
+            "trust",
+            "culture",
+            "values",
+            "customs",
+            "esteem"
+        ],
+        "text": "We recognize your good-faith approach; proceed with substance."
+    },
+    {
+        "intent": "build_rapport",
+        "keywords": [
+            "peace",
+            "respect",
+            "cooperate",
+            "harmony",
+            "mutual",
+            "trust",
+            "culture",
+            "values",
+            "customs",
+            "esteem"
+        ],
+        "text": "Common purpose exists; let us anchor it to testable steps."
+    },
+    {
+        "intent": "build_rapport",
+        "keywords": [
+            "peace",
+            "respect",
+            "cooperate",
+            "harmony",
+            "mutual",
+            "trust",
+            "culture",
+            "values",
+            "customs",
+            "esteem"
+        ],
+        "text": "Polite exchanges are useful when they lead to verifiable change."
+    },
+    {
+        "intent": "build_rapport",
+        "keywords": [
+            "peace",
+            "respect",
+            "cooperate",
+            "harmony",
+            "mutual",
+            "trust",
+            "culture",
+            "values",
+            "customs",
+            "esteem"
+        ],
+        "text": "We appreciate restraint; it facilitates orderly progress."
+    },
+    {
+        "intent": "build_rapport",
+        "keywords": [
+            "peace",
+            "respect",
+            "cooperate",
+            "harmony",
+            "mutual",
+            "trust",
+            "culture",
+            "values",
+            "customs",
+            "esteem"
+        ],
+        "text": "We can share knowledge where risks are transparently managed."
+    },
+    {
+        "intent": "build_rapport",
+        "keywords": [
+            "peace",
+            "respect",
+            "cooperate",
+            "harmony",
+            "mutual",
+            "trust",
+            "culture",
+            "values",
+            "customs",
+            "esteem"
+        ],
+        "text": "Diplomacy is viable when both sides uphold measurable duties."
+    },
+    {
+        "intent": "build_rapport",
+        "keywords": [
+            "peace",
+            "respect",
+            "cooperate",
+            "harmony",
+            "mutual",
+            "trust",
+            "culture",
+            "values",
+            "customs",
+            "esteem"
+        ],
+        "text": "We acknowledge your concerns and prefer constructive wording."
+    },
+    {
+        "intent": "build_rapport",
+        "keywords": [
+            "peace",
+            "respect",
+            "cooperate",
+            "harmony",
+            "mutual",
+            "trust",
+            "culture",
+            "values",
+            "customs",
+            "esteem"
+        ],
+        "text": "Courtesy accepted; suggest one concrete cooperative act."
+    },
+    {
+        "intent": "build_rapport",
+        "keywords": [
+            "peace",
+            "respect",
+            "cooperate",
+            "harmony",
+            "mutual",
+            "trust",
+            "culture",
+            "values",
+            "customs",
+            "esteem"
+        ],
+        "text": "Respect is mutual when commitments are kept precisely."
+    },
+    {
+        "intent": "seek_clarity",
+        "keywords": [
+            "clarify",
+            "what",
+            "how",
+            "why",
+            "terms",
+            "conditions",
+            "details",
+            "explain",
+            "specify",
+            "question"
+        ],
+        "text": "Please clarify your terms so our council can proceed."
+    },
+    {
+        "intent": "seek_clarity",
+        "keywords": [
+            "clarify",
+            "what",
+            "how",
+            "why",
+            "terms",
+            "conditions",
+            "details",
+            "explain",
+            "specify",
+            "question"
+        ],
+        "text": "State the exact conditions you require in one sentence."
+    },
+    {
+        "intent": "seek_clarity",
+        "keywords": [
+            "clarify",
+            "what",
+            "how",
+            "why",
+            "terms",
+            "conditions",
+            "details",
+            "explain",
+            "specify",
+            "question"
+        ],
+        "text": "What outcome do you expect within the next cycle?"
+    },
+    {
+        "intent": "seek_clarity",
+        "keywords": [
+            "clarify",
+            "what",
+            "how",
+            "why",
+            "terms",
+            "conditions",
+            "details",
+            "explain",
+            "specify",
+            "question"
+        ],
+        "text": "Specify quantities, locations, and timing for your request."
+    },
+    {
+        "intent": "seek_clarity",
+        "keywords": [
+            "clarify",
+            "what",
+            "how",
+            "why",
+            "terms",
+            "conditions",
+            "details",
+            "explain",
+            "specify",
+            "question"
+        ],
+        "text": "Which risk do you want us to mitigate first—be explicit."
+    },
+    {
+        "intent": "seek_clarity",
+        "keywords": [
+            "clarify",
+            "what",
+            "how",
+            "why",
+            "terms",
+            "conditions",
+            "details",
+            "explain",
+            "specify",
+            "question"
+        ],
+        "text": "Provide one verifiable metric to evaluate success."
+    },
+    {
+        "intent": "seek_clarity",
+        "keywords": [
+            "clarify",
+            "what",
+            "how",
+            "why",
+            "terms",
+            "conditions",
+            "details",
+            "explain",
+            "specify",
+            "question"
+        ],
+        "text": "Define the resource, the unit, and the delivery window."
+    },
+    {
+        "intent": "seek_clarity",
+        "keywords": [
+            "clarify",
+            "what",
+            "how",
+            "why",
+            "terms",
+            "conditions",
+            "details",
+            "explain",
+            "specify",
+            "question"
+        ],
+        "text": "What constraints limit your current capacity?"
+    },
+    {
+        "intent": "seek_clarity",
+        "keywords": [
+            "clarify",
+            "what",
+            "how",
+            "why",
+            "terms",
+            "conditions",
+            "details",
+            "explain",
+            "specify",
+            "question"
+        ],
+        "text": "Clarify the authority under which you negotiate."
+    },
+    {
+        "intent": "seek_clarity",
+        "keywords": [
+            "clarify",
+            "what",
+            "how",
+            "why",
+            "terms",
+            "conditions",
+            "details",
+            "explain",
+            "specify",
+            "question"
+        ],
+        "text": "List the non‑negotiable items to avoid delay."
+    },
+    {
+        "intent": "seek_clarity",
+        "keywords": [
+            "clarify",
+            "what",
+            "how",
+            "why",
+            "terms",
+            "conditions",
+            "details",
+            "explain",
+            "specify",
+            "question"
+        ],
+        "text": "Explain how compliance will be demonstrated."
+    },
+    {
+        "intent": "seek_clarity",
+        "keywords": [
+            "clarify",
+            "what",
+            "how",
+            "why",
+            "terms",
+            "conditions",
+            "details",
+            "explain",
+            "specify",
+            "question"
+        ],
+        "text": "What inspection protocol do you accept?"
+    },
+    {
+        "intent": "seek_clarity",
+        "keywords": [
+            "clarify",
+            "what",
+            "how",
+            "why",
+            "terms",
+            "conditions",
+            "details",
+            "explain",
+            "specify",
+            "question"
+        ],
+        "text": "Identify the counterpart responsible for execution."
+    },
+    {
+        "intent": "seek_clarity",
+        "keywords": [
+            "clarify",
+            "what",
+            "how",
+            "why",
+            "terms",
+            "conditions",
+            "details",
+            "explain",
+            "specify",
+            "question"
+        ],
+        "text": "Which clause do you contest—cite it precisely."
+    },
+    {
+        "intent": "seek_clarity",
+        "keywords": [
+            "clarify",
+            "what",
+            "how",
+            "why",
+            "terms",
+            "conditions",
+            "details",
+            "explain",
+            "specify",
+            "question"
+        ],
+        "text": "Summarize your ask in under twenty words."
+    },
+    {
+        "intent": "seek_clarity",
+        "keywords": [
+            "clarify",
+            "what",
+            "how",
+            "why",
+            "terms",
+            "conditions",
+            "details",
+            "explain",
+            "specify",
+            "question"
+        ],
+        "text": "What reciprocal concession do you offer?"
+    },
+    {
+        "intent": "seek_clarity",
+        "keywords": [
+            "clarify",
+            "what",
+            "how",
+            "why",
+            "terms",
+            "conditions",
+            "details",
+            "explain",
+            "specify",
+            "question"
+        ],
+        "text": "Detail the escalation path if schedules slip."
+    },
+    {
+        "intent": "seek_clarity",
+        "keywords": [
+            "clarify",
+            "what",
+            "how",
+            "why",
+            "terms",
+            "conditions",
+            "details",
+            "explain",
+            "specify",
+            "question"
+        ],
+        "text": "How will you secure civilian corridors—outline steps."
+    },
+    {
+        "intent": "seek_clarity",
+        "keywords": [
+            "clarify",
+            "what",
+            "how",
+            "why",
+            "terms",
+            "conditions",
+            "details",
+            "explain",
+            "specify",
+            "question"
+        ],
+        "text": "What data would convince you to proceed?"
+    },
+    {
+        "intent": "seek_clarity",
+        "keywords": [
+            "clarify",
+            "what",
+            "how",
+            "why",
+            "terms",
+            "conditions",
+            "details",
+            "explain",
+            "specify",
+            "question"
+        ],
+        "text": "Provide references to prior agreements you rely upon."
+    },
+    {
+        "intent": "apologize",
+        "keywords": [
+            "sorry",
+            "apologize",
+            "regret",
+            "mistake",
+            "fault",
+            "incursion",
+            "misstep",
+            "offense",
+            "amends",
+            "atone"
+        ],
+        "text": "Your acknowledgement is noted. What amends do you propose?"
+    },
+    {
+        "intent": "apologize",
+        "keywords": [
+            "sorry",
+            "apologize",
+            "regret",
+            "mistake",
+            "fault",
+            "incursion",
+            "misstep",
+            "offense",
+            "amends",
+            "atone"
+        ],
+        "text": "Regret accepted; propose a limited corrective action."
+    },
+    {
+        "intent": "apologize",
+        "keywords": [
+            "sorry",
+            "apologize",
+            "regret",
+            "mistake",
+            "fault",
+            "incursion",
+            "misstep",
+            "offense",
+            "amends",
+            "atone"
+        ],
+        "text": "Admission recorded. Offer a measurable remedy."
+    },
+    {
+        "intent": "apologize",
+        "keywords": [
+            "sorry",
+            "apologize",
+            "regret",
+            "mistake",
+            "fault",
+            "incursion",
+            "misstep",
+            "offense",
+            "amends",
+            "atone"
+        ],
+        "text": "If you seek repair, specify compensation terms."
+    },
+    {
+        "intent": "apologize",
+        "keywords": [
+            "sorry",
+            "apologize",
+            "regret",
+            "mistake",
+            "fault",
+            "incursion",
+            "misstep",
+            "offense",
+            "amends",
+            "atone"
+        ],
+        "text": "We accept contrition when paired with restitution."
+    },
+    {
+        "intent": "apologize",
+        "keywords": [
+            "sorry",
+            "apologize",
+            "regret",
+            "mistake",
+            "fault",
+            "incursion",
+            "misstep",
+            "offense",
+            "amends",
+            "atone"
+        ],
+        "text": "Remorse is credible when followed by compliance milestones."
+    },
+    {
+        "intent": "apologize",
+        "keywords": [
+            "sorry",
+            "apologize",
+            "regret",
+            "mistake",
+            "fault",
+            "incursion",
+            "misstep",
+            "offense",
+            "amends",
+            "atone"
+        ],
+        "text": "An apology is a start; outline prevention measures."
+    },
+    {
+        "intent": "apologize",
+        "keywords": [
+            "sorry",
+            "apologize",
+            "regret",
+            "mistake",
+            "fault",
+            "incursion",
+            "misstep",
+            "offense",
+            "amends",
+            "atone"
+        ],
+        "text": "Accountability requires a dated corrective plan."
+    },
+    {
+        "intent": "apologize",
+        "keywords": [
+            "sorry",
+            "apologize",
+            "regret",
+            "mistake",
+            "fault",
+            "incursion",
+            "misstep",
+            "offense",
+            "amends",
+            "atone"
+        ],
+        "text": "Noted. Provide an inspection window for verification."
+    },
+    {
+        "intent": "apologize",
+        "keywords": [
+            "sorry",
+            "apologize",
+            "regret",
+            "mistake",
+            "fault",
+            "incursion",
+            "misstep",
+            "offense",
+            "amends",
+            "atone"
+        ],
+        "text": "If harm occurred, enumerate affected sectors and aid."
+    },
+    {
+        "intent": "apologize",
+        "keywords": [
+            "sorry",
+            "apologize",
+            "regret",
+            "mistake",
+            "fault",
+            "incursion",
+            "misstep",
+            "offense",
+            "amends",
+            "atone"
+        ],
+        "text": "We value sincerity; deliver material relief accordingly."
+    },
+    {
+        "intent": "apologize",
+        "keywords": [
+            "sorry",
+            "apologize",
+            "regret",
+            "mistake",
+            "fault",
+            "incursion",
+            "misstep",
+            "offense",
+            "amends",
+            "atone"
+        ],
+        "text": "Apologies carry weight when backed by enforceable steps."
+    },
+    {
+        "intent": "apologize",
+        "keywords": [
+            "sorry",
+            "apologize",
+            "regret",
+            "mistake",
+            "fault",
+            "incursion",
+            "misstep",
+            "offense",
+            "amends",
+            "atone"
+        ],
+        "text": "Remediation must be proportional; define the ratio."
+    },
+    {
+        "intent": "apologize",
+        "keywords": [
+            "sorry",
+            "apologize",
+            "regret",
+            "mistake",
+            "fault",
+            "incursion",
+            "misstep",
+            "offense",
+            "amends",
+            "atone"
+        ],
+        "text": "We acknowledge fault statements that include restitution."
+    },
+    {
+        "intent": "apologize",
+        "keywords": [
+            "sorry",
+            "apologize",
+            "regret",
+            "mistake",
+            "fault",
+            "incursion",
+            "misstep",
+            "offense",
+            "amends",
+            "atone"
+        ],
+        "text": "State the safeguard you will implement immediately."
+    },
+    {
+        "intent": "apologize",
+        "keywords": [
+            "sorry",
+            "apologize",
+            "regret",
+            "mistake",
+            "fault",
+            "incursion",
+            "misstep",
+            "offense",
+            "amends",
+            "atone"
+        ],
+        "text": "Assurances require auditing; propose an auditor."
+    },
+    {
+        "intent": "apologize",
+        "keywords": [
+            "sorry",
+            "apologize",
+            "regret",
+            "mistake",
+            "fault",
+            "incursion",
+            "misstep",
+            "offense",
+            "amends",
+            "atone"
+        ],
+        "text": "If borders were crossed, describe your withdrawal schedule."
+    },
+    {
+        "intent": "apologize",
+        "keywords": [
+            "sorry",
+            "apologize",
+            "regret",
+            "mistake",
+            "fault",
+            "incursion",
+            "misstep",
+            "offense",
+            "amends",
+            "atone"
+        ],
+        "text": "We accept atonement when tangible outcomes follow."
+    },
+    {
+        "intent": "apologize",
+        "keywords": [
+            "sorry",
+            "apologize",
+            "regret",
+            "mistake",
+            "fault",
+            "incursion",
+            "misstep",
+            "offense",
+            "amends",
+            "atone"
+        ],
+        "text": "Your apology will be recorded alongside your actions."
+    },
+    {
+        "intent": "apologize",
+        "keywords": [
+            "sorry",
+            "apologize",
+            "regret",
+            "mistake",
+            "fault",
+            "incursion",
+            "misstep",
+            "offense",
+            "amends",
+            "atone"
+        ],
+        "text": "Submit a brief corrective protocol for review."
+    },
+    {
+        "intent": "offer_trade",
+        "keywords": [
+            "trade",
+            "offer",
+            "exchange",
+            "deal",
+            "swap",
+            "barter",
+            "proposal",
+            "bid",
+            "terms",
+            "rates"
+        ],
+        "text": "A concrete exchange is acceptable. State the units and timing."
+    },
+    {
+        "intent": "offer_trade",
+        "keywords": [
+            "trade",
+            "offer",
+            "exchange",
+            "deal",
+            "swap",
+            "barter",
+            "proposal",
+            "bid",
+            "terms",
+            "rates"
+        ],
+        "text": "Energy cells for star charts is plausible. Specify quantities."
+    },
+    {
+        "intent": "offer_trade",
+        "keywords": [
+            "trade",
+            "offer",
+            "exchange",
+            "deal",
+            "swap",
+            "barter",
+            "proposal",
+            "bid",
+            "terms",
+            "rates"
+        ],
+        "text": "We can swap medical kits for mineral rights—define scope."
+    },
+    {
+        "intent": "offer_trade",
+        "keywords": [
+            "trade",
+            "offer",
+            "exchange",
+            "deal",
+            "swap",
+            "barter",
+            "proposal",
+            "bid",
+            "terms",
+            "rates"
+        ],
+        "text": "Propose volume, delivery cadence, and collateral."
+    },
+    {
+        "intent": "offer_trade",
+        "keywords": [
+            "trade",
+            "offer",
+            "exchange",
+            "deal",
+            "swap",
+            "barter",
+            "proposal",
+            "bid",
+            "terms",
+            "rates"
+        ],
+        "text": "Transit access in return for sensor data is negotiable."
+    },
+    {
+        "intent": "offer_trade",
+        "keywords": [
+            "trade",
+            "offer",
+            "exchange",
+            "deal",
+            "swap",
+            "barter",
+            "proposal",
+            "bid",
+            "terms",
+            "rates"
+        ],
+        "text": "We accept barter if guarantees are escrowed."
+    },
+    {
+        "intent": "offer_trade",
+        "keywords": [
+            "trade",
+            "offer",
+            "exchange",
+            "deal",
+            "swap",
+            "barter",
+            "proposal",
+            "bid",
+            "terms",
+            "rates"
+        ],
+        "text": "Outline price bands and penalty clauses."
+    },
+    {
+        "intent": "offer_trade",
+        "keywords": [
+            "trade",
+            "offer",
+            "exchange",
+            "deal",
+            "swap",
+            "barter",
+            "proposal",
+            "bid",
+            "terms",
+            "rates"
+        ],
+        "text": "Provide a sample batch before the main transfer."
+    },
+    {
+        "intent": "offer_trade",
+        "keywords": [
+            "trade",
+            "offer",
+            "exchange",
+            "deal",
+            "swap",
+            "barter",
+            "proposal",
+            "bid",
+            "terms",
+            "rates"
+        ],
+        "text": "Your bid is pending detail on purity standards."
+    },
+    {
+        "intent": "offer_trade",
+        "keywords": [
+            "trade",
+            "offer",
+            "exchange",
+            "deal",
+            "swap",
+            "barter",
+            "proposal",
+            "bid",
+            "terms",
+            "rates"
+        ],
+        "text": "We can bundle logistics if lanes stay demilitarized."
+    },
+    {
+        "intent": "offer_trade",
+        "keywords": [
+            "trade",
+            "offer",
+            "exchange",
+            "deal",
+            "swap",
+            "barter",
+            "proposal",
+            "bid",
+            "terms",
+            "rates"
+        ],
+        "text": "Define warranty terms for any critical hardware."
+    },
+    {
+        "intent": "offer_trade",
+        "keywords": [
+            "trade",
+            "offer",
+            "exchange",
+            "deal",
+            "swap",
+            "barter",
+            "proposal",
+            "bid",
+            "terms",
+            "rates"
+        ],
+        "text": "Exchange requires synchronized manifests and seals."
+    },
+    {
+        "intent": "offer_trade",
+        "keywords": [
+            "trade",
+            "offer",
+            "exchange",
+            "deal",
+            "swap",
+            "barter",
+            "proposal",
+            "bid",
+            "terms",
+            "rates"
+        ],
+        "text": "We accept staged delivery tied to milestones."
+    },
+    {
+        "intent": "offer_trade",
+        "keywords": [
+            "trade",
+            "offer",
+            "exchange",
+            "deal",
+            "swap",
+            "barter",
+            "proposal",
+            "bid",
+            "terms",
+            "rates"
+        ],
+        "text": "Offer received; submit your verification routine."
+    },
+    {
+        "intent": "offer_trade",
+        "keywords": [
+            "trade",
+            "offer",
+            "exchange",
+            "deal",
+            "swap",
+            "barter",
+            "proposal",
+            "bid",
+            "terms",
+            "rates"
+        ],
+        "text": "We will counter once you disclose true reserves."
+    },
+    {
+        "intent": "offer_trade",
+        "keywords": [
+            "trade",
+            "offer",
+            "exchange",
+            "deal",
+            "swap",
+            "barter",
+            "proposal",
+            "bid",
+            "terms",
+            "rates"
+        ],
+        "text": "Include contingency stock to cover shortfall risk."
+    },
+    {
+        "intent": "offer_trade",
+        "keywords": [
+            "trade",
+            "offer",
+            "exchange",
+            "deal",
+            "swap",
+            "barter",
+            "proposal",
+            "bid",
+            "terms",
+            "rates"
+        ],
+        "text": "We can lease instead of sell if that reduces friction."
+    },
+    {
+        "intent": "offer_trade",
+        "keywords": [
+            "trade",
+            "offer",
+            "exchange",
+            "deal",
+            "swap",
+            "barter",
+            "proposal",
+            "bid",
+            "terms",
+            "rates"
+        ],
+        "text": "Payment in kind is fine; specify conversion ratios."
+    },
+    {
+        "intent": "offer_trade",
+        "keywords": [
+            "trade",
+            "offer",
+            "exchange",
+            "deal",
+            "swap",
+            "barter",
+            "proposal",
+            "bid",
+            "terms",
+            "rates"
+        ],
+        "text": "Your price hinges on safe-passage guarantees."
+    },
+    {
+        "intent": "offer_trade",
+        "keywords": [
+            "trade",
+            "offer",
+            "exchange",
+            "deal",
+            "swap",
+            "barter",
+            "proposal",
+            "bid",
+            "terms",
+            "rates"
+        ],
+        "text": "We prefer transparent brokers for settlement."
+    },
+    {
+        "intent": "share_plan",
+        "keywords": [
+            "plan",
+            "proposal",
+            "ceasefire",
+            "schedule",
+            "timeline",
+            "roadmap",
+            "inspection",
+            "corridor",
+            "evacuation",
+            "protocol"
+        ],
+        "text": "A limited ceasefire followed by inspection could work."
+    },
+    {
+        "intent": "share_plan",
+        "keywords": [
+            "plan",
+            "proposal",
+            "ceasefire",
+            "schedule",
+            "timeline",
+            "roadmap",
+            "inspection",
+            "corridor",
+            "evacuation",
+            "protocol"
+        ],
+        "text": "Propose a three‑step plan with timelines and owners."
+    },
+    {
+        "intent": "share_plan",
+        "keywords": [
+            "plan",
+            "proposal",
+            "ceasefire",
+            "schedule",
+            "timeline",
+            "roadmap",
+            "inspection",
+            "corridor",
+            "evacuation",
+            "protocol"
+        ],
+        "text": "We suggest a 48‑hour pause to evacuate civilians."
+    },
+    {
+        "intent": "share_plan",
+        "keywords": [
+            "plan",
+            "proposal",
+            "ceasefire",
+            "schedule",
+            "timeline",
+            "roadmap",
+            "inspection",
+            "corridor",
+            "evacuation",
+            "protocol"
+        ],
+        "text": "Schedule joint patrols with body‑cam telemetry."
+    },
+    {
+        "intent": "share_plan",
+        "keywords": [
+            "plan",
+            "proposal",
+            "ceasefire",
+            "schedule",
+            "timeline",
+            "roadmap",
+            "inspection",
+            "corridor",
+            "evacuation",
+            "protocol"
+        ],
+        "text": "Phase I: deconfliction; Phase II: audit; Phase III: exchange."
+    },
+    {
+        "intent": "share_plan",
+        "keywords": [
+            "plan",
+            "proposal",
+            "ceasefire",
+            "schedule",
+            "timeline",
+            "roadmap",
+            "inspection",
+            "corridor",
+            "evacuation",
+            "protocol"
+        ],
+        "text": "Publish a public notice to prevent escalation incidents."
+    },
+    {
+        "intent": "share_plan",
+        "keywords": [
+            "plan",
+            "proposal",
+            "ceasefire",
+            "schedule",
+            "timeline",
+            "roadmap",
+            "inspection",
+            "corridor",
+            "evacuation",
+            "protocol"
+        ],
+        "text": "We can install beacons to mark neutral corridors."
+    },
+    {
+        "intent": "share_plan",
+        "keywords": [
+            "plan",
+            "proposal",
+            "ceasefire",
+            "schedule",
+            "timeline",
+            "roadmap",
+            "inspection",
+            "corridor",
+            "evacuation",
+            "protocol"
+        ],
+        "text": "Adopt a shared dashboard for milestone tracking."
+    },
+    {
+        "intent": "share_plan",
+        "keywords": [
+            "plan",
+            "proposal",
+            "ceasefire",
+            "schedule",
+            "timeline",
+            "roadmap",
+            "inspection",
+            "corridor",
+            "evacuation",
+            "protocol"
+        ],
+        "text": "Invite a neutral observer to certify compliance."
+    },
+    {
+        "intent": "share_plan",
+        "keywords": [
+            "plan",
+            "proposal",
+            "ceasefire",
+            "schedule",
+            "timeline",
+            "roadmap",
+            "inspection",
+            "corridor",
+            "evacuation",
+            "protocol"
+        ],
+        "text": "Define go/no‑go criteria to avoid ambiguity."
+    },
+    {
+        "intent": "share_plan",
+        "keywords": [
+            "plan",
+            "proposal",
+            "ceasefire",
+            "schedule",
+            "timeline",
+            "roadmap",
+            "inspection",
+            "corridor",
+            "evacuation",
+            "protocol"
+        ],
+        "text": "Create a hotline for immediate incident reporting."
+    },
+    {
+        "intent": "share_plan",
+        "keywords": [
+            "plan",
+            "proposal",
+            "ceasefire",
+            "schedule",
+            "timeline",
+            "roadmap",
+            "inspection",
+            "corridor",
+            "evacuation",
+            "protocol"
+        ],
+        "text": "We propose mirrored withdrawals by sector."
+    },
+    {
+        "intent": "share_plan",
+        "keywords": [
+            "plan",
+            "proposal",
+            "ceasefire",
+            "schedule",
+            "timeline",
+            "roadmap",
+            "inspection",
+            "corridor",
+            "evacuation",
+            "protocol"
+        ],
+        "text": "Stage equipment at agreed depots under seal."
+    },
+    {
+        "intent": "share_plan",
+        "keywords": [
+            "plan",
+            "proposal",
+            "ceasefire",
+            "schedule",
+            "timeline",
+            "roadmap",
+            "inspection",
+            "corridor",
+            "evacuation",
+            "protocol"
+        ],
+        "text": "Synchronize timecodes for all coordinated tasks."
+    },
+    {
+        "intent": "share_plan",
+        "keywords": [
+            "plan",
+            "proposal",
+            "ceasefire",
+            "schedule",
+            "timeline",
+            "roadmap",
+            "inspection",
+            "corridor",
+            "evacuation",
+            "protocol"
+        ],
+        "text": "Issue daily situation reports for transparency."
+    },
+    {
+        "intent": "share_plan",
+        "keywords": [
+            "plan",
+            "proposal",
+            "ceasefire",
+            "schedule",
+            "timeline",
+            "roadmap",
+            "inspection",
+            "corridor",
+            "evacuation",
+            "protocol"
+        ],
+        "text": "Pilot the plan in one low‑risk district first."
+    },
+    {
+        "intent": "share_plan",
+        "keywords": [
+            "plan",
+            "proposal",
+            "ceasefire",
+            "schedule",
+            "timeline",
+            "roadmap",
+            "inspection",
+            "corridor",
+            "evacuation",
+            "protocol"
+        ],
+        "text": "Map hazards and lock them behind geofences."
+    },
+    {
+        "intent": "share_plan",
+        "keywords": [
+            "plan",
+            "proposal",
+            "ceasefire",
+            "schedule",
+            "timeline",
+            "roadmap",
+            "inspection",
+            "corridor",
+            "evacuation",
+            "protocol"
+        ],
+        "text": "Agree on a red‑line list with verified alerts."
+    },
+    {
+        "intent": "share_plan",
+        "keywords": [
+            "plan",
+            "proposal",
+            "ceasefire",
+            "schedule",
+            "timeline",
+            "roadmap",
+            "inspection",
+            "corridor",
+            "evacuation",
+            "protocol"
+        ],
+        "text": "Publish a post‑incident review template now."
+    },
+    {
+        "intent": "share_plan",
+        "keywords": [
+            "plan",
+            "proposal",
+            "ceasefire",
+            "schedule",
+            "timeline",
+            "roadmap",
+            "inspection",
+            "corridor",
+            "evacuation",
+            "protocol"
+        ],
+        "text": "Commit to a joint statement after Phase I."
+    },
+    {
+        "intent": "close_treaty",
+        "keywords": [
+            "sign",
+            "treaty",
+            "agreement",
+            "conclude",
+            "finalize",
+            "ratify",
+            "seal",
+            "accord",
+            "pact",
+            "signature"
+        ],
+        "text": "We appear aligned. We can formalize the accord now."
+    },
+    {
+        "intent": "close_treaty",
+        "keywords": [
+            "sign",
+            "treaty",
+            "agreement",
+            "conclude",
+            "finalize",
+            "ratify",
+            "seal",
+            "accord",
+            "pact",
+            "signature"
+        ],
+        "text": "Submit the final text; we will countersign promptly."
+    },
+    {
+        "intent": "close_treaty",
+        "keywords": [
+            "sign",
+            "treaty",
+            "agreement",
+            "conclude",
+            "finalize",
+            "ratify",
+            "seal",
+            "accord",
+            "pact",
+            "signature"
+        ],
+        "text": "Our council is ready to ratify—present the signature page."
+    },
+    {
+        "intent": "close_treaty",
+        "keywords": [
+            "sign",
+            "treaty",
+            "agreement",
+            "conclude",
+            "finalize",
+            "ratify",
+            "seal",
+            "accord",
+            "pact",
+            "signature"
+        ],
+        "text": "Let us conclude with a dated, enforceable document."
+    },
+    {
+        "intent": "close_treaty",
+        "keywords": [
+            "sign",
+            "treaty",
+            "agreement",
+            "conclude",
+            "finalize",
+            "ratify",
+            "seal",
+            "accord",
+            "pact",
+            "signature"
+        ],
+        "text": "We will seal the pact once verifiers confirm baselines."
+    },
+    {
+        "intent": "close_treaty",
+        "keywords": [
+            "sign",
+            "treaty",
+            "agreement",
+            "conclude",
+            "finalize",
+            "ratify",
+            "seal",
+            "accord",
+            "pact",
+            "signature"
+        ],
+        "text": "All terms reconciled; proceed to authentication."
+    },
+    {
+        "intent": "close_treaty",
+        "keywords": [
+            "sign",
+            "treaty",
+            "agreement",
+            "conclude",
+            "finalize",
+            "ratify",
+            "seal",
+            "accord",
+            "pact",
+            "signature"
+        ],
+        "text": "We accept conclusion if dispute clauses are intact."
+    },
+    {
+        "intent": "close_treaty",
+        "keywords": [
+            "sign",
+            "treaty",
+            "agreement",
+            "conclude",
+            "finalize",
+            "ratify",
+            "seal",
+            "accord",
+            "pact",
+            "signature"
+        ],
+        "text": "Prepare the registry entry and notify observers."
+    },
+    {
+        "intent": "close_treaty",
+        "keywords": [
+            "sign",
+            "treaty",
+            "agreement",
+            "conclude",
+            "finalize",
+            "ratify",
+            "seal",
+            "accord",
+            "pact",
+            "signature"
+        ],
+        "text": "We can finalize upon receipt of the escrow receipt."
+    },
+    {
+        "intent": "close_treaty",
+        "keywords": [
+            "sign",
+            "treaty",
+            "agreement",
+            "conclude",
+            "finalize",
+            "ratify",
+            "seal",
+            "accord",
+            "pact",
+            "signature"
+        ],
+        "text": "Deliver signature keys; we will acknowledge within the hour."
+    },
+    {
+        "intent": "close_treaty",
+        "keywords": [
+            "sign",
+            "treaty",
+            "agreement",
+            "conclude",
+            "finalize",
+            "ratify",
+            "seal",
+            "accord",
+            "pact",
+            "signature"
+        ],
+        "text": "We are ready to exchange instruments of agreement."
+    },
+    {
+        "intent": "close_treaty",
+        "keywords": [
+            "sign",
+            "treaty",
+            "agreement",
+            "conclude",
+            "finalize",
+            "ratify",
+            "seal",
+            "accord",
+            "pact",
+            "signature"
+        ],
+        "text": "Affix seals and publish the annexes simultaneously."
+    },
+    {
+        "intent": "close_treaty",
+        "keywords": [
+            "sign",
+            "treaty",
+            "agreement",
+            "conclude",
+            "finalize",
+            "ratify",
+            "seal",
+            "accord",
+            "pact",
+            "signature"
+        ],
+        "text": "Let us mark the border beacons and declare completion."
+    },
+    {
+        "intent": "close_treaty",
+        "keywords": [
+            "sign",
+            "treaty",
+            "agreement",
+            "conclude",
+            "finalize",
+            "ratify",
+            "seal",
+            "accord",
+            "pact",
+            "signature"
+        ],
+        "text": "Provide final coordinates; we will lock them in records."
+    },
+    {
+        "intent": "close_treaty",
+        "keywords": [
+            "sign",
+            "treaty",
+            "agreement",
+            "conclude",
+            "finalize",
+            "ratify",
+            "seal",
+            "accord",
+            "pact",
+            "signature"
+        ],
+        "text": "Concluding statement: cooperation with accountability."
+    },
+    {
+        "intent": "close_treaty",
+        "keywords": [
+            "sign",
+            "treaty",
+            "agreement",
+            "conclude",
+            "finalize",
+            "ratify",
+            "seal",
+            "accord",
+            "pact",
+            "signature"
+        ],
+        "text": "We endorse the outcome; activate monitoring immediately."
+    },
+    {
+        "intent": "close_treaty",
+        "keywords": [
+            "sign",
+            "treaty",
+            "agreement",
+            "conclude",
+            "finalize",
+            "ratify",
+            "seal",
+            "accord",
+            "pact",
+            "signature"
+        ],
+        "text": "Counter‑signatures are queued; transmit your token."
+    },
+    {
+        "intent": "close_treaty",
+        "keywords": [
+            "sign",
+            "treaty",
+            "agreement",
+            "conclude",
+            "finalize",
+            "ratify",
+            "seal",
+            "accord",
+            "pact",
+            "signature"
+        ],
+        "text": "We will lodge the treaty with the arbiter today."
+    },
+    {
+        "intent": "close_treaty",
+        "keywords": [
+            "sign",
+            "treaty",
+            "agreement",
+            "conclude",
+            "finalize",
+            "ratify",
+            "seal",
+            "accord",
+            "pact",
+            "signature"
+        ],
+        "text": "All prerequisites satisfied; we are ready to close."
+    },
+    {
+        "intent": "close_treaty",
+        "keywords": [
+            "sign",
+            "treaty",
+            "agreement",
+            "conclude",
+            "finalize",
+            "ratify",
+            "seal",
+            "accord",
+            "pact",
+            "signature"
+        ],
+        "text": "Confirm your delegation’s authority and we will sign."
+    },
+    {
+        "intent": "apologize",
+        "keywords": [
+            "sorry",
+            "apologize",
+            "amends",
+            "regret",
+            "fault",
+            "atone",
+            "offense"
+        ],
+        "text": "Our council accept contrition when paired with restitution."
+    },
+    {
+        "intent": "build_rapport",
+        "keywords": [
+            "respect",
+            "harmony",
+            "esteem",
+            "mutual",
+            "customs",
+            "peace"
+        ],
+        "text": "Cooperation is acceptable; outline shared benefits briefly."
+    },
+    {
+        "intent": "share_plan",
+        "keywords": [
+            "protocol",
+            "plan",
+            "inspection",
+            "evacuation",
+            "proposal",
+            "corridor",
+            "roadmap"
+        ],
+        "text": "Schedule joint patrols with body‑cam telemetry. State only the essentials."
+    },
+    {
+        "intent": "apologize",
+        "keywords": [
+            "apologize",
+            "fault",
+            "regret",
+            "sorry",
+            "amends",
+            "incursion",
+            "atone"
+        ],
+        "text": "We acknowledge fault statements that include restitution. State only the essentials."
+    },
+    {
+        "intent": "apologize",
+        "keywords": [
+            "apologize",
+            "sorry",
+            "mistake",
+            "offense",
+            "incursion",
+            "fault",
+            "misstep"
+        ],
+        "text": "If you seek repair, specify compensation terms."
+    },
+    {
+        "intent": "apologize",
+        "keywords": [
+            "incursion",
+            "fault",
+            "mistake",
+            "misstep",
+            "apologize",
+            "atone"
+        ],
+        "text": "State the safeguard you will implement immediately."
+    },
+    {
+        "intent": "build_rapport",
+        "keywords": [
+            "values",
+            "trust",
+            "esteem",
+            "cooperate",
+            "mutual",
+            "peace",
+            "customs"
+        ],
+        "text": "Courtesy accepted; suggest one concrete cooperative act. Keep your response concise."
+    },
+    {
+        "intent": "share_plan",
+        "keywords": [
+            "ceasefire",
+            "corridor",
+            "inspection",
+            "plan",
+            "roadmap",
+            "evacuation"
+        ],
+        "text": "Synchronize timecodes for all coordinated tasks. State only the essentials."
+    },
+    {
+        "intent": "share_plan",
+        "keywords": [
+            "roadmap",
+            "corridor",
+            "evacuation",
+            "plan",
+            "inspection",
+            "ceasefire"
+        ],
+        "text": "Publish a post‑incident review template now. Keep your response concise."
+    },
+    {
+        "intent": "offer_trade",
+        "keywords": [
+            "swap",
+            "bid",
+            "rates",
+            "barter",
+            "deal",
+            "exchange",
+            "trade"
+        ],
+        "text": "We can swap medical kits for mineral rights—define scope."
+    },
+    {
+        "intent": "offer_trade",
+        "keywords": [
+            "offer",
+            "bid",
+            "trade",
+            "rates",
+            "exchange",
+            "proposal",
+            "swap"
+        ],
+        "text": "Exchange requires synchronized manifests and seals. State only the essentials."
+    },
+    {
+        "intent": "offer_trade",
+        "keywords": [
+            "exchange",
+            "bid",
+            "proposal",
+            "swap",
+            "rates"
+        ],
+        "text": "Our council accept staged delivery tied to milestones."
+    },
+    {
+        "intent": "seek_clarity",
+        "keywords": [
+            "details",
+            "conditions",
+            "question",
+            "what",
+            "explain",
+            "clarify"
+        ],
+        "text": "Which clause do you contest—cite it precisely."
+    },
+    {
+        "intent": "seek_clarity",
+        "keywords": [
+            "why",
+            "clarify",
+            "explain",
+            "details",
+            "terms",
+            "what",
+            "how"
+        ],
+        "text": "Which risk do you want us to mitigate first—be explicit. State only the essentials."
+    },
+    {
+        "intent": "apologize",
+        "keywords": [
+            "amends",
+            "incursion",
+            "atone",
+            "apologize",
+            "offense",
+            "fault"
+        ],
+        "text": "Your acknowledgement is noted. What amends do you propose? State only the essentials."
+    },
+    {
+        "intent": "share_plan",
+        "keywords": [
+            "evacuation",
+            "inspection",
+            "protocol",
+            "schedule",
+            "corridor",
+            "plan",
+            "roadmap"
+        ],
+        "text": "Propose a three‑step plan with timelines and owners."
+    },
+    {
+        "intent": "close_treaty",
+        "keywords": [
+            "treaty",
+            "conclude",
+            "accord",
+            "signature",
+            "sign"
+        ],
+        "text": "Let us mark the border beacons and declare completion."
+    },
+    {
+        "intent": "apologize",
+        "keywords": [
+            "sorry",
+            "regret",
+            "apologize",
+            "amends",
+            "fault"
+        ],
+        "text": "Submit a brief corrective protocol for review."
+    },
+    {
+        "intent": "build_rapport",
+        "keywords": [
+            "culture",
+            "cooperate",
+            "mutual",
+            "customs",
+            "values",
+            "esteem",
+            "harmony"
+        ],
+        "text": "Cooperation is acceptable; outline shared benefits briefly. State only the essentials."
+    },
+    {
+        "intent": "build_rapport",
+        "keywords": [
+            "values",
+            "esteem",
+            "mutual",
+            "peace",
+            "respect",
+            "culture"
+        ],
+        "text": "Harmony follows when both parties honor agreed constraints."
+    },
+    {
+        "intent": "close_treaty",
+        "keywords": [
+            "accord",
+            "agreement",
+            "sign",
+            "treaty",
+            "finalize",
+            "pact"
+        ],
+        "text": "We are ready to exchange instruments of agreement."
+    },
+    {
+        "intent": "seek_clarity",
+        "keywords": [
+            "terms",
+            "what",
+            "question",
+            "explain",
+            "how",
+            "specify",
+            "conditions"
+        ],
+        "text": "How will you secure civilian corridors—outline steps."
+    },
+    {
+        "intent": "seek_clarity",
+        "keywords": [
+            "conditions",
+            "why",
+            "specify",
+            "details",
+            "what",
+            "explain",
+            "question"
+        ],
+        "text": "How will you secure civilian corridors—outline steps."
+    },
+    {
+        "intent": "seek_clarity",
+        "keywords": [
+            "clarify",
+            "question",
+            "terms",
+            "why",
+            "how",
+            "what"
+        ],
+        "text": "Detail the escalation path if schedules slip."
+    },
+    {
+        "intent": "close_treaty",
+        "keywords": [
+            "ratify",
+            "signature",
+            "treaty",
+            "accord",
+            "sign",
+            "seal"
+        ],
+        "text": "Confirm your delegation’s authority and we will sign. Keep your response concise."
+    },
+    {
+        "intent": "offer_trade",
+        "keywords": [
+            "bid",
+            "trade",
+            "rates",
+            "barter",
+            "exchange"
+        ],
+        "text": "Outline price bands and penalty clauses. Keep your response concise."
+    },
+    {
+        "intent": "close_treaty",
+        "keywords": [
+            "seal",
+            "conclude",
+            "accord",
+            "treaty",
+            "pact"
+        ],
+        "text": "Our council is ready to ratify—present the signature page."
+    },
+    {
+        "intent": "close_treaty",
+        "keywords": [
+            "seal",
+            "accord",
+            "signature",
+            "ratify",
+            "sign",
+            "treaty",
+            "finalize"
+        ],
+        "text": "We are ready to exchange instruments of agreement."
+    },
+    {
+        "intent": "seek_clarity",
+        "keywords": [
+            "explain",
+            "how",
+            "question",
+            "conditions",
+            "specify",
+            "what",
+            "terms"
+        ],
+        "text": "Please clarify your terms so our council can proceed. State only the essentials."
+    },
+    {
+        "intent": "build_rapport",
+        "keywords": [
+            "respect",
+            "customs",
+            "cooperate",
+            "harmony",
+            "esteem",
+            "trust",
+            "peace"
+        ],
+        "text": "We favor peaceful exchange and mutual safety."
+    },
+    {
+        "intent": "apologize",
+        "keywords": [
+            "mistake",
+            "incursion",
+            "fault",
+            "offense",
+            "atone",
+            "apologize",
+            "sorry"
+        ],
+        "text": "An apology is a start; outline prevention measures. Keep your response concise."
+    },
+    {
+        "intent": "close_treaty",
+        "keywords": [
+            "signature",
+            "pact",
+            "seal",
+            "accord",
+            "finalize",
+            "treaty",
+            "ratify"
+        ],
+        "text": "Affix seals and publish the annexes simultaneously."
+    },
+    {
+        "intent": "share_plan",
+        "keywords": [
+            "ceasefire",
+            "plan",
+            "protocol",
+            "proposal",
+            "inspection",
+            "schedule"
+        ],
+        "text": "Map hazards and lock them behind geofences."
+    },
+    {
+        "intent": "share_plan",
+        "keywords": [
+            "roadmap",
+            "evacuation",
+            "corridor",
+            "inspection",
+            "plan"
+        ],
+        "text": "Schedule joint patrols with body‑cam telemetry."
+    },
+    {
+        "intent": "share_plan",
+        "keywords": [
+            "timeline",
+            "plan",
+            "proposal",
+            "protocol",
+            "schedule"
+        ],
+        "text": "Propose a three‑step plan with timelines and owners. State only the essentials."
+    },
+    {
+        "intent": "share_plan",
+        "keywords": [
+            "roadmap",
+            "evacuation",
+            "schedule",
+            "protocol",
+            "ceasefire",
+            "corridor"
+        ],
+        "text": "A limited ceasefire followed by inspection could work."
+    },
+    {
+        "intent": "share_plan",
+        "keywords": [
+            "schedule",
+            "evacuation",
+            "timeline",
+            "corridor",
+            "proposal",
+            "protocol",
+            "roadmap"
+        ],
+        "text": "Agree on a red‑line list with verified alerts."
+    },
+    {
+        "intent": "offer_trade",
+        "keywords": [
+            "barter",
+            "offer",
+            "deal",
+            "bid",
+            "trade",
+            "terms"
+        ],
+        "text": "Propose volume, delivery cadence, and collateral."
+    },
+    {
+        "intent": "close_treaty",
+        "keywords": [
+            "ratify",
+            "agreement",
+            "finalize",
+            "treaty",
+            "conclude"
+        ],
+        "text": "Deliver signature keys; we will acknowledge within the hour."
+    },
+    {
+        "intent": "seek_clarity",
+        "keywords": [
+            "how",
+            "why",
+            "question",
+            "conditions",
+            "specify",
+            "terms"
+        ],
+        "text": "Specify quantities, locations, and timing for your request."
+    }
+]
