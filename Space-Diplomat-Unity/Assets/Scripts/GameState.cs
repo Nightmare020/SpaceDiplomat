@@ -13,6 +13,8 @@ public class GameState : MonoBehaviour
         public Dictionary<string, float> emotionCounts = new Dictionary<string, float>()
         {{"joy", 0 }, {"sadness", 0 }, {"anger", 0 },
             {"disgust", 0}, {"fear", 0} }; // Emotion counts for the alien
+        public bool conversationClosed; // Flag to indicate if the conversation is closed
+        public string conclusionMessage; // Conclusion message for the alien conversation
     }
 
     public Dictionary<string, AlienData> aliensData = new Dictionary<string, AlienData>(); // Dictionary to hold alien data

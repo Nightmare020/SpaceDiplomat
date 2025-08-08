@@ -23,6 +23,7 @@ public class ChatManager : MonoBehaviour
     private const string API_URL = "http://127.0.0.1:5000/chat";
     private bool alienTalking = false;
     private bool _chatLocked = false;
+    private string _pendingSystemLine = null; // Queued end notice printed after typing finishes
     private float _joyThresholdCache = 0.9f; // Threshold for joy emotion to consider negotiation success
     private float _angerToleranceCache = 0.9f; // Threshold for anger emotion to consider negotiation failure
     private GameState.AlienData alienData => 
@@ -47,6 +48,7 @@ public class ChatManager : MonoBehaviour
             alienEmotionImage.enabled = true; // Show the image if a planet is selected
             SetInitialAlienSprite(); // Set the initial alien emotion sprite
             RestoreHistory(); // Restore chat history for the selected alien
+            EnforceConclusionGateIfAny(); // Enforce conclusion gate if the conversation is closed
         }
     }
 
@@ -107,6 +109,20 @@ public class ChatManager : MonoBehaviour
 
     void SubmitMessage()
     {
+        // Don't allow sending if conversation is closed
+        if (alienData != null && alienData.conversationClosed)
+        {
+            // Avoid duplicate lines
+            string requiredLine = $"SYSTEM: {alienData.conclusionMessage}";
+            if (alienData.chatHistory.Count == 0 || alienData.chatHistory[^1] != requiredLine)
+            {
+                DisplayMessage("SYSTEM", alienData.conclusionMessage); // Display the conclusion message
+            }
+
+            inputField.interactable = false; // Disable input field interaction
+            return;
+        }
+
         // Block whule alien is sending message
         if (alienTalking) return;
 
@@ -248,14 +264,20 @@ public class ChatManager : MonoBehaviour
                 // -------- GOAP Hard Stop --------
                 if (response.negotiationSuccess || GoapGate.IsSuccess(alienData.emotionCounts["joy"]))
                 {
-                    DisplayMessage("SYSTEM", "Diplomatic solution reached. Talks Concluded.");
-                    LockChatPermanently();
+                    _pendingSystemLine = "Diplomatic solution reached. Talks Concluded.";
+
+                    // Persist closed state
+                    alienData.conversationClosed = true; // Mark the conversation as closed
+                    alienData.conclusionMessage = _pendingSystemLine; // Store the conclusion message
                 }
 
                 if (response.negotiationFailure || GoapGate.IsFailure(alienData.emotionCounts["anger"]))
                 {
-                    DisplayMessage("SYSTEM", "Negotiation failed. The alien refuses to continue.");
-                    LockChatPermanently();
+                    _pendingSystemLine = "Negotiation failed. The alien refuses to continue.";
+
+                    // Persist closed state
+                    alienData.conversationClosed = true; // Mark the conversation as closed
+                    alienData.conclusionMessage = _pendingSystemLine; // Store the conclusion message
                 }
             }
         }
@@ -283,6 +305,15 @@ public class ChatManager : MonoBehaviour
 
         // Tipying is done -> unlock unless chat is permanently locked
         alienTalking = false;
+
+        // If we queued an end notice, print it now and lock forever
+        if (!string.IsNullOrEmpty(_pendingSystemLine))
+        {
+            DisplayMessage("SYSTEM", _pendingSystemLine);
+            _pendingSystemLine = null; // Clear the pending system line
+            LockChatPermanently(); // Lock the chat permanently after the end notice
+        }
+
         if (!_chatLocked)
         {
             inputField.interactable = true;
@@ -398,6 +429,22 @@ public class ChatManager : MonoBehaviour
         }
 
         return list.ToArray(); // Return the array of history turns
+    }
+
+    private void EnforceConclusionGateIfAny()
+    {
+        if (alienData != null && alienData.conversationClosed)
+        {
+            _chatLocked = true; // Lock the chat permanently
+            inputField.interactable = false; // Disable input field interaction
+
+            // Ensure the SYSTEM line is the last thing in history (avoid duplicates)
+            string requiredLine = $"SYSTEM: {alienData.conclusionMessage}";
+            if (alienData.chatHistory.Count == 0 || alienData.chatHistory[^1] != requiredLine)
+            {
+                DisplayMessage("SYSTEM", alienData.conclusionMessage); // Display the conclusion message
+            }
+        }
     }
 
     [System.Serializable]

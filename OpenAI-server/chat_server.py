@@ -223,8 +223,11 @@ def load_alien_profiles(path: str):
 
 ALIENS = load_alien_profiles(alien_profiles_path)
 
-# Running affect per alien (possibly swapped for FAtiMa later)
+# Running affect per alien
 alien_affect = defaultdict(lambda: {"joy": 0.0, "anger": 0.0})
+
+# Aliens that are closed (talks concluded)
+closed_aliens = {}
 
 # ======================================
 # Helper methods
@@ -326,6 +329,37 @@ def chat():
     profile = ALIENS.get(alien_name)
     if profile is None:
         return jsonify({"error": f"Alien profile '{alien_name}' not found"}), 400
+
+    # If talks already concluded for this alien, refuse to continue
+    if alien_name in closed_aliens:
+        outcome = closed_aliens[alien_name]
+        joy_threshold = float(profile.get("joyThreshold", 0.9))
+        anger_tolerance = float(profile.get("angerTolerance", 0.3))
+        return jsonify({
+            "reply": "The council considers this matter sttled.",
+            "analysis": {
+                "entities": [],
+                "emotion": "neutral",
+                "emotionScore": 0.0,
+                "distributionJson": json.dumps({"keys": ["disgust", "fear", "anger", "sadness", "joy"], "values": [0,0,0,0,0]}),
+                "polarity": 0.0,
+                "subjectivity": 0.0
+            },
+            "alienProfile": {
+                "name": profile["name"],
+                "joyThreshold": joy_threshold,
+                "angerTolerance": anger_tolerance,
+            },
+            "state": {
+                "joy": alien_affect[alien_name]["joy"],
+                "anger": alien_affect[alien_name]["anger"],
+            },
+            "styleHints": [],
+            "temperatureUsed": base_temperature,
+            "negotiationSuccess": outcome["success"],
+            "negotiationFailure": outcome["failure"],
+            "rl": None
+    })
 
     # --- Redaction & NER ---
     redacted_input, named_entities = redact_sensitive(user_input)
@@ -491,6 +525,19 @@ def chat():
 
     success = (aa["joy"] >= joy_threshold and aa["joy_streak"] >= 2 and aa["turns"] >= min_turns)
     failure = (aa["anger"] >= anger_tolerance and aa["anger_streak"] >= 2 and aa["turns"] >= min_turns)
+
+    if success and alien_name not in closed_aliens:
+        closed_aliens[alien_name] = {
+            "success": True,
+            "failure": False,
+            "message": "Diplomatic solution reached. Talks Concluded."
+        }
+    elif failure and alien_name not in closed_aliens:
+        closed_aliens[alien_name] = {
+            "success": False,
+            "failure": True,
+            "message": "Negotiation failed. The alien refuses to continue."
+        }
 
     # Log current state
     print(f"[{alien_name}] joy={alien_affect[alien_name]['joy']:.3f} / thr={joy_threshold} | "
