@@ -50,9 +50,9 @@
         "angerTolerance": "0.35",
         "relations": {
             "ZAXIN": 0.7,
-            "BRAXIM": -0.6
+            "BRAXIM": -0.7
         },
-        "socialOverlay":  0.6,
-        "socialK":  0.15
+        "socialOverlay":  0.7,
+        "socialK":  0.2
     }
 ]

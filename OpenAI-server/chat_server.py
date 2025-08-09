@@ -23,6 +23,11 @@ max_tokens = int(os.getenv("MAX_TOKENS", 150))
 base_temperature = float(os.getenv("TEMPERATURE", 0.7))
 alien_profiles_path = os.getenv("ALIEN_PROFILES_PATH", "AlienPersonalities.json")
 braxim_replies_path = os.getenv("BRAXIM_REPLIES_PATH", "BraximReplies.json")
+state_path = os.getenv("STATE_PATH", "server_state.json")
+save_every = int(os.getenv("SAVE_EVERY", "5")) # autosave every N chats
+
+_update_count = 0
+last_sa = defaultdict(lambda: None) # per-alien last (state, action)
 
 print(f"MAX TOKENS:", max_tokens)
 print(f"TEMPERATURE:", base_temperature)
@@ -190,6 +195,37 @@ def compute_reward(dist):
     reward = base + pair_term
     return float(max(-2.0, min(2.0, reward)))
 
+def save_state():
+    # jsonify defaultdicts into plain dicts
+    q_plain = {s: {a: float(v) for a, v in acts.items()} for s, acts in Q.items()}
+    affect_plain = {k: {"joy": float(v.get("joy", 0.0)), "anger": float(v.get("anger", 0.0))}
+                    for k, v in alien_affect.items()}
+    data = {
+        "Q": q_plain,
+        "alien_affect": affect_plain,
+        "closed_aliens": closed_aliens
+    }
+    with open(state_path, "w", encoding="utf-8") as f:
+        json.dump(data, f, indent=2)
+
+def load_state():
+    global Q, alien_affect, closed_aliens
+    if not os.path.exists(state_path):
+        return
+    with open(state_path, "r", encoding="utf-8") as f:
+        data = json.load(f)
+
+    # rebuild Q with intent defaults
+    Q.clear()
+    for s, acts in data.get("Q", {}).items():
+        Q[s] = {a: float(acts.get(a, 0.0)) for a in INTENTS}
+
+    # rebuild affects
+    alien_affect.clear()
+    for k, v in data.get("alien_affect", {}).items():
+        alien_affect[k] = {"joy": float(v.get("joy", 0.0)), "anger": float(v.get("anger", 0.0))}
+    closed_aliens.clear()
+    closed_aliens.update(data.get("closed_aliens", {}))
 
 # ======================================
 # Alien Profiles
@@ -250,6 +286,7 @@ def load_braxim_replies(path):
         return []
 
 ALIENS = load_alien_profiles(alien_profiles_path)
+load_state()
 
 # ======================================
 # Braxim Static Replies Behaviour
@@ -371,6 +408,8 @@ def penbol_social_cascade():
     # Apply with decay
     aa["joy"] = min(1.0, max(0.0, aa["joy"] * DECAY + joy_gain))
     aa["anger"] = min(1.0, max(0.0, aa["anger"] * DECAY + anger_gain))
+
+    print(f"[Penbol cascade] friend_score={friend_score:.3f} joy->{aa['joy']:.3f} anger->{aa['anger']:.3f}")
 
 # Running affect per alien
 alien_affect = defaultdict(lambda: {"joy": 0.0, "anger": 0.0})
@@ -589,6 +628,15 @@ def chat():
     # RL State/Action Update and Round-Trip
     # ======================================
     dist_map = dict(zip(canon_order, vals))
+
+    # credit the previous (state, action) with the current reward (delayed credit)
+    prev = last_sa.get(alien_name)
+    if prev:
+        prev_state, prev_action = prev
+        r = compute_reward(dist_map)
+        Q_prev = Q[prev_state][prev_action]
+        Q[prev_state][prev_action] = Q_prev + ALPHA * (r - Q_prev)
+
     rl_state = encode_state(dist_map)
     rl_action = choose_intent(rl_state)
 
@@ -814,6 +862,16 @@ def chat():
         display_vals = list(vals)  # just copy the original values
 
     distribution_json = json.dumps({"keys": canon_order, "values": display_vals})
+    
+    # remember (state, action) for next trun's delayed credit
+    last_sa[alien_name] = (rl_state, rl_action)
+
+    # Autosave occasionally
+    global _update_count
+    _update_count += 1
+    if _update_count % save_every == 0:
+        save_state()
+
 
     # ======================================
     # Response
@@ -852,6 +910,7 @@ def chat():
             "qForState": Q[rl_state]
         }
     })
+    
 
 # Endpoint to reset affect during testing
 @app.route('/reset_affect', methods=['POST'])
@@ -883,11 +942,45 @@ def alien_state():
     # Overlay running mood
     joy_i = canon_order.index("joy")
     anger_i = canon_order.index("anger")
-    aa = alien_affect[name]
-    overlay = float(profile.get("socialOverlay", 0.5)) if name == "PENBOL" else 0.0
-    display_vals[joy_i] = max(display_vals[joy_i], overlay * float(aa.get("joy", 0.0)))
-    display_vals[anger_i] = max(display_vals[anger_i], overlay * float(aa.get("anger", 0.0)))
+    fear_i = canon_order.index("fear")
+    sad_i = canon_order.index("sadness")
+    disgust_i = canon_order.index("disgust")
 
+    aa = alien_affect[name]
+
+    if name == "PENBOL":
+        overlay = float(profile.get("socialOverlay", 0.7))
+
+        # Add Penbol's stored mood
+        display_vals[joy_i] += overlay * float(aa.get("joy", 0.0))
+        display_vals[anger_i] += overlay * float(aa.get("anger", 0.0))
+
+        # Compute a fresh social friend_score for diaplay only
+        rel = profile.get("relations", {}) or {}
+        friend_score = 0.0
+        for other, w in rel.items():
+            other_feel = alien_affect[(other or "").upper()]
+            friend_score += float(w) * (float(other_feel.get("joy", 0.0)) - float(other_feel.get("anger", 0.0)))
+        friend_score = max(-1.0, min(1.0, friend_score))
+
+        # Positive social -> boost joy visually; Negative -> redistribute into negatives + reduce joy
+        if friend_score > 0.0:
+            pos = overlay * friend_score
+            display_vals[joy_i] += pos
+            # Slightly de-emphasis of anger
+            display_vals[anger_i] *= (1.0 - 0.25 * pos)
+        elif friend_score < 0.0:
+            neg = overlay * (-friend_score)
+
+            # pull down joy a bit
+            display_vals[joy_i] *= (1.0 - 0.40 * neg)
+            # push into negative emotions (anger > disgust > fear); sadness small
+            display_vals[anger_i] += 0.50 * neg 
+            display_vals[disgust_i] += 0.30 * neg
+            display_vals[fear_i] += 0.20 * neg
+            display_vals[sad_i] +=0.10 * neg
+
+    # Renormalize
     s = sum(display_vals) or 1.0
     display_vals = [v / s for v in display_vals]
 
@@ -901,6 +994,14 @@ def alien_state():
         "joyThreshold": float(profile.get("joyThreshold", 0.9)),
         "angerTolerance": float(profile.get("angerTolerance", 0.3)),
     })
+
+@app.route('/health', methods=['GET'])
+def health(): return jsonify({"ok": True})
+
+@app.route('/save', methods=['POST'])
+def save_now():
+    save_state();
+    return jsonify({"ok": True})
 
 if __name__ == '__main__':
     app.run(port=5000)
