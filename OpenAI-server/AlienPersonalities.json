@@ -51,6 +51,8 @@
         "relations": {
             "ZAXIN": 0.7,
             "BRAXIM": -0.6
-        }
+        },
+        "socialOverlay":  0.6,
+        "socialK":  0.15
     }
 ]

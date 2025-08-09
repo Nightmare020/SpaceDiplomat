@@ -1934,8 +1934,10 @@ MonoBehaviour:
     img: {fileID: 6920836}
   centerMask: {fileID: 1848203936}
   chartRoot: {fileID: 1260460380}
-  diamater: 45
+  diameter: 30
   innerHoleRatio: 0.58
+  autoPoll: 0
+  pollInterval: 1.2
 --- !u!1 &1291124213
 GameObject:
   m_ObjectHideFlags: 0

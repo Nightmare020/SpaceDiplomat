@@ -4,6 +4,7 @@ using UnityEngine.UI;
 using UnityEngine.Networking;
 using System.Collections;
 using System.Linq;
+using System.Text.RegularExpressions;
 using UnityEngine.SceneManagement;
 using Unity.VisualScripting;
 
@@ -20,12 +21,36 @@ public class ChatManager : MonoBehaviour
     public int maxChars = 300; // Maximum number of words allowed in a message
     public Image alienEmotionImage; // Image to display alien emotion
 
-    private const string API_URL = "http://127.0.0.1:5000/chat";
+    private const string RP_NAME = "John";
+    private const string RP_HOME = "Missouri, US";
+    private const string RP_COMPANY = "Weyland-Yutani Corp";
+
+    // Compiled regexes: "my name is X"m "I'm X", "I am X"
+    private static readonly Regex rxName1 = new Regex(@"\b(my\s+name\s+is|call\s+me)\s+([A-Za-z][\w'\-]+(?:\s+[A-Za-z][\w'\-]+){0,2})",
+        RegexOptions.IgnoreCase | RegexOptions.Compiled);
+    private static readonly Regex rxName2 = new Regex(@"\b(i\s*am|i'm)\s+([A-Za-z][\w'\-]+)\b",
+        RegexOptions.IgnoreCase | RegexOptions.Compiled);
+
+    // Locations: "I'm from Y", "I live in Y", "I am in Y", "I was born in Y", "born in Y"
+    private static readonly Regex rxLocation1 = new Regex(@"\b(i\s*(?:am|'m)\s*from)\s([^.,;!?]+)",
+        RegexOptions.IgnoreCase | RegexOptions.Compiled);
+    private static readonly Regex rxLocation2 = new Regex(@"\b(i\s*(?:live|am|'m)\s+in|i\s+was\s*born\s+in)\s([^.,;!?]+)",
+        RegexOptions.IgnoreCase | RegexOptions.Compiled);
+
+    // Company: "I work at Z", "I serve at Z", "My employer is Z"
+    private static readonly Regex rxOrg1 = new Regex(@"\b(i\s*(?:work|serve|am\s+employed)\s+(?:at|for))\s+([^.,;!?]+)",
+        RegexOptions.IgnoreCase | RegexOptions.Compiled);
+    private static readonly Regex rxOrg2 = new Regex(@"\b(my\s+(?:employer|company|organization)\s+is)\s+([^.,;!?]+)",
+        RegexOptions.IgnoreCase | RegexOptions.Compiled);
+
+    private const string SERVER_BASE = "http://127.0.0.1:5000";
+    private const string API_CHAT = SERVER_BASE + "/chat";
+
     private bool alienTalking = false;
     private bool _chatLocked = false;
     private string _pendingSystemLine = null; // Queued end notice printed after typing finishes
     private float _joyThresholdCache = 0.9f; // Threshold for joy emotion to consider negotiation success
-    private float _angerToleranceCache = 0.9f; // Threshold for anger emotion to consider negotiation failure
+    private float _angerToleranceCache = 0.3f; // Threshold for anger emotion to consider negotiation failure
     private GameState.AlienData alienData => 
         string.IsNullOrEmpty(currentAlienName) ? null : GameState.Instance.GetAlienData(currentAlienName); // Get the alien data for the current alien
 
@@ -36,7 +61,9 @@ public class ChatManager : MonoBehaviour
         Cursor.visible = true;
 
         currentAlienName = PlayerData.SelectedAlienName; // Get the selected alien name from PlayerData
-        
+
+        GameState.EmotionsChanged += OnEmotionsChanged;
+
         if (string.IsNullOrEmpty(currentAlienName))
         {
             // No planet selected -> Hide the image completely
@@ -64,10 +91,42 @@ public class ChatManager : MonoBehaviour
         inputField.interactable = true;
     }
 
+    private void OnDestroy()
+    {
+        GameState.EmotionsChanged -= OnEmotionsChanged;
+    }
+
     // Update is called once per frame
     void Update()
     {
         UpdateCharacterCountBar();
+    }
+
+    private string ApplyRoleplayPIIFilter(string input)
+    {
+        if (string.IsNullOrEmpty(input))
+        {
+            return input; // Return empty if input is null or empty
+        }
+
+        // Name substitutions
+        string st = rxName1.Replace(input, m=> $"{m.Groups[1].Value} {RP_NAME}");
+        st = rxName2.Replace(st, m => $"{m.Groups[1].Value} {RP_NAME}"); // Replace names with RP_NAME
+
+        // Location substitutions
+        st = rxLocation1.Replace(st, m => $"{m.Groups[1].Value} {RP_HOME}"); // Replace "from" locations with RP_HOME
+        st = rxLocation2.Replace(st, m =>
+        {
+            // Preserve the leading phrase exactly as typed (e.g., "I was born in")
+            string lead = m.Groups[1].Value; // Get the leading phrase
+            return $"{lead} {RP_HOME}"; // Replace "in" locations with RP_HOME
+        });
+
+        // Organization substitutions
+        st = rxOrg1.Replace(st, m => $"{m.Groups[1].Value} {RP_COMPANY}");
+        st = rxOrg2.Replace(st, m => $"{m.Groups[1].Value} {RP_COMPANY}");
+
+        return st; // Return the modified string
     }
 
     // Call once when the scene opens
@@ -142,8 +201,11 @@ public class ChatManager : MonoBehaviour
 
         if (!string.IsNullOrEmpty(message))
         {
-            DisplayMessage("YOU", message);
-            StartCoroutine(SendMessageToGroq(message));
+            // Santize locally for roleplay before display or send
+            string safeMessage = ApplyRoleplayPIIFilter(message);
+
+            DisplayMessage("YOU", safeMessage);
+            StartCoroutine(SendMessageToGroq(safeMessage));
             inputField.interactable = false; // Lock immediately after sending
         }
     }
@@ -205,7 +267,7 @@ public class ChatManager : MonoBehaviour
         string json = JsonUtility.ToJson(payload);
 
         byte[] bodyRaw = System.Text.Encoding.UTF8.GetBytes(json);
-        UnityWebRequest request = new UnityWebRequest(API_URL, "POST");
+        UnityWebRequest request = new UnityWebRequest(API_CHAT, "POST");
         request.uploadHandler = new UploadHandlerRaw(bodyRaw);
         request.downloadHandler = new DownloadHandlerBuffer();
         request.SetRequestHeader("Content-Type", "application/json");
@@ -248,13 +310,6 @@ public class ChatManager : MonoBehaviour
                         alienData.emotionCounts[key] = value; // Increment the count for the emotion
                     }
                 }
-
-                // Re-draw the donut so the UI reflects the new distribution
-                DonutBuilder donut = FindFirstObjectByType<DonutBuilder>();
-                if (donut != null)
-                {
-                    donut.Refresh();
-                }
             }
 
             if (response.analysis != null)
@@ -279,6 +334,15 @@ public class ChatManager : MonoBehaviour
                     alienData.conversationClosed = true; // Mark the conversation as closed
                     alienData.conclusionMessage = _pendingSystemLine; // Store the conclusion message
                 }
+            }
+
+            // Notify UI that emotion counts changed for this alien
+            GameState.Instance.RaiseEmotionsChanged(currentAlienName);
+
+            // Penbol's social cascade might have changed due to this turn
+            if (!string.Equals(currentAlienName, "PENBOL", System.StringComparison.OrdinalIgnoreCase))
+            {
+                GameState.Instance.RaiseEmotionsChanged("PENBOL");
             }
         }
         else
@@ -335,21 +399,35 @@ public class ChatManager : MonoBehaviour
         }
 
         // Find the top emotion from the parsed distribution
-        string topKey = "nautral"; // Default to neutral if no emotion is found
+        string topKey = "neutral"; // Default to neutral if no emotion is found
         float topValue = -1f; // Default value for neutral emotion
+        float second = -1f;
 
         foreach (var key in new[] { "joy", "sadness", "anger", "fear", "disgust" })
         {
             float val = alienData.emotionCounts.TryGetValue(key, out float value) ? value : 0f; // Get the emotion value or default to 0
             if (val > topValue)
             {
-                topValue = val; // Update the top value
+                second = topValue; // Update the top value
+                topValue = val;
                 topKey = key; // Update the top emotion key
+            }
+            else if (val > second)
+            {
+                second = val;
             }
         }
 
+        // Neutral if flat/uncertain
+        const float neutralFloor = 0.30f; // Require at least 0.30 to "commit" to an emotion
+        const float nearTieDelta = 0.05f; // If top barely beates second, treat as neutral
+
         string spriteKey;
-        if (topKey == "joy")
+        if (topValue < neutralFloor || (topValue - second) < nearTieDelta)
+        {
+            spriteKey = "Neutral";
+        }
+        else if (topKey == "joy")
         {
             // Use the per-alien threshold when available
             float threshold = Mathf.Clamp01(_joyThresholdCache <= 0f ? 0.9f : _joyThresholdCache); // Default to 0.9 if no threshold is set
@@ -388,6 +466,16 @@ public class ChatManager : MonoBehaviour
         // Capitalise the first letter
         string capitalizedEmotion = char.ToUpper(emotion[0]) + emotion.Substring(1).ToLower();
         return Resources.Load<Sprite>($"AlienEmotions/{alienName}/{capitalizedEmotion}");
+    }
+
+    private void OnEmotionsChanged(string alienName)
+    {
+        if (string.IsNullOrEmpty(currentAlienName) || alienData == null) return;
+        if (alienName == null ||
+            string.Equals(alienName, currentAlienName, System.StringComparison.OrdinalIgnoreCase))
+        {
+            UpdateAlienEmotion("ignored", 0f);
+        }
     }
 
     IEnumerator ScrollToBottomNextFrame()

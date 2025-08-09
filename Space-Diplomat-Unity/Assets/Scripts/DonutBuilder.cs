@@ -1,16 +1,49 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.Networking;
 using UnityEngine.SceneManagement;
 using System.Linq;
+using System.Collections;
 
 public class DonutBuilder : MonoBehaviour
 {
+    private const string SERVER_BASE = "http://127.0.0.1:5000";
+    private const string API_STATE = SERVER_BASE + "/alien_state";
+
+
     [System.Serializable]
     public class  Slice
     {
         public string emotionKey; // The key for the emotion
         public Image img; // The sprite for the emotion
+    }
+
+    [System.Serializable]
+    private class AlienStateResponse
+    {
+        public string alien;
+        public string distributionJson; // Emotion distribution as a JSON string
+        public State state;
+        public float joyThreshold; // Joy threshold for negotiation success
+        public float angerTolerance; // Anger tolerance for negotiation failure 
+
+        [System.Serializable]
+        public class State
+        {
+            public float joy; // Joy emotion value
+            public float anger; // Anger emotion value
+        }
+    }
+
+    [System.Serializable]
+    private class AlienNamePayload { public string alienName; }
+
+    [System.Serializable]
+    public class DistributionWrapper
+    {
+        public string[] keys; // Array of emotion keys
+        public float[] values; // Corresponding array of emotion values
     }
 
     public List<Slice> slices = new List<Slice>(); // List of slices representing emotions
@@ -19,24 +52,33 @@ public class DonutBuilder : MonoBehaviour
     // Control layout explicitly
     [Header("Layout")]
     [SerializeField] RectTransform chartRoot; // parent rect that contains all slices + center
-    [SerializeField] float diamater = 600f; // pixels (befire CanvasScaler)
+    [SerializeField] float diameter = 600f; // pixels (befire CanvasScaler)
     [Range(0.1f, 0.9f)]
     [SerializeField] float innerHoleRatio = 0.58f; // inner hole = diameter * this
 
     // Fixed order around the circle (clockwise)
     static readonly string[] Order = { "disgust", "fear", "anger", "sadness", "joy"};
 
-    // Awake is called when the script instance is being loaded
-    private void Awake()
-    {
-        // Normalize rects so they always match
-        NormalizeRects();
-    }
-
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
         Refresh();
+    }
+
+    private void OnEnable()
+    {
+        // Normalize rects in case layout changed
+        NormalizeRects();
+
+        // Try to get a fresh snapshot from server, the refresh UI
+        StartCoroutine(FetchAndApplyState());
+
+        GameState.EmotionsChanged += OnEmotionsChanged;
+    }
+
+    private void OnDisable()
+    {
+        GameState.EmotionsChanged -= OnEmotionsChanged;
     }
 
     // Force identical anchors/size/position for all chart pieces
@@ -47,7 +89,7 @@ public class DonutBuilder : MonoBehaviour
             chartRoot = GetComponent<RectTransform>(); // fallback
         }
 
-        Vector2 size = new Vector2(diamater, diamater);
+        Vector2 size = new Vector2(diameter, diameter);
 
         foreach (var sl in slices)
         {
@@ -62,6 +104,50 @@ public class DonutBuilder : MonoBehaviour
             RectTransform rt = centerMask.rectTransform;
             SnapToCenter(rt, size * innerHoleRatio);
             centerMask.preserveAspect = true;
+        }
+    }
+
+    private IEnumerator FetchAndApplyState()
+    {
+        string alien = PlayerData.SelectedAlienName;
+        if (string.IsNullOrEmpty(alien)) yield break;
+
+        var payload = JsonUtility.ToJson(new AlienNamePayload { alienName = alien });
+
+        using (var req = new UnityWebRequest(API_STATE, "POST"))
+        {
+            byte[] body = System.Text.Encoding.UTF8.GetBytes(payload);
+            req.uploadHandler = new UploadHandlerRaw(body);
+            req.downloadHandler = new DownloadHandlerBuffer();
+            req.SetRequestHeader("Content-Type", "application/json");
+
+            yield return req.SendWebRequest();
+
+            if (req.result == UnityWebRequest.Result.Success)
+            {
+                var response = JsonUtility.FromJson<AlienStateResponse>(req.downloadHandler.text);
+
+                // Update GameState so any other UI uses the same, fresh numbers
+                var data = GameState.Instance.GetAlienData(alien);
+                var dist = JsonUtility.FromJson<DistributionWrapper>(response.distributionJson);
+
+                data.emotionCounts.Clear();
+                for (int i = 0; i < dist.keys.Length; i++)
+                {
+                    data.emotionCounts[dist.keys[i]] = dist.values[i];
+                }
+
+                GameState.Instance.RaiseEmotionsChanged(alien);
+
+                // Now repaint this donut
+                Refresh();
+            }
+            else
+            {
+                // Fallback: just paint whatever GameState has
+                Refresh();
+                Debug.LogWarning("DonutBuilder: alien_state fetch failed: " + req.error);
+            }
         }
     }
 
@@ -168,5 +254,24 @@ public class DonutBuilder : MonoBehaviour
         rt.sizeDelta = size;
         rt.localScale = Vector3.one;
         rt.localRotation = Quaternion.identity;
+    }
+
+    private void OnEmotionsChanged(string alienName)
+    {
+        string current = PlayerData.SelectedAlienName;
+
+        // if this donut is for Penbol, any alien change could affect it via social cascade -> fetch
+        if (string.Equals(current, "PENBOL", System.StringComparison.OrdinalIgnoreCase))
+        {
+            StartCoroutine(FetchAndApplyState());
+            return;
+        }
+
+        // if this donut is for the same alien that just spoke...
+        if (string.Equals(current, alienName, System.StringComparison.OrdinalIgnoreCase))
+        {
+            // Non-Penbol: we already have the latest counts locally, so just repaint
+            Refresh();
+        }
     }
 }

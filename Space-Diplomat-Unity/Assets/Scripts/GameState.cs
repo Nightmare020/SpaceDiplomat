@@ -1,9 +1,11 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class GameState : MonoBehaviour
 {
     public static GameState Instance { get; private set; }
+    public static event Action<string> EmotionsChanged;
 
     // A record per alien
     public class AlienData
@@ -40,5 +42,10 @@ public class GameState : MonoBehaviour
             aliensData[alienName] = new AlienData(); // Create new data if it doesn't exist
         }
         return aliensData[alienName];
+    }
+
+    public void RaiseEmotionsChanged(string alienName = null)
+    {
+        EmotionsChanged?.Invoke(alienName);
     }
 }

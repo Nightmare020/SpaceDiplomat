@@ -1,5 +1,5 @@
-import dis
-import time
+﻿# -*- coding: utf-8 -*-
+
 from flask import Flask, request, jsonify
 import os
 import requests
@@ -24,7 +24,6 @@ base_temperature = float(os.getenv("TEMPERATURE", 0.7))
 alien_profiles_path = os.getenv("ALIEN_PROFILES_PATH", "AlienPersonalities.json")
 braxim_replies_path = os.getenv("BRAXIM_REPLIES_PATH", "BraximReplies.json")
 
-print(f"API KEY:", groq_api_key)
 print(f"MAX TOKENS:", max_tokens)
 print(f"TEMPERATURE:", base_temperature)
 print(f"ALIEN PROFILES PATH:", alien_profiles_path)
@@ -64,7 +63,6 @@ INTENTS = [
 Q = defaultdict(lambda: {a: random.uniform(-0.05, 0.05) for a in INTENTS})
 EPSILON = 0.15
 ALPHA = 0.25
-GAMMA = 0.90
 
 PAIR_RULE = {
     ("joy", "joy"):         +1.00,  # Ectasy
@@ -252,6 +250,10 @@ def load_braxim_replies(path):
         return []
 
 ALIENS = load_alien_profiles(alien_profiles_path)
+
+# ======================================
+# Braxim Static Replies Behaviour
+# ======================================
 BRAXIM_REPLIES = load_braxim_replies(braxim_replies_path)
 
 _braxim_last_idx = None  # Last used Braxim reply index
@@ -330,6 +332,46 @@ def choose_braxim_reply(user_input: str, rl_intent: str, topk: int = 6):
     _braxim_last_idx = idx  # remember last used index
     return BRAXIM_REPLIES[idx]["text"]
 
+# ======================================
+# Penbol Social Behaviour
+# ======================================
+def penbol_social_cascade():
+    """
+    Recompute Penbol's mood from current network,
+    even if we didn't talk with Penbol.
+    """
+    name = "PENBOL"
+    profile = ALIENS.get(name)
+    if not profile:
+        return
+
+    rel = profile.get("relations", {}) or {}
+    SOCIAL_K = float(profile.get("socialK", 0.15))
+    DECAY = 0.90  # decay factor for Penbol's mood
+
+    aa = alien_affect[name] # running affect
+    joy_gain = 0.0
+    anger_gain = 0.0
+
+    friend_score = 0.0
+    for other, w in rel.items():
+        # defaultdict gives 0.0 if missing
+        other_affect = alien_affect[(other or "").upper()]
+        other_joy = float(other_affect.get("joy", 0.0))
+        other_anger = float(other_affect.get("anger", 0.0))
+        friend_score += float(w) * (other_joy - other_anger)
+
+    # Clamp and convert to gains
+    friend_score = max(-1.0, min(1.0, friend_score))  # clamp to [-1, 1]
+    if friend_score > 0:
+        joy_gain = friend_score * SOCIAL_K
+    elif friend_score < 0:
+        anger_gain = (-friend_score) * SOCIAL_K
+
+    # Apply with decay
+    aa["joy"] = min(1.0, max(0.0, aa["joy"] * DECAY + joy_gain))
+    aa["anger"] = min(1.0, max(0.0, aa["anger"] * DECAY + anger_gain))
+
 # Running affect per alien
 alien_affect = defaultdict(lambda: {"joy": 0.0, "anger": 0.0})
 
@@ -372,18 +414,68 @@ def style_hints_from_traits(traits):
     return hints, eo, na, c
 
 def redact_sensitive(text):
+    """
+    Replace personal entities in user input with fixed role-play values.
+    - PERSON -> 'John'
+    - GPE / LOC -> 'Missouri, US'
+    - ORG -> 'Weyland-Yutani Corp'
+    """
+    RP_NAME = "John"
+    RP_HOME = "Missouri, US"
+    RP_COMPANY = "Weyland-Yutani Corp"
+
     if "ner" not in nlp_spacy.pipe_names:
-        print("Warning: NER is not available. Redaction will not work.")
-        return text, []
+        # Lightweight regex fallback for common self-diclosures
+        st = text
+
+        # Name patterns
+        st = re.sub(r"\b(my\s+name\s+is|call\s+me)\s+[A-Za-z][\w'\-]+(?:\s+[A-Za-z][\w'\-]+){0,2}",
+                   r"\1 " + RP_NAME, st, flags=re.I)
+        st = re.sub(r"\b(i\s*am|i['’]m)\s+[A-Za-z][\w'\-]+",
+                   r"\1 " + RP_NAME, st, flags=re.I)
+
+        # Location patterns
+        st = re.sub(r"\b(i\s*(?:am|['’]m)\s*from)\s+[^.,;!?]+",
+                    r"\1 " + RP_HOME, st, flags=re.I)
+        st = re.sub(r"\b(i\s*(?:live|am|['’]m)\s+in|i\s+was\s+born\s+in|born\s+in)\s+[^.,;!?]+",
+                   r"\1 " + RP_HOME, st, flags=re.I)
+
+        # Organization patterns
+        st = re.sub(r"\b(i\s*(?:work|serve|am\s+employed)\s+(?:at|for))\s+[^.,;!?]+",
+                    r"\1 " + RP_COMPANY, st, flags=re.I)
+        st = re.sub(r"\b(my\s+(?:employer|company|organization)\s+is)\s+[^.,;!?]+",
+                    r"\1 " + RP_COMPANY, st, flags=re.I)
+
+        return st, []
 
     doc = nlp_spacy(text)
     named = [{"text": ent.text, "label": ent.label_} for ent in doc.ents]
-    sensitive_labels = ["PERSON", "GPE", "ORG", "LOC"]
-    redacted = text
-    for ent in doc.ents:
-        if ent.label_ in sensitive_labels:
-            redacted = redacted.replace(ent.text, "[REDACTED]")
-    return redacted, named
+
+    # Replace entities inline (PERSON, GPE, ORG, LOC)
+    st = text
+    for ent in sorted(doc.ents, key=lambda e: e.start_char, reverse=True):
+        if ent.label_ in("PERSON",):
+            st = st[:ent.start_char] + RP_NAME + st[ent.end_char:]
+        elif ent.label_ in ("GPE", "LOC"):
+            st = st[:ent.start_char] + RP_HOME + st[ent.end_char:]
+        elif ent.label_ == "ORG":
+            st = st[:ent.start_char] + RP_COMPANY + st[ent.end_char:]
+
+    # Also handle "my name is .. / I live in .." lexical pattern
+    st = re.sub(r"\b(my\s+name\s+is|call\s+me)\s+[A-Za-z][\w'\-]+(?:\s+[A-Za-z][\w'\-]+){0,2}",
+               r"\1 " + RP_NAME, st, flags=re.I)
+    st = re.sub(r"\b(i\s*am|i['’]m)\s+[A-Za-z][\w'\-]+",
+               r"\1 " + RP_NAME, st, flags=re.I)
+    st = re.sub(r"\b(i\s*(?:am|['’]m)\s*from)\s+[^.,;!?]+",
+               r"\1 " + RP_HOME, st, flags=re.I)
+    st = re.sub(r"\b(i\s*(?:live|am|['’]m)\s+in|i\s+was\s+born\s+in|born\s+in)\s+[^.,;!?]+",
+               r"\1 " + RP_HOME, st, flags=re.I)
+    st = re.sub(r"\b(i\s*(?:work|serve|am\s+employed)\s+(?:at|for))\s+[^.,;!?]+",
+                r"\1 " + RP_COMPANY, st, flags=re.I)
+    st = re.sub(r"\b(my\s+(?:employer|company|organization)\s+is)\s+[^.,;!?]+",
+                r"\1 " + RP_COMPANY, st, flags=re.I)
+    
+    return st, named
 
 def top_emotion_classifier(raw_result):
     """
@@ -515,6 +607,15 @@ def chat():
 
     if not is_braxim:
         # --- System prompt ---
+        social_line = ""
+        if alien_name.upper() == "PENBOL":
+            rel = profile.get("relations", {}) or {}
+            likes = [k for k,v in rel.items() if v > 0]
+            dislikes = [k for k, v in rel.items() if v < 0]
+            if likes or dislikes:
+                social_line = ("social context: you currently like " + ", ".join(likes) if likes else "") + \
+                    ((" and dislike " if likes and dislikes else "dislike ") + ", ".join(dislikes) if dislikes else "") + \
+                    ". Let this subtly color your tone."
         system_prompt = f"""
         You are {profile['name']}, the alien leader.
         Persona: {profile.get('personalityType','')}.
@@ -522,6 +623,7 @@ def chat():
         Culture: {profile.get('culture', '')}.
         Stay in-character. {profile.get('behaviorInstruction', '')}
         Style hints: {", ".join(style_hints)}.
+        {social_line}
 
         Player emotion: {top_emotion} ({emotion_score:.2f}); sentiment polarity: {polarity:.2f}, subjectivity: {subjectivity:.2f}.
         Player said: {redacted_input}.
@@ -618,6 +720,33 @@ def chat():
         anger_gain *= 0.25
         joy_gain *= 0.25
 
+    # Social influence (Penbol only): friends' moods sway Penbol
+    if alien_name.upper() == "PENBOL":
+        rel = profile.get("relations", {}) or {}
+
+        # How much Penbol cares about friends' moods)
+        SOCIAL_K = float(profile.get("socialK", 0.15))
+
+        # friend_score > 0 if liked aliens are joyful (or disliked rivals are misserable)
+        friend_score = 0.0
+        for other_name, w in rel.items():
+            other_key = (other_name or "").upper()
+
+            #defaultdict gives 0.0 if missing
+            other_affect = alien_affect[other_key]
+
+            other_joy = float(other_affect.get("joy", 0.0))
+            other_anger = float(other_affect.get("anger", 0.0))
+            friend_score += float(w) * (other_joy - other_anger)
+
+        friend_score = max(-1.0, min(1.0, friend_score))  # clamp to [-1, 1]
+        # Apply social influence
+        if friend_score > 0:
+            joy_gain += friend_score * SOCIAL_K
+        elif friend_score < 0:
+            anger_gain += (-friend_score) * SOCIAL_K
+
+
     # Passive decay towards 0 (feelings fade)
     alien_affect[alien_name]["anger"] = min(1.0, max(0.0, alien_affect[alien_name]["anger"] * DECAY + anger_gain))
     alien_affect[alien_name]["joy"] = min(1.0, max(0.0, alien_affect[alien_name]["joy"] * DECAY + joy_gain))
@@ -652,6 +781,10 @@ def chat():
             "message": "Negotiation failed. The alien refuses to continue."
         }
 
+    # keep Penbol socially up-to-date when we talk to other aliens
+    if alien_name.upper() != "PENBOL":
+        penbol_social_cascade()
+
     # Log current state
     print(f"[{alien_name}] joy={alien_affect[alien_name]['joy']:.3f} / thr={joy_threshold} | "
           f"anger={alien_affect[alien_name]['anger']:.3f} / tol={anger_tolerance} | "
@@ -660,6 +793,27 @@ def chat():
     rl_reward = compute_reward(dist_map)
     Q_prev = Q[rl_state][rl_action]
     Q[rl_state][rl_action] = Q_prev + ALPHA * (rl_reward - Q_prev)
+
+    # Build the distribution to send back to Unity (with Penbol social overlay)
+    display_vals = list(vals)  # copy to avoid mutation
+    joy_i = canon_order.index("joy")
+    anger_i = canon_order.index("anger")
+
+    if alien_name.upper() == "PENBOL":
+        aa = alien_affect[alien_name] # Penbol's running mood after social influence/math above
+        overlay_strength = float(profile.get("socialOverlay", 0.5))
+
+        # Lift joy/anger visually to reflect current mood (gentle, not overriding)
+        display_vals[joy_i] = max(display_vals[joy_i], overlay_strength * float(aa.get("joy", 0.0)))
+        display_vals[anger_i] = max(display_vals[anger_i], overlay_strength * float(aa.get("anger", 0.0)))
+
+        # Renormalize to sum to 1
+        s = sum(display_vals) or 1.0
+        display_vals = [v / s for v in display_vals]
+    else:
+        display_vals = list(vals)  # just copy the original values
+
+    distribution_json = json.dumps({"keys": canon_order, "values": display_vals})
 
     # ======================================
     # Response
@@ -712,6 +866,41 @@ def reset_affect():
         alien_affect.clear()
         return jsonify({"ok": True, "reset": "ALL"})
     return jsonify({"ok": False, "error": "Unknown alien"}), 400
+
+
+@app.route('/alien_state', methods=['POST'])
+def alien_state():
+    data = request.get_json() or {}
+    name = (data.get("alienName") or "").strip().upper()
+    profile = ALIENS.get(name)
+    if not profile:
+        return jsonify({"error": f"Alien profile '{name}' not found"}), 400
+
+    # Base display distribution (neutral prior)
+    canon_order = ["disgust", "fear", "anger", "sadness", "joy"]
+    display_vals = [0.2, 0.2, 0.2, 0.2, 0.2]
+
+    # Overlay running mood
+    joy_i = canon_order.index("joy")
+    anger_i = canon_order.index("anger")
+    aa = alien_affect[name]
+    overlay = float(profile.get("socialOverlay", 0.5)) if name == "PENBOL" else 0.0
+    display_vals[joy_i] = max(display_vals[joy_i], overlay * float(aa.get("joy", 0.0)))
+    display_vals[anger_i] = max(display_vals[anger_i], overlay * float(aa.get("anger", 0.0)))
+
+    s = sum(display_vals) or 1.0
+    display_vals = [v / s for v in display_vals]
+
+    return jsonify({
+        "alien": name,
+        "state": {"joy": aa.get("joy", 0.0), "anger": aa.get("anger", 0.0)},
+        "distributionJson": json.dumps({
+            "keys": canon_order,
+            "values": display_vals
+        }),
+        "joyThreshold": float(profile.get("joyThreshold", 0.9)),
+        "angerTolerance": float(profile.get("angerTolerance", 0.3)),
+    })
 
 if __name__ == '__main__':
     app.run(port=5000)
