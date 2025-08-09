@@ -30,9 +30,13 @@ public class BackendBootstrap : MonoBehaviour
 
             if (req.result != UnityWebRequest.Result.Success)
             {
+#if UNITY_EDITOR
                 // Remote not reachable -> fall back to local dev server
                 ServerConfig.OverrideBaseUrl("http://127.0.0.1:5000");
                 Debug.LogWarning($"Backend not reachable at {healthUrl}. Falling back to {ServerConfig.BaseUrl}");
+#else
+                Debug.LogError($"Backend not reachable at {healthUrl}.");
+#endif
             }
             else
             {

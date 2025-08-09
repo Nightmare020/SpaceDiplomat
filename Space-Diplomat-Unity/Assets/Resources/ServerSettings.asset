@@ -12,4 +12,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ce646b80b7baaf94ea07f8d923912419, type: 3}
   m_Name: ServerSettings
   m_EditorClassIdentifier: 
-  BaseUrl: https://ai.spacediplomat.com
+  BaseUrl: https://aispacediplomat.com
