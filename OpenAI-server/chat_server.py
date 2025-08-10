@@ -29,7 +29,7 @@ save_every = int(os.getenv("SAVE_EVERY", "5")) # autosave every N chats
 
 # ------------- GLOBAL STATE -------------
 Q = defaultdict(lambda:defaultdict(float))                      # Q-table
-alien_affect = defaultdict(lambda: {"joy": 0.0, "anger": 0.0}   # per-alien emotion state
+alien_affect = defaultdict(lambda: {"joy": 0.0, "anger": 0.0})  # per-alien emotion state
 closed_aliens = {}                                              # any "closed" flags which persist
 STATE_LOCK = threading.Lock()
 
