@@ -135,7 +135,7 @@ public class DonutBuilder : MonoBehaviour
 
                 // detect flat ~0.2 each (server neutral prior)
                 bool looksNeutral = true;
-                if ( (dist.values != null && dist.values.Length == 5)
+                if (dist.values != null && dist.values.Length == 5)
                 {
                     for (int i = 0; i < dist.values.Length; i++)
                     {

@@ -997,7 +997,7 @@ def alien_state():
             display_vals[fear_i] += 0.20 * neg
             display_vals[sad_i] += 0.10 * neg
 
-    # Renormalize
+    # Normalize
     s = sum(display_vals) or 1.0
     display_vals = [v / s for v in display_vals]
 
