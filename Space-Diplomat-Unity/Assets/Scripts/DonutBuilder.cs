@@ -133,10 +133,27 @@ public class DonutBuilder : MonoBehaviour
                 var data = GameState.Instance.GetAlienData(alien);
                 var dist = JsonUtility.FromJson<DistributionWrapper>(response.distributionJson);
 
-                data.emotionCounts.Clear();
-                for (int i = 0; i < dist.keys.Length; i++)
+                // detect flat ~0.2 each (server neutral prior)
+                bool looksNeutral = true;
+                if ( (dist.values != null && dist.values.Length == 5)
                 {
-                    data.emotionCounts[dist.keys[i]] = dist.values[i];
+                    for (int i = 0; i < dist.values.Length; i++)
+                    {
+                        if (Mathf.Abs(dist.values[i] - 0.2f) > 0.03f)
+                        {
+                            looksNeutral = false;
+                            break;
+                        }
+                    }
+                }
+
+                if (!looksNeutral)
+                {
+                    data.emotionCounts.Clear();
+                    for (int i = 0;i < dist.keys.Length;i++)
+                    {
+                        data.emotionCounts[dist.keys[i]] = dist.values[i];
+                    }
                 }
 
                 // Now repaint this donut
