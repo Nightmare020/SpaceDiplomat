@@ -140,7 +140,7 @@ public class DonutBuilder : MonoBehaviour
             req.uploadHandler = new UploadHandlerRaw(body);
             req.downloadHandler = new DownloadHandlerBuffer();
             req.SetRequestHeader("Content-Type", "application/json");
-            req.timeout = 30;
+
             yield return req.SendWebRequest();
 
             if (req.result == UnityWebRequest.Result.Success)
