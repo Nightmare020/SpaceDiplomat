@@ -5,7 +5,6 @@ import os
 import requests
 import spacy
 import json
-import threading
 from dotenv import load_dotenv
 from textblob import TextBlob
 from transformers import pipeline
@@ -26,12 +25,6 @@ alien_profiles_path = os.getenv("ALIEN_PROFILES_PATH", "AlienPersonalities.json"
 braxim_replies_path = os.getenv("BRAXIM_REPLIES_PATH", "BraximReplies.json")
 state_path = os.getenv("STATE_PATH", "server_state.json")
 save_every = int(os.getenv("SAVE_EVERY", "5")) # autosave every N chats
-
-# ------------- GLOBAL STATE -------------
-Q = defaultdict(lambda:defaultdict(float))                      # Q-table
-alien_affect = defaultdict(lambda: {"joy": 0.0, "anger": 0.0}   # per-alien emotion state
-closed_aliens = {}                                              # any "closed" flags which persist
-STATE_LOCK = threading.Lock()
 
 _update_count = 0
 last_sa = defaultdict(lambda: None) # per-alien last (state, action)
@@ -204,8 +197,6 @@ def compute_reward(dist):
     return float(max(-2.0, min(2.0, reward)))
 
 def save_state():
-    os.makedirs(os.path.dirname(state_path), exist_ok=True)
-
     # jsonify defaultdicts into plain dicts
     q_plain = {s: {a: float(v) for a, v in acts.items()} for s, acts in Q.items()}
     affect_plain = {k: {"joy": float(v.get("joy", 0.0)), "anger": float(v.get("anger", 0.0))}
@@ -217,54 +208,36 @@ def save_state():
         "closed_aliens": closed_aliens,
         "last_dist": last_plain
     }
-
-    with STATE_LOCK:
-        with open(state_path, "w", encoding="utf-8") as f:
-            json.dump(data, f, indent=2)
+    with open(state_path, "w", encoding="utf-8") as f:
+        json.dump(data, f, indent=2)
 
 def load_state():
-    """
-    Load Q-table, affect, and closed_aliens from STATE_PATH
-    If file is missing/empty/invalid, intialize with safe defaults
-    """
-    global Q, closed_aliens, last_dist, alien_affect
+    global Q, alien_affect, closed_aliens, last_dist
+    if not os.path.exists(state_path):
+        return
+    with open(state_path, "r", encoding="utf-8") as f:
+        data = json.load(f)
 
-    os.makedirs(os.path.dirname(state_path), exist_ok=True)
-
-    data = None
-    try:
-        with open(state_path, "r", encoding="utf-8") as f:
-            raw = f.read().strip()
-            data = json.loads(raw) if raw else None
-    except Exception as e:
-        print(f"[state] missing/invalid at {state_path}: {e}; starting fresh")
-    
-    if not data:
-        data = {"Q": {}, "alien_affect": {}, "closed_aliens": {}, "last_dist": {}}
-        with open(state_path, "w", encoding="utf-8") as f:
-            json.dump(data, f)
-
-    # Rebind Q with intent defaults
-    Q = defaultdict(lambda: {a: 0.0 for a in INTENTS})
+    # rebuild Q with intent defaults
+    Q.clear()
     for s, acts in data.get("Q", {}).items():
         Q[s] = {a: float(acts.get(a, 0.0)) for a in INTENTS}
 
-    # running affect
+    # rebuild affects
     alien_affect.clear()
-    for k, v in (data.get("alien_affect") or {}).items():
-        alien_affect[k] = {
-            "joy": float(v.get("joy", 0.0)), 
-            "anger": float(v.get("anger", 0.0))
-        }
+    for k, v in data.get("alien_affect", {}).items():
+        alien_affect[k] = {"joy": float(v.get("joy", 0.0)), "anger": float(v.get("anger", 0.0))}
+    closed_aliens.clear()
+    closed_aliens.update(data.get("closed_aliens", {}))
 
-    # closed flags
-    closed_aliens = dict(data.get("closed_aliens") or {})
-
-    # last donut sent to client
-    last_dist.clear()
-    for k, arr in (data.get("last_dist") or {}).items():
-        arr = (arr + [0,0,0,0,0])[:5]
-        last_dist[k] = [float(x) for x in arr]
+    # restore last distribution
+    last_loaded = data.get("last_dist", {})
+    if last_loaded:
+        last_dist.clear()
+        for k, arr in last_loaded.items():
+            #sanity: pad/trim to 5
+            fixed = (arr + [0,0,0,0,0])[:5]
+            last_dist[k] = [float(x) for x in fixed]
 
 # ======================================
 # Alien Profiles
@@ -325,6 +298,7 @@ def load_braxim_replies(path):
         return []
 
 ALIENS = load_alien_profiles(alien_profiles_path)
+load_state()
 
 # ======================================
 # Braxim Static Replies Behaviour
@@ -448,6 +422,12 @@ def penbol_social_cascade():
     aa["anger"] = min(1.0, max(0.0, aa["anger"] * DECAY + anger_gain))
 
     print(f"[Penbol cascade] friend_score={friend_score:.3f} joy->{aa['joy']:.3f} anger->{aa['anger']:.3f}")
+
+# Running affect per alien
+alien_affect = defaultdict(lambda: {"joy": 0.0, "anger": 0.0})
+
+# Aliens that are closed (talks concluded)
+closed_aliens = {}
 
 # ======================================
 # Helper methods
@@ -586,13 +566,12 @@ def adjusted_temperature(base_temp, conscientiousness):
 # Flask App
 # ======================================
 app = Flask(__name__)
-load_state()
 
 @app.route('/chat', methods=['POST'])
 def chat():
     data = request.get_json() or {}
     user_input = (data.get("message") or "").strip()
-    alien_name = (data.get("alienName") or "ZAXIN").strip().upper()
+    alien_name = data.get("alienName", "Z1A-X0N")
 
     if not user_input:
         return jsonify({"error": "Empty message"}), 400
