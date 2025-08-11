@@ -1039,8 +1039,7 @@ def alien_state():
     })
 
 @app.route('/health', methods=['GET'])
-def health(): 
-    return jsonify({"ok": True}), 200
+def health(): return jsonify({"ok": True})
 
 @app.route('/save', methods=['POST'])
 def save_now():
