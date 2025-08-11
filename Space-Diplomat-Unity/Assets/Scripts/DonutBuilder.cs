@@ -8,8 +8,10 @@ using System.Collections;
 
 public class DonutBuilder : MonoBehaviour
 {
-    private const string SERVER_BASE = "http://127.0.0.1:5000";
-    private const string API_STATE = SERVER_BASE + "/alien_state";
+    private static string SERVER_BASE => ServerConfig.BaseUrl;
+    private static string API_CHAT => SERVER_BASE + "/chat";
+    private static string API_STATE => SERVER_BASE + "/alien_state";
+    private static string API_HEALTH => SERVER_BASE + "/health";
 
 
     [System.Serializable]
@@ -71,7 +73,8 @@ public class DonutBuilder : MonoBehaviour
         NormalizeRects();
 
         // Try to get a fresh snapshot from server, the refresh UI
-        StartCoroutine(FetchAndApplyState());
+        if (string.Equals(PlayerData.SelectedAlienName, "PENBOL", System.StringComparison.OrdinalIgnoreCase))
+            StartCoroutine(FetchAndApplyState());
 
         GameState.EmotionsChanged += OnEmotionsChanged;
     }
