@@ -1409,9 +1409,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cd099d7b6c2fd1443b0b3ace3338dfed, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  acceleration: 180
-  maxSpeed: 350
-  brakeForce: 120
+  acceleration: 230
+  maxSpeed: 500
+  brakeForce: 200
   yawRate: 120
   yawAccel: 600
   rotateOnlyWhenThrusting: 0

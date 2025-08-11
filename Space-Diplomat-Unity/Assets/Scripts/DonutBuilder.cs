@@ -8,10 +8,8 @@ using System.Collections;
 
 public class DonutBuilder : MonoBehaviour
 {
-    private static string SERVER_BASE => ServerConfig.BaseUrl;
-    private static string API_CHAT => SERVER_BASE + "/chat";
-    private static string API_STATE => SERVER_BASE + "/alien_state";
-    private static string API_HEALTH => SERVER_BASE + "/health";
+    private const string SERVER_BASE = "http://127.0.0.1:5000";
+    private const string API_STATE = SERVER_BASE + "/alien_state";
 
 
     [System.Serializable]
@@ -139,6 +137,8 @@ public class DonutBuilder : MonoBehaviour
                     data.emotionCounts[dist.keys[i]] = dist.values[i];
                 }
 
+                GameState.Instance.RaiseEmotionsChanged(alien);
+
                 // Now repaint this donut
                 Refresh();
             }
@@ -260,18 +260,10 @@ public class DonutBuilder : MonoBehaviour
     {
         string current = PlayerData.SelectedAlienName;
 
-        // if this donut is for Penbol, only fetch when other alien changed
+        // if this donut is for Penbol, any alien change could affect it via social cascade -> fetch
         if (string.Equals(current, "PENBOL", System.StringComparison.OrdinalIgnoreCase))
         {
-            if (!string.Equals(alienName, "PENBOL", System.StringComparison.OrdinalIgnoreCase))
-            {
-                StartCoroutine(FetchAndApplyState());
-            }
-            else
-            {
-                Refresh();
-            }
-
+            StartCoroutine(FetchAndApplyState());
             return;
         }
 
