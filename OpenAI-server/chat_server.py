@@ -204,9 +204,7 @@ def compute_reward(dist):
     return float(max(-2.0, min(2.0, reward)))
 
 def save_state():
-    dir_ = os.path.dirname(state_path)
-    if dir_:
-        os.makedirs(dir_, exist_ok=True)
+    os.makedirs(os.path.dirname(state_path), exist_ok=True)
 
     # jsonify defaultdicts into plain dicts
     q_plain = {s: {a: float(v) for a, v in acts.items()} for s, acts in Q.items()}
@@ -231,9 +229,7 @@ def load_state():
     """
     global Q, closed_aliens, last_dist, alien_affect
 
-    dir_ = os.path.dirname(state_path)
-    if dir_:
-        os.makedirs(dir_, exist_ok=True)
+    os.makedirs(os.path.dirname(state_path), exist_ok=True)
 
     data = None
     try:
@@ -656,17 +652,7 @@ def chat():
 
     # Build ordered canonical distribution
     canon_order = ["disgust", "fear", "anger", "sadness", "joy"]
-
-    arr = []
-    if isinstance(emotion_results, list):
-        if emotion_results and isinstance(emotion_results[0], list):
-            arr = emotion_results[0]
-        else:
-            arr = emotion_results
-    elif isinstance(emotion_results, dict):
-        arr = [emotion_results]
-
-    raw = {d['label'].lower(): float(d['score']) for d in arr}
+    raw = {d['label'].lower(): float(d['score']) for d in emotion_results[0]}
     vals = [raw.get(k, 0.0) for k in canon_order]
     s = sum(vals) or 1.0
     vals = [v / s for v in vals]
@@ -896,7 +882,7 @@ def chat():
 
     if alien_name.upper() == "PENBOL":
         aa = alien_affect[alien_name] # Penbol's running mood after social influence/math above
-        overlay_strength = float(profile.get("socialOverlay", 0.5))
+        overlay_strength = float(profile.get("socialOverlay", 0.5)) if alien_name == "PENBOL" else 0.0
 
         # Lift joy/anger visually to reflect current mood (gentle, not overriding)
         display_vals[joy_i] = max(display_vals[joy_i], overlay_strength * float(aa.get("joy", 0.0)))
@@ -965,33 +951,18 @@ def chat():
 # Endpoint to reset affect during testing
 @app.route('/reset_affect', methods=['POST'])
 def reset_affect():
-    global alien_affect, last_dist, closed_aliens
-
-    payload = request.get_json(silent=True) or {}
-    name = (payload.get("alienName") or "").strip().upper()
-
-    NEUTRAL_DIST = [0.2,0.2,0.2,0.2,0.2]
-    NEUTRAL_AFFECT = {
-        "disgust": 0.0, "fear": 0.0, "anger": 0.0, "sadness": 0.0, "joy": 0.0
-    }
-
+    data = request.get_json() or {}
+    alien_name = (data.get("alienName") or "").strip().upper()
     with STATE_LOCK:
-        if name:
-            if name not in ALIENS:
-                return jsonify({"ok": False, "error": f"Unknown alien '{name}'"}), 400
-            #safest: drop running affect; neutralize donut; clear closed flag
-            alien_affect.pop(name, None)
-            closed_aliens.pop(name, None)
-            last_dist[name] = NEUTRAL_DIST.copy()
-            last_sa.pop(name, None)
+        if alien_name:
+            alien_affect[alien_name] = {"joy": 0.0, "anger": 0.0}
+            last_dist[alien_name] = [0.2,0.2,0.2,0.2,0.2]
+            closed_aliens.pop(alien_name, None)
         else:
-            # fresh run for everyone
+            # Reset all aliens
             alien_affect.clear()
+            last_dist.clear()
             closed_aliens.clear()
-            last_sa.clear()
-            # seed neutral donut for all aliens so charts are correct before first chat
-            for n in ALIENS.keys():
-                last_dist[n.upper()] = NEUTRAL_DIST.copy()
         save_state()
     return jsonify({"ok": True})
 

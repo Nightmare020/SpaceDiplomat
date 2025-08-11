@@ -181,14 +181,8 @@ public class ChatManager : MonoBehaviour
             lastEmotionKey = "Neutral"; // Default to Neutral if no emotion is set
         }
 
-        var sprite = LoadEmotion(currentAlienName, alienData.lastEmotionKey ?? "Neutral");
-        if (sprite == null)
-        {
-            sprite = LoadEmotion(currentAlienName, "Neutral");
-        }
-
         // Load the initial alien emotion sprite based on the selected alien name
-        alienEmotionImage.sprite = sprite;
+        alienEmotionImage.sprite = LoadEmotion(currentAlienName, lastEmotionKey);
     }
 
     void SubmitMessage()
