@@ -33,7 +33,7 @@ public class GameBootstrap : MonoBehaviour
         EnsureNeutralIfNewGame("BRAXIM");
 
         // Server-side reset
-        yield return ResetServerAffect();
+        StartCoroutine(ResetServerAffect(5));
 
         // Notify UI to repaint
         GameState.Instance.RaiseEmotionsChanged(null);
@@ -41,6 +41,7 @@ public class GameBootstrap : MonoBehaviour
         // Unblock everyone else
         BootDone = true;
         Booted?.Invoke();
+        yield break;
     }
 
     private void EnsureNeutralIfNewGame(string alien)
@@ -57,13 +58,14 @@ public class GameBootstrap : MonoBehaviour
         }
     }
 
-    IEnumerator ResetServerAffect()
+    IEnumerator ResetServerAffect(int timeoutSeconds = 5)
     {
         var json = "{}";
         var req = new UnityWebRequest(API_RESET, "POST");
         req.uploadHandler = new UploadHandlerRaw(System.Text.Encoding.UTF8.GetBytes(json));
         req.downloadHandler = new DownloadHandlerBuffer();
         req.SetRequestHeader("Content-Type", "application/json");
+        req.timeout = timeoutSeconds;
         yield return req.SendWebRequest();
         if (req.result != UnityWebRequest.Result.Success)
             Debug.LogWarning("Reset affect failed:" + req.error);
