@@ -882,7 +882,7 @@ def chat():
 
     if alien_name.upper() == "PENBOL":
         aa = alien_affect[alien_name] # Penbol's running mood after social influence/math above
-        overlay_strength = float(profile.get("socialOverlay", 0.5)) if alien_name == "PENBOL" else 0.0
+        overlay_strength = float(profile.get("socialOverlay", 0.5)) if name == "PENBOL" else 0.0
 
         # Lift joy/anger visually to reflect current mood (gentle, not overriding)
         display_vals[joy_i] = max(display_vals[joy_i], overlay_strength * float(aa.get("joy", 0.0)))
