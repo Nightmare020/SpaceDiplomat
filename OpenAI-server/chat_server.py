@@ -270,6 +270,15 @@ def load_state():
         arr = (arr + [0,0,0,0,0])[:5]
         last_dist[k] = [float(x) for x in arr]
 
+def _warmup():
+    try:
+        emotion_classifier("hello")
+        print("[warmup] emotion model ready")
+    except Exception as e:
+        print("[warmup] error:", e)
+
+threading.Thread(target=_warmup, daemon=True).start()
+
 # ======================================
 # Alien Profiles
 # ======================================

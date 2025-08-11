@@ -296,7 +296,7 @@ public class ChatManager : MonoBehaviour
         request.uploadHandler = new UploadHandlerRaw(bodyRaw);
         request.downloadHandler = new DownloadHandlerBuffer();
         request.SetRequestHeader("Content-Type", "application/json");
-
+        request.timeout = 30;
         yield return request.SendWebRequest();
 
         if (request.result == UnityWebRequest.Result.Success)

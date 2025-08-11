@@ -28,12 +28,15 @@ public class GameBootstrap : MonoBehaviour
 
     private IEnumerator Boot()
     {
+        // Wait until backend says ok
+        yield return WaitForHealthy(30, 5); // 30s timeout per try, up to 5 tries
+
         EnsureNeutralIfNewGame("ZAXIN");
         EnsureNeutralIfNewGame("PENBOL");
         EnsureNeutralIfNewGame("BRAXIM");
 
         // Server-side reset
-        StartCoroutine(ResetServerAffect(5));
+        StartCoroutine(ResetServerAffect(30));
 
         // Notify UI to repaint
         GameState.Instance.RaiseEmotionsChanged(null);
@@ -56,6 +59,22 @@ public class GameBootstrap : MonoBehaviour
             data.emotionCounts["disgust"] = 0.2f;
             data.lastEmotionKey = "Neutral";
         }
+    }
+
+    private IEnumerator WaitForHealthy(int perTryTimeoutSeconds, int retries)
+    {
+        var url = ServerConfig.BaseUrl + "/health";
+        for (int i = 0; i < retries; i++)
+        {
+            var req = new UnityWebRequest(url, "GET");
+            req.downloadHandler = new DownloadHandlerBuffer();
+            req.timeout = perTryTimeoutSeconds;
+            yield return req.SendWebRequest();
+            if (req.result == UnityWebRequest.Result.Success)
+                yield break; // healthy
+            yield return new WaitForSeconds(1f);
+        }
+        Debug.LogWarning("Backend health did not confirm; proceeding anyway.");
     }
 
     IEnumerator ResetServerAffect(int timeoutSeconds = 5)
