@@ -919,5 +919,9 @@ def alien_state():
         "angerTolerance": float(profile.get("angerTolerance", 0.3)),
     })
 
+@app.route('/health', methods=['GET'])
+def health(): 
+    return jsonify({"ok": True}), 200
+
 if __name__ == '__main__':
     app.run(port=5000)

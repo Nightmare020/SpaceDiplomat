@@ -43,8 +43,10 @@ public class ChatManager : MonoBehaviour
     private static readonly Regex rxOrg2 = new Regex(@"\b(my\s+(?:employer|company|organization)\s+is)\s+([^.,;!?]+)",
         RegexOptions.IgnoreCase | RegexOptions.Compiled);
 
-    private const string SERVER_BASE = "http://127.0.0.1:5000";
-    private const string API_CHAT = SERVER_BASE + "/chat";
+    private static string SERVER_BASE => ServerConfig.BaseUrl;
+    private static string API_CHAT => SERVER_BASE + "/chat";
+    private static string API_STATE => SERVER_BASE + "/alien_state";
+    private static string API_HEALTH => SERVER_BASE + "/health";
 
     private bool alienTalking = false;
     private bool _chatLocked = false;
