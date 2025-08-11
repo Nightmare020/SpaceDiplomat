@@ -951,20 +951,20 @@ def chat():
 # Endpoint to reset affect during testing
 @app.route('/reset_affect', methods=['POST'])
 def reset_affect():
+    global closed_aliens, last_dist
     data = request.get_json() or {}
-    alien_name = (data.get("alienName") or "").strip().upper()
-    with STATE_LOCK:
-        if alien_name:
-            alien_affect[alien_name] = {"joy": 0.0, "anger": 0.0}
-            last_dist[alien_name] = [0.2,0.2,0.2,0.2,0.2]
-            closed_aliens.pop(alien_name, None)
-        else:
-            # Reset all aliens
-            alien_affect.clear()
-            last_dist.clear()
-            closed_aliens.clear()
-        save_state()
-    return jsonify({"ok": True})
+    alien_name = data.get("alienName", None)
+    if alien_name:
+        alien_affect[alien_name] = {"joy": 0.0, "anger": 0.0}
+        last_dist.pop(alien_name, None)
+        closed_aliens.pop(name, None)
+        return jsonify({"ok": True, "reset": alien_name})
+    else:
+        # Reset all aliens
+        alien_affect.clear()
+        last_dist.clear()
+        closed_aliens.clear()
+        return jsonify({"ok": True, "reset": "ALL"})
 
 
 
