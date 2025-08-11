@@ -69,6 +69,29 @@ public class DonutBuilder : MonoBehaviour
 
     private void OnEnable()
     {
+        if (!GameBootstrap.BootDone)
+        {
+            GameBootstrap.Booted += OnBootedDonut;
+            return;
+        }
+
+        SafeEnable();
+    }
+
+    private void OnDisable()
+    {
+        GameBootstrap.Booted -= OnBootedDonut;
+        GameState.EmotionsChanged -= OnEmotionsChanged;
+    }
+
+    private void OnBootedDonut()
+    {
+        GameBootstrap.Booted -= OnBootedDonut;
+        SafeEnable();
+    }
+
+    private void SafeEnable()
+    {
         // Normalize rects in case layout changed
         NormalizeRects();
 
@@ -76,11 +99,6 @@ public class DonutBuilder : MonoBehaviour
         StartCoroutine(FetchAndApplyState());
 
         GameState.EmotionsChanged += OnEmotionsChanged;
-    }
-
-    private void OnDisable()
-    {
-        GameState.EmotionsChanged -= OnEmotionsChanged;
     }
 
     // Force identical anchors/size/position for all chart pieces
@@ -133,6 +151,11 @@ public class DonutBuilder : MonoBehaviour
                 var data = GameState.Instance.GetAlienData(alien);
                 var dist = JsonUtility.FromJson<DistributionWrapper>(response.distributionJson);
 
+                // Only let server override if this alien has in-session history, or it's Penbol
+                bool allowServer =
+                    string.Equals(alien, "PENBOL", System.StringComparison.OrdinalIgnoreCase) ||
+                    (data.chatHistory != null && data.chatHistory.Count > 0);
+
                 // detect flat ~0.2 each (server neutral prior)
                 bool looksNeutral = true;
                 if (dist.values != null && dist.values.Length == 5)
@@ -147,13 +170,26 @@ public class DonutBuilder : MonoBehaviour
                     }
                 }
 
-                if (!looksNeutral)
+                if (allowServer && !looksNeutral)
                 {
+                    // Always take server truth, even if neutral
                     data.emotionCounts.Clear();
                     for (int i = 0;i < dist.keys.Length;i++)
                     {
-                        data.emotionCounts[dist.keys[i]] = dist.values[i];
+                        var k = (dist.keys[i] ?? "").ToLowerInvariant();
+                        data.emotionCounts[k] = Mathf.Max(0f, dist.values[i]);
                     }
+
+                    // ENsure all 5 exist (fallback 0.2)
+                    foreach (var k in new[] { "joy", "sadness", "anger", "fear", "disgust" })
+                    {
+                        if (!data.emotionCounts.ContainsKey(k))
+                        {
+                            data.emotionCounts[k] = 0.2f;
+                        }
+                    }
+
+                    GameState.Instance.RaiseEmotionsChanged();
                 }
 
                 // Now repaint this donut
@@ -282,6 +318,7 @@ public class DonutBuilder : MonoBehaviour
         {
             if (!string.Equals(alienName, "PENBOL", System.StringComparison.OrdinalIgnoreCase))
             {
+
                 StartCoroutine(FetchAndApplyState());
             }
             else

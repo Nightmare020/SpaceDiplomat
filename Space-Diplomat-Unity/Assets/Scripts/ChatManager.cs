@@ -59,6 +59,16 @@ public class ChatManager : MonoBehaviour
     // Awake is called when the script instance is being loaded
     void Awake()
     {
+        if (!GameBootstrap.BootDone)
+        {
+            GameBootstrap.Booted += OnBootedChat;
+            return;
+        }
+        Init();
+    }
+
+    private void Init()
+    {
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;
 
@@ -95,7 +105,14 @@ public class ChatManager : MonoBehaviour
 
     private void OnDestroy()
     {
+        GameBootstrap.Booted -= OnBootedChat;
         GameState.EmotionsChanged -= OnEmotionsChanged;
+    }
+
+    private void OnBootedChat()
+    {
+        GameBootstrap.Booted -= OnBootedChat;
+        Init();
     }
 
     // Update is called once per frame

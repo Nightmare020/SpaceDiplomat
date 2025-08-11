@@ -882,7 +882,7 @@ def chat():
 
     if alien_name.upper() == "PENBOL":
         aa = alien_affect[alien_name] # Penbol's running mood after social influence/math above
-        overlay_strength = float(profile.get("socialOverlay", 0.5))
+        overlay_strength = float(profile.get("socialOverlay", 0.5)) if name == "PENBOL" else 0.0
 
         # Lift joy/anger visually to reflect current mood (gentle, not overriding)
         display_vals[joy_i] = max(display_vals[joy_i], overlay_strength * float(aa.get("joy", 0.0)))
@@ -951,16 +951,21 @@ def chat():
 # Endpoint to reset affect during testing
 @app.route('/reset_affect', methods=['POST'])
 def reset_affect():
+    global closed_aliens, last_dist
     data = request.get_json() or {}
     alien_name = data.get("alienName", None)
-    if alien_name and alien_name in alien_affect:
+    if alien_name:
         alien_affect[alien_name] = {"joy": 0.0, "anger": 0.0}
+        last_dist.pop(alien_name, None)
+        closed_aliens.pop(name, None)
         return jsonify({"ok": True, "reset": alien_name})
-    elif not alien_name:
+    else:
         # Reset all aliens
         alien_affect.clear()
+        last_dist.clear()
+        closed_aliens.clear()
         return jsonify({"ok": True, "reset": "ALL"})
-    return jsonify({"ok": False, "error": "Unknown alien"}), 400
+
 
 
 @app.route('/alien_state', methods=['POST'])
