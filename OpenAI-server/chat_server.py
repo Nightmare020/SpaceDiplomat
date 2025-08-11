@@ -28,7 +28,6 @@ save_every = int(os.getenv("SAVE_EVERY", "5")) # autosave every N chats
 
 _update_count = 0
 last_sa = defaultdict(lambda: None) # per-alien last (state, action)
-last_dist = defaultdict(lambda: [0.2, 0.2, 0.2, 0.2, 0.2])
 
 print(f"MAX TOKENS:", max_tokens)
 print(f"TEMPERATURE:", base_temperature)
@@ -201,18 +200,16 @@ def save_state():
     q_plain = {s: {a: float(v) for a, v in acts.items()} for s, acts in Q.items()}
     affect_plain = {k: {"joy": float(v.get("joy", 0.0)), "anger": float(v.get("anger", 0.0))}
                     for k, v in alien_affect.items()}
-    last_plain = {k: [float(x) for x in v] for k, v in last_dist.items()}
     data = {
         "Q": q_plain,
         "alien_affect": affect_plain,
-        "closed_aliens": closed_aliens,
-        "last_dist": last_plain
+        "closed_aliens": closed_aliens
     }
     with open(state_path, "w", encoding="utf-8") as f:
         json.dump(data, f, indent=2)
 
 def load_state():
-    global Q, alien_affect, closed_aliens, last_dist
+    global Q, alien_affect, closed_aliens
     if not os.path.exists(state_path):
         return
     with open(state_path, "r", encoding="utf-8") as f:
@@ -229,15 +226,6 @@ def load_state():
         alien_affect[k] = {"joy": float(v.get("joy", 0.0)), "anger": float(v.get("anger", 0.0))}
     closed_aliens.clear()
     closed_aliens.update(data.get("closed_aliens", {}))
-
-    # restore last distribution
-    last_loaded = data.get("last_dist", {})
-    if last_loaded:
-        last_dist.clear()
-        for k, arr in last_loaded.items():
-            #sanity: pad/trim to 5
-            fixed = (arr + [0,0,0,0,0])[:5]
-            last_dist[k] = [float(x) for x in fixed]
 
 # ======================================
 # Alien Profiles
@@ -875,9 +863,6 @@ def chat():
 
     distribution_json = json.dumps({"keys": canon_order, "values": display_vals})
     
-    # remember the exact donut sent to the client
-    last_dist[alien_name] = list(display_vals)
-
     # remember (state, action) for next trun's delayed credit
     last_sa[alien_name] = (rl_state, rl_action)
 
@@ -952,6 +937,7 @@ def alien_state():
 
     # Base display distribution (neutral prior)
     canon_order = ["disgust", "fear", "anger", "sadness", "joy"]
+    display_vals = [0.2, 0.2, 0.2, 0.2, 0.2]
 
     # Overlay running mood
     joy_i = canon_order.index("joy")
@@ -960,20 +946,16 @@ def alien_state():
     sad_i = canon_order.index("sadness")
     disgust_i = canon_order.index("disgust")
 
-    # start from the last donut we sent for this alien
-    display_vals = list(last_dist.get(name, [0.2,0.2,0.2,0.2,0.2]))
-
-    # gently reflect current running affect (joy/anger) for all aliens
     aa = alien_affect[name]
-    base_overlay = float(profile.get("baseOverlay", 0.35)) # tweakable per-alien, default gentle
-    display_vals[joy_i] = max(display_vals[joy_i], base_overlay * float(aa.get("joy", 0.0)))
-    display_vals[anger_i] = max(display_vals[anger_i], base_overlay * float(aa.get("anger", 0.0)))
 
-    # Penbol: add social visualization using relations
     if name == "PENBOL":
         overlay = float(profile.get("socialOverlay", 0.7))
 
-        # recompute friend score love for display
+        # Add Penbol's stored mood
+        display_vals[joy_i] += overlay * float(aa.get("joy", 0.0))
+        display_vals[anger_i] += overlay * float(aa.get("anger", 0.0))
+
+        # Compute a fresh social friend_score for diaplay only
         rel = profile.get("relations", {}) or {}
         friend_score = 0.0
         for other, w in rel.items():
@@ -985,17 +967,18 @@ def alien_state():
         if friend_score > 0.0:
             pos = overlay * friend_score
             display_vals[joy_i] += pos
-            # slightly de-emphasis of anger
+            # Slightly de-emphasis of anger
             display_vals[anger_i] *= (1.0 - 0.25 * pos)
         elif friend_score < 0.0:
             neg = overlay * (-friend_score)
+
             # pull down joy a bit
             display_vals[joy_i] *= (1.0 - 0.40 * neg)
             # push into negative emotions (anger > disgust > fear); sadness small
             display_vals[anger_i] += 0.50 * neg 
             display_vals[disgust_i] += 0.30 * neg
             display_vals[fear_i] += 0.20 * neg
-            display_vals[sad_i] += 0.10 * neg
+            display_vals[sad_i] +=0.10 * neg
 
     # Renormalize
     s = sum(display_vals) or 1.0

@@ -277,7 +277,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4413095617141819125, guid: f6ea84b31efbe0f48baf6b434071b81d, type: 3}
       propertyPath: m_MatchWidthOrHeight
-      value: 0.8
+      value: 0.7
       objectReference: {fileID: 0}
     - target: {fileID: 4584084227172897814, guid: f6ea84b31efbe0f48baf6b434071b81d, type: 3}
       propertyPath: m_AnchorMax.x
