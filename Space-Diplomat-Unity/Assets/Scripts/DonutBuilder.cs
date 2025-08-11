@@ -263,7 +263,11 @@ public class DonutBuilder : MonoBehaviour
         // if this donut is for Penbol, any alien change could affect it via social cascade -> fetch
         if (string.Equals(current, "PENBOL", System.StringComparison.OrdinalIgnoreCase))
         {
-            StartCoroutine(FetchAndApplyState());
+            // If another alien changed, Penbol may be socially affected -> fetch
+            if (!string.Equals(alienName, "PENBOL", System.StringComparison.OrdinalIgnoreCase))
+                StartCoroutine(FetchAndApplyState());
+            else
+                Refresh();
             return;
         }
 

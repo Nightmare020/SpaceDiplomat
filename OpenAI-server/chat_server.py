@@ -29,6 +29,9 @@ print(f"TEMPERATURE:", base_temperature)
 print(f"ALIEN PROFILES PATH:", alien_profiles_path)
 print(f"BRAXIM REPLIES PATH:", braxim_replies_path)
 
+last_display_dist = defaultdict(lambda: {"keys": ["disgust", "fear", "anger", "sadness", "joy"], 
+                                         "values":[0.2,0.2,0.2,0.2,0.2]})
+
 # ======================================
 # NLP Components
 # ======================================
@@ -372,6 +375,8 @@ def penbol_social_cascade():
     aa["joy"] = min(1.0, max(0.0, aa["joy"] * DECAY + joy_gain))
     aa["anger"] = min(1.0, max(0.0, aa["anger"] * DECAY + anger_gain))
 
+    print(f"[Penbol cascade] friend_score={friend_score:.3f} joy->{aa['joy']:.3f} anger->{aa['anger']:.3f}")
+
 # Running affect per alien
 alien_affect = defaultdict(lambda: {"joy": 0.0, "anger": 0.0})
 
@@ -708,7 +713,8 @@ def chat():
 
     # Personality-biased gains
     anger_gain = 0.0
-    if top_emotion == "anger":
+    if top_emotion in ("anger", "sadness", "fear", "disgust"):
+        # treat any non-joy as negative for Penbol rules
         anger_gain = emotion_score * ANGER_STEP * (0.8 + 0.6 * na - 0.4 * ag)
 
     joy_gain = 0.0
@@ -725,7 +731,7 @@ def chat():
         rel = profile.get("relations", {}) or {}
 
         # How much Penbol cares about friends' moods)
-        SOCIAL_K = float(profile.get("socialK", 0.15))
+        SOCIAL_K = float(profile.get("socialK", 0.35))
 
         # friend_score > 0 if liked aliens are joyful (or disliked rivals are misserable)
         friend_score = 0.0
@@ -798,14 +804,17 @@ def chat():
     display_vals = list(vals)  # copy to avoid mutation
     joy_i = canon_order.index("joy")
     anger_i = canon_order.index("anger")
+    fear_i = canon_order.index("fear")
+    sad_i = canon_order.index("sadness")
+    disgust_i = canon_order.index("disgust")
 
     if alien_name.upper() == "PENBOL":
         aa = alien_affect[alien_name] # Penbol's running mood after social influence/math above
         overlay_strength = float(profile.get("socialOverlay", 0.5))
 
         # Lift joy/anger visually to reflect current mood (gentle, not overriding)
-        display_vals[joy_i] = max(display_vals[joy_i], overlay_strength * float(aa.get("joy", 0.0)))
-        display_vals[anger_i] = max(display_vals[anger_i], overlay_strength * float(aa.get("anger", 0.0)))
+        display_vals[joy_i] += overlay_strength * float(aa.get("joy", 0.0))
+        display_vals[anger_i] += overlay_strength * float(aa.get("anger", 0.0))
 
         # Renormalize to sum to 1
         s = sum(display_vals) or 1.0
@@ -814,6 +823,9 @@ def chat():
         display_vals = list(vals)  # just copy the original values
 
     distribution_json = json.dumps({"keys": canon_order, "values": display_vals})
+   
+    last_display_dist[alien_name.upper()] = {"keys": canon_order, "values": display_vals}
+
 
     # ======================================
     # Response
@@ -876,17 +888,22 @@ def alien_state():
     if not profile:
         return jsonify({"error": f"Alien profile '{name}' not found"}), 400
 
+    # keep Penbol's running mood up-to-date
+    if name == "PENBOL":
+        penbol_social_cascade()
+
     # Base display distribution (neutral prior)
     canon_order = ["disgust", "fear", "anger", "sadness", "joy"]
-    display_vals = [0.2, 0.2, 0.2, 0.2, 0.2]
+    base = last_display_dist[name]
+    display_vals = list(base["values"])
 
     # Overlay running mood
     joy_i = canon_order.index("joy")
     anger_i = canon_order.index("anger")
     aa = alien_affect[name]
     overlay = float(profile.get("socialOverlay", 0.5)) if name == "PENBOL" else 0.0
-    display_vals[joy_i] = max(display_vals[joy_i], overlay * float(aa.get("joy", 0.0)))
-    display_vals[anger_i] = max(display_vals[anger_i], overlay * float(aa.get("anger", 0.0)))
+    display_vals[joy_i] += overlay * float(aa.get("joy", 0.0))
+    display_vals[anger_i] += overlay * float(aa.get("anger", 0.0))
 
     s = sum(display_vals) or 1.0
     display_vals = [v / s for v in display_vals]
