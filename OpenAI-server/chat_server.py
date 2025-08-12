@@ -1002,6 +1002,7 @@ def alien_state():
         display_vals = list(base["values"])
 
         # Add Penbol's social overlay (additive), the renormalize
+        aa = alien_affect[name]
         if name == "PENBOL":
             overlay = float(profile.get("socialOverlay", 0.5))
             joy_i = canon_order.index("joy")
