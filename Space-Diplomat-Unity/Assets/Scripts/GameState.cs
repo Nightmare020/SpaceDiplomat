@@ -59,4 +59,14 @@ public class GameState : MonoBehaviour
     {
         EmotionsChanged?.Invoke(alienName);
     }
+
+    public void StartNewGameSession()
+    {
+        // new run -> new session and force server reset on first use
+        sessionId = System.Guid.NewGuid().ToString("N");
+        serverAffectResetDone = false;
+
+        // Clear local per-alien memory so UI starts neutral
+        aliensData.Clear();
+    }
 }

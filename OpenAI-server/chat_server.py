@@ -959,7 +959,8 @@ def reset_affect():
 
     # helper: neutral 5-way split
     def _neutral():
-        return {"keys": ["disgust", "fear", "anger", "sadness", "joy"], "values": [0.2,0.2,0.2,0.2,0.2]}
+        return {"keys": ["disgust", "fear", "anger", "sadness", "joy"], 
+                "values": [0.2,0.2,0.2,0.2,0.2]}
 
     if name:
         alien_affect.pop(name, None)
@@ -993,6 +994,8 @@ def alien_state():
     canon_order = ["disgust", "fear", "anger", "sadness", "joy"]
     base = last_display_dist[name]
     aa = alien_affect[name]
+
+    # if no running mood yet, start from neutral every time
     if abs(aa.get("joy", 0.0)) < 1e-6 and abs(aa.get("anger", 0.0))< 1e-6:
         base = {"keys": canon_order, "values": [0.2, 0.2, 0.2, 0.2, 0.2]}
     display_vals = list(base["values"])
