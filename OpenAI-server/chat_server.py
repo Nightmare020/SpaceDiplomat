@@ -955,13 +955,24 @@ def chat():
 @app.route('/reset_affect', methods=['POST'])
 def reset_affect():
     data = request.get_json() or {}
-    alien_name = data.get("alienName", None)
-    if alien_name and alien_name in alien_affect:
-        alien_affect[alien_name] = {"joy": 0.0, "anger": 0.0}
-        return jsonify({"ok": True, "reset": alien_name})
-    elif not alien_name:
+    name = (data.get("alienName") or "").strip().upper()
+
+    # helper: neutral 5-way split
+    def _neutral():
+        return {"keys": ["disgust", "fear", "anger", "sadness", "joy"], "values": [0.2,0.2,0.2,0.2,0.2]}
+
+    if name:
+        alien_affect.pop(name, None)
+        closed_aliens.pop(name, None)
+        last_display_dist[name] = _neutral()
+        return jsonify({"ok": True, "reset": name})
+    else:
         # Reset all aliens
         alien_affect.clear()
+        closed_aliens.clear()
+        # reset the cached donut baseline for everyone
+        for k in list(last_display_dist.keys()):
+            last_display_dist[k] = _neutral()
         return jsonify({"ok": True, "reset": "ALL"})
     return jsonify({"ok": False, "error": "Unknown alien"}), 400
 
@@ -981,6 +992,9 @@ def alien_state():
     # Base display distribution (neutral prior)
     canon_order = ["disgust", "fear", "anger", "sadness", "joy"]
     base = last_display_dist[name]
+    aa = alien_affect[name]
+    if abs(aa.get("joy", 0.0)) < 1e-6 and abs(aa.get("anger", 0.0))< 1e-6:
+        base = {"keys": canon_order, "values": [0.2, 0.2, 0.2, 0.2, 0.2]}
     display_vals = list(base["values"])
 
     # Overlay running mood

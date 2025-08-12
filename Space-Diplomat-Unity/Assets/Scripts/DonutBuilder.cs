@@ -74,7 +74,7 @@ public class DonutBuilder : MonoBehaviour
 
         // Try to get a fresh snapshot from server, the refresh UI
         if (string.Equals(PlayerData.SelectedAlienName, "PENBOL", System.StringComparison.OrdinalIgnoreCase))
-            StartCoroutine(FetchAndApplyState());
+            StartCoroutine(InitPenbolChart());
 
         GameState.EmotionsChanged += OnEmotionsChanged;
     }
@@ -280,5 +280,29 @@ public class DonutBuilder : MonoBehaviour
             // Non-Penbol: we already have the latest counts locally, so just repaint
             Refresh();
         }
+    }
+
+    IEnumerator InitPenbolChart()
+    {
+        if (!GameState.Instance.serverAffectResetDone)
+        {
+            yield return StartCoroutine(ResetServerAffectOnce());
+            GameState.Instance.MarkServerAffectReset();
+        }
+        yield return StartCoroutine(FetchAndApplyState());
+    }
+
+    IEnumerator ResetServerAffectOnce()
+    {
+        var url = ServerConfig.BaseUrl + "/reset_affect";
+        var req = new UnityWebRequest(url, "POST");
+        var body = System.Text.Encoding.UTF8.GetBytes("{}");
+        req.uploadHandler = new UploadHandlerRaw(body);
+        req.downloadHandler = new DownloadHandlerBuffer();
+        req.SetRequestHeader("Content-Type", "application/json");
+        req.timeout = 10;
+        yield return req.SendWebRequest();
+        if (req.result != UnityWebRequest.Result.Success)
+            Debug.LogWarning("reset_affect failed: " + req.error);
     }
 }
