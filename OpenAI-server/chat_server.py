@@ -746,8 +746,8 @@ def chat():
             return jsonify({"error":"groq_http_error","status":status,"detail":detail}), 502
         
         except Exception as e:
-        app.logger.exception("Groq request error")
-        return jsonify({"error":"groq_request_error","detail":str(e)}), 502
+            app.logger.exception("Groq request error")
+            return jsonify({"error":"groq_request_error","detail":str(e)}), 502
 
     else:
         reply = choose_braxim_reply(user_input, rl_action)
