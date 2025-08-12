@@ -50,6 +50,11 @@ public class GameState : MonoBehaviour
         return aliensData[alienName];
     }
 
+    public void MarkServerAffectReset()
+    {
+        serverAffectResetDone = true;
+    }
+
     public void RaiseEmotionsChanged(string alienName = null)
     {
         EmotionsChanged?.Invoke(alienName);

@@ -736,13 +736,18 @@ def chat():
 
         
         except requests.exceptions.HTTPError as err:
-            # Response may be None if post() itself failed
-            body = response.text if response is not None else ""
-            print("Groq request failed:", err, body)
-            return jsonify({"error": "Failed to contact Groq API"}), 500
+            status = err.response.status_code if err.response is not None else None
+            detail = ""
+            try:
+                detail = err.response.text[:400] if err.response is not None else ""
+            except Exception:
+                pass
+            app.logger.error("Groq HTTP %s: %s", status, detail)
+            return jsonify({"error":"groq_http_error","status":status,"detail":detail}), 502
+        
         except Exception as e:
-            print("Groq request error:", e)
-            return jsonify({"error": "Groq request error"}), 500
+        app.logger.exception("Groq request error")
+        return jsonify({"error":"groq_request_error","detail":str(e)}), 502
 
     else:
         reply = choose_braxim_reply(user_input, rl_action)
@@ -848,32 +853,38 @@ def chat():
     Q_prev = Q[rl_state][rl_action]
     Q[rl_state][rl_action] = Q_prev + ALPHA * (rl_reward - Q_prev)
 
-    append_rl_log({
-        "ts": datetime.utcnow().isoformat(timespec="seconds")+"Z",
-        "sessionId": session_id,
-        "alien": alien_name,
-        "userInputRedacted": redacted_input,       # keep PII out
-        "topEmotion": top_emotion,
-        "emotionScore": emotion_score,
-        "dist": dict(zip(canon_order, vals)),
-        "polarity": polarity,
-        "subjectivity": subjectivity,
-        "rl": {
-            "state": rl_state,
-            "action": rl_action,
-            "reward": rl_reward,
-            "qBefore": Q_prev,
-            "qAfter": Q[rl_state][rl_action]
-        },
-        "affect": {
-            "joy": alien_affect[alien_name]["joy"],
-            "anger": alien_affect[alien_name]["anger"]
-        },
-        "success": success,
-        "failure": failure
-    })
+    try:
+        append_rl_log({
+            "ts": datetime.utcnow().isoformat(timespec="seconds")+"Z",
+            "sessionId": session_id,
+            "alien": alien_name,
+            "userInputRedacted": redacted_input,       # keep PII out
+            "topEmotion": top_emotion,
+            "emotionScore": emotion_score,
+            "dist": dict(zip(canon_order, vals)),
+            "polarity": polarity,
+            "subjectivity": subjectivity,
+            "rl": {
+                "state": rl_state,
+                "action": rl_action,
+                "reward": rl_reward,
+                "qBefore": Q_prev,
+                "qAfter": Q[rl_state][rl_action]
+            },
+            "affect": {
+                "joy": alien_affect[alien_name]["joy"],
+                "anger": alien_affect[alien_name]["anger"]
+            },
+            "success": success,
+            "failure": failure
+        })
+    except Exception as e:
+        app.logger.exception("RL logging failed: %s", e)
 
-    save_q_table()
+    try:
+        save_q_table()
+    except Exception as e:
+        app.logger.exception("Q-table save failed: %s", e)
 
     # Build the distribution to send back to Unity (with Penbol social overlay)
     display_vals = list(vals)  # copy to avoid mutation

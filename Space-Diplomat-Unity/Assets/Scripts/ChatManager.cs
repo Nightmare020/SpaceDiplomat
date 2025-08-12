@@ -263,7 +263,7 @@ public class ChatManager : MonoBehaviour
         if (!GameState.Instance.serverAffectResetDone)
         {
             yield return StartCoroutine(ResetServerAffectOnce());
-            GameState.Instance.serverAffectResetDone = true;
+            GameState.Instance.MarkServerAffectReset();
         }
 
         // Build a typed payload so JsonUtility makes correct JSON
