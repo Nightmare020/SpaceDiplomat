@@ -7,6 +7,9 @@ public class GameState : MonoBehaviour
     public static GameState Instance { get; private set; }
     public static event Action<string> EmotionsChanged;
 
+    public string sessionId {  get; private set; }
+    public bool serverAffectResetDone { get; private set; } = false;
+
     // A record per alien
     public class AlienData
     {
@@ -32,6 +35,9 @@ public class GameState : MonoBehaviour
 
         Instance = this; // Set the singleton instance
         DontDestroyOnLoad(gameObject); // Persist this object across scenes
+
+        // New run -> New session
+        sessionId = System.Guid.NewGuid().ToString("N");
     }
 
     // Convenience

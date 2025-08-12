@@ -37,7 +37,7 @@ last_display_dist = defaultdict(lambda: {"keys": ["disgust", "fear", "anger", "s
 # ======================================
 # RL Persistence
 # ======================================
-DATA_DIR = pathlib.Path(os.getenv("DATA_DIR", "/opt/space-diplomat/app/data")).resolve
+DATA_DIR = pathlib.Path(os.getenv("DATA_DIR", "/opt/space-diplomat/app/data")).resolve()
 LOG_DIR = DATA_DIR / "logs"
 Q_PATH = DATA_DIR / "q_table.json"
 _io_lock = threading.Lock()
@@ -994,7 +994,7 @@ def alien_state():
         "angerTolerance": float(profile.get("angerTolerance", 0.3)),
     })
 
-@app.route("rl/best_actions", methods=["POST"])
+@app.route("/rl/best_actions", methods=["POST"])
 def rl_best_actions():
     data = request.get_json() or {}
     dist = data.get("distribution") or {}   # keys joy/sad/fear/anger/disgust

@@ -259,11 +259,19 @@ public class ChatManager : MonoBehaviour
 
     IEnumerator SendMessageToGroq(string playerInput)
     {
+        // One-time reset per run
+        if (!GameState.Instance.serverAffectResetDone)
+        {
+            yield return StartCoroutine(ResetServerAffectOnce());
+            GameState.Instance.serverAffectResetDone = true;
+        }
+
         // Build a typed payload so JsonUtility makes correct JSON
         var payload = new ChatRequest { 
             message = playerInput, 
             alienName = currentAlienName,
-            history = BuildHistoryTurns(15) // Build the chat history for the alien
+            history = BuildHistoryTurns(15), // Build the chat history for the alien
+            sessionId = GameState.Instance.sessionId
         };
 
         string json = JsonUtility.ToJson(payload);
@@ -384,6 +392,20 @@ public class ChatManager : MonoBehaviour
         {
             inputField.interactable = true;
         }
+    }
+
+    IEnumerator ResetServerAffectOnce()
+    {
+        var url = ServerConfig.BaseUrl + "/reset_affect";
+        var req = new UnityWebRequest(url, "POST");
+        var body = System.Text.Encoding.UTF8.GetBytes("{}");
+        req.uploadHandler = new UploadHandlerRaw(body);
+        req.downloadHandler = new DownloadHandlerBuffer();
+        req.SetRequestHeader("Content-Type", "application/json");
+        req.timeout = 10;
+        yield return req.SendWebRequest();
+        if (req.result != UnityWebRequest.Result.Success)
+            Debug.LogWarning("reset_affect failed: " + req.error);
     }
 
     private void LockChatPermanently()
@@ -550,6 +572,7 @@ public class ChatManager : MonoBehaviour
         public string message; // The message from the player
         public string alienName; // The name of the alien character
         public HistoryTurn[] history; // Chat history for the alien
+        public string sessionId; // Id of the current player session
     }
 
     [System.Serializable]
