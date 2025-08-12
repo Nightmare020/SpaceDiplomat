@@ -9,6 +9,8 @@ from dotenv import load_dotenv
 from textblob import TextBlob
 from transformers import pipeline
 from collections import defaultdict
+from datetime import datetime
+import threading, pathlib
 import re, random
 
 # ======================================
@@ -31,6 +33,51 @@ print(f"BRAXIM REPLIES PATH:", braxim_replies_path)
 
 last_display_dist = defaultdict(lambda: {"keys": ["disgust", "fear", "anger", "sadness", "joy"], 
                                          "values":[0.2,0.2,0.2,0.2,0.2]})
+
+# ======================================
+# RL Persistence
+# ======================================
+DATA_DIR = pathlib.Path(os.getenv("DATA_DIR", "/opt/space-diplomat/app/data")).resolve
+LOG_DIR = DATA_DIR / "logs"
+Q_PATH = DATA_DIR / "q_table.json"
+_io_lock = threading.Lock()
+
+DATA_DIR.mkdir(parents=True, exist_ok=True)
+LOG_DIR.mkdir(parents=True, exist_ok=True)
+
+def load_q_table():
+    global Q
+    if Q_PATH.exists():
+        try:
+            with Q_PATH.open("r", encoding="utf-8") as f:
+                table = json.load(f)
+
+            # restore defaults for missing actions
+            for s, acts in table.items():
+                for a in INTENTS:
+                    acts.setdefault(a, 0.0)
+            Q.clear()
+            for s, acts in table.items():
+                Q[s] = acts
+
+            print(f"[RL] Loaded Q-table with {len(Q)} states from {Q_PATH}")
+        except Exception as e:
+            print("[RL] Could not load Q-table:", e)
+
+def save_q_table():
+    # write automatically
+    tmp = Q_PATH.with_suffix(".tmp")
+    with _io_lock:
+        with tmp.open("w", encoding="utf-8") as f:
+            json.dump(Q, f, ensure_ascii=False, indent=2)
+        tmp.replace(Q_PATH)
+
+def append_rl_log(event: dict):
+    ts = datetime.utcnow().strftime("%Y%m%d")
+    path = LOG_DIR / f"rl_interactions_{ts}.jsonl"
+    with _io_lock:
+        with path.open("a", encoding="utf-8") as f:
+            f.write(json.dumps(event, ensure_ascii=False) + "\n")
 
 # ======================================
 # NLP Components
@@ -64,6 +111,7 @@ INTENTS = [
 
 # Q[state][action] -> value
 Q = defaultdict(lambda: {a: random.uniform(-0.05, 0.05) for a in INTENTS})
+load_q_table()
 EPSILON = 0.15
 ALPHA = 0.25
 
@@ -192,7 +240,6 @@ def compute_reward(dist):
     
     reward = base + pair_term
     return float(max(-2.0, min(2.0, reward)))
-
 
 # ======================================
 # Alien Profiles
@@ -526,6 +573,7 @@ def chat():
     data = request.get_json() or {}
     user_input = (data.get("message") or "").strip()
     alien_name = data.get("alienName", "Z1A-X0N")
+    session_id = (data.get("sessionId") or "").strip()    # from client
 
     if not user_input:
         return jsonify({"error": "Empty message"}), 400
@@ -800,6 +848,33 @@ def chat():
     Q_prev = Q[rl_state][rl_action]
     Q[rl_state][rl_action] = Q_prev + ALPHA * (rl_reward - Q_prev)
 
+    append_rl_log({
+        "ts": datetime.utcnow().isoformat(timespec="seconds")+"Z",
+        "sessionId": session_id,
+        "alien": alien_name,
+        "userInputRedacted": redacted_input,       # keep PII out
+        "topEmotion": top_emotion,
+        "emotionScore": emotion_score,
+        "dist": dict(zip(canon_order, vals)),
+        "polarity": polarity,
+        "subjectivity": subjectivity,
+        "rl": {
+            "state": rl_state,
+            "action": rl_action,
+            "reward": rl_reward,
+            "qBefore": Q_prev,
+            "qAfter": Q[rl_state][rl_action]
+        },
+        "affect": {
+            "joy": alien_affect[alien_name]["joy"],
+            "anger": alien_affect[alien_name]["anger"]
+        },
+        "success": success,
+        "failure": failure
+    })
+
+    save_q_table()
+
     # Build the distribution to send back to Unity (with Penbol social overlay)
     display_vals = list(vals)  # copy to avoid mutation
     joy_i = canon_order.index("joy")
@@ -918,6 +993,18 @@ def alien_state():
         "joyThreshold": float(profile.get("joyThreshold", 0.9)),
         "angerTolerance": float(profile.get("angerTolerance", 0.3)),
     })
+
+@app.route("rl/best_actions", methods=["POST"])
+def rl_best_actions():
+    data = request.get_json() or {}
+    dist = data.get("distribution") or {}   # keys joy/sad/fear/anger/disgust
+    if dist:
+        state = encode_state({k: float(dist.get(k, 0.0)) for k in ["joy", "sadness", "anger", "fear", "disgust"]})
+    else:
+        state = (data.get("stateKey") or "").strip()
+    acts = Q[state]
+    ranked = sorted(acts.items(), key=lambda kv: kv[1], reverse=True)
+    return jsonify({"stateKey": state, "rankedIntents": ranked[:3]})
 
 @app.route('/health', methods=['GET'])
 def health(): 
