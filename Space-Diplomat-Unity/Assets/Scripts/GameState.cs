@@ -9,6 +9,7 @@ public class GameState : MonoBehaviour
 
     public string sessionId {  get; private set; }
     public bool serverAffectResetDone { get; private set; } = false;
+    public bool sessionActive { get; private set; } = false;
 
     // A record per alien
     public class AlienData
@@ -68,5 +69,8 @@ public class GameState : MonoBehaviour
 
         // Clear local per-alien memory so UI starts neutral
         aliensData.Clear();
+
+        // Mark new in-session
+        sessionActive = true;
     }
 }

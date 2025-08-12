@@ -12,7 +12,7 @@
             "agreeableness": 0.70,
             "neuroticism": 0.25
         },
-        "joyThreshold": "0.85",
+        "joyThreshold": "0.80",
         "angerTolerance": "0.28"
     },
 
@@ -29,7 +29,7 @@
             "agreeableness": 0.45,
             "neuroticism": 0.60
         },
-        "joyThreshold": "0.9",
+        "joyThreshold": "0.85",
         "angerTolerance": "0.22"
     },
 
@@ -46,7 +46,7 @@
             "agreeableness": 0.80,
             "neuroticism": 0.30
         },
-        "joyThreshold": "0.6",
+        "joyThreshold": "0.75",
         "angerTolerance": "0.35",
         "relations": {
             "ZAXIN": 0.7,

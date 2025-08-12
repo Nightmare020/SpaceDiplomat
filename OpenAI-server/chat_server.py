@@ -992,12 +992,9 @@ def alien_state():
 
     # Base display distribution (neutral prior)
     canon_order = ["disgust", "fear", "anger", "sadness", "joy"]
-    base = last_display_dist[name]
-    aa = alien_affect[name]
 
-    # if no running mood yet, start from neutral every time
-    if abs(aa.get("joy", 0.0)) < 1e-6 and abs(aa.get("anger", 0.0))< 1e-6:
-        base = {"keys": canon_order, "values": [0.2, 0.2, 0.2, 0.2, 0.2]}
+    # use last display_display_dist if we have it; otherwise neutral
+    base = last_display_dist[name](name, {"keys": canon_order, "values": [0.2,0.2,0.2,0.2,0.2]})
     display_vals = list(base["values"])
 
     # Overlay running mood

@@ -4,18 +4,32 @@ using UnityEngine.Networking;
 
 public class SessionBootStrap : MonoBehaviour
 {
+    private static bool _booted = false;
+
     // Awake is called when the script instance is being loaded
     private void Awake()
     {
+        if (_booted)
+        {
+            Destroy(gameObject);
+            return;
+        }
+
+        _booted = true;
+        DontDestroyOnLoad(gameObject);
+
         // Make sure GameState exists
         if (GameState.Instance == null)
             new GameObject("GameState").AddComponent<GameState>();
 
-        // Start a brand new run (new sessionId + clear locally memory + ensure next call reset server)
-        GameState.Instance.StartNewGameSession();
+        if (!GameState.Instance.sessionActive)
+        {
+            // Start a brand new run (new sessionId + clear locally memory + ensure next call reset server)
+            GameState.Instance.StartNewGameSession();
 
-        // Reset the server right now so Penbol is neutral before any charts/chat
-        StartCoroutine(ResetServerAffectNow());
+            // Reset the server right now so Penbol is neutral before any charts/chat
+            StartCoroutine(ResetServerAffectNow());
+        }
     }
 
     IEnumerator ResetServerAffectNow()
