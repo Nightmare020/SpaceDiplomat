@@ -1050,6 +1050,23 @@ def rl_best_actions():
     ranked = sorted(acts.items(), key=lambda kv: kv[1], reverse=True)
     return jsonify({"stateKey": state, "rankedIntents": ranked[:3]})
 
+@app.route("/admin/q_table/size", methods=["GET"])
+def admin_q_table_size():
+    return jsonify({"states": len(Q)})
+
+@app.route("/admin/q_table", methods=["GET"])
+def admin_q_table():
+    return jsonify(Q)
+
+@app.route("/admin/rl/logs", methods=["GET"])
+def admin_rl_logs():
+    from datetime import datetime
+    d = request.args.get("date") or datetime.utcnow().strftime("%Y%m%d")
+    p = LOG_DIR / f"rl_interactions_{d}.jsonl"
+    if not p.exists():
+        return jsonify({"error": "no_log_for_date"}), 404
+    return app.response_class(p.read_text("utf-8"), mimetype="application/jsonl")
+
 @app.route('/health', methods=['GET'])
 def health(): 
     return jsonify({"ok": True}), 200
