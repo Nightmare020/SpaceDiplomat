@@ -24,3 +24,28 @@ sudo systemctl status space-diplomat --no-pager
 
 sudo cp /opt/space-diplomat/SpaceDiplomat/OpenAI-server/chat_server.py /opt/space-diplomat/app/
 less -N chat_server.py
+
+# list
+ls -lh /opt/space-diplomat/app/data/logs
+
+# peek first 3 lines of today's log
+today=$(date -u +"%Y%m%d")
+head -n 3 /opt/space-diplomat/app/data/logs/rl_interactions_${today}.jsonl
+
+# how many interactions today?
+jq -s 'length' /opt/space-diplomat/app/data/logs/rl_interactions_${today}.jsonl
+
+# top RL actions chosen today
+jq -r '.rl.action' /opt/space-diplomat/app/data/logs/rl_interactions_${today}.jsonl | sort | uniq -c | sort -nr
+
+# average reward by action
+jq -r '.rl | "\(.action) \(.reward)"' /opt/space-diplomat/app/data/logs/rl_interactions_${today}.jsonl \ | awk '{sum[$1]+=$2; n[$1]++} END{for(k in sum) printf "%s %.4f (n=%d)\n",k,sum[k]/n[k],n[k]}'
+
+jq 'keys | length' /opt/space-diplomat/app/data/q_table.json      # how many states?
+
+# show a specific state if you have its key
+jq -r '."JOYHIGH_ANGERLOW_FEARLOW_SADLOW_DISGUSTLOW"' /opt/space-diplomat/app/data/q_table.json
+
+# ask for best actions for a given distribution
+curl -s https://aispacediplomat.com/rl/best_actions \ -H 'Content-Type: application/json' \ -d '{"distribution":{"joy":0.7,"anger":0.05,"fear":0.1,"sadness":0.1,"disgust":0.05}}' | jq
+
