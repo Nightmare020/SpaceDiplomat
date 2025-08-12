@@ -1,6 +1,7 @@
 ﻿# -*- coding: utf-8 -*-
 
 from flask import Flask, request, jsonify
+from langdetect import detect, DetectorFactory
 import os
 import requests
 import spacy
@@ -16,11 +17,12 @@ import re, random
 # ======================================
 # Bootstrap / Configuration
 # ======================================
-
+DetectorFactory.seed = 0  # stable detections
 # Load environment variables from .env file
 load_dotenv()
 
 groq_api_key = os.getenv("GROQ_API_KEY")
+groq_model_id = os.getenv("GROQ_MODEL_ID", "llama-3.1-8b-instant")
 max_tokens = int(os.getenv("MAX_TOKENS", 150))
 base_temperature = float(os.getenv("TEMPERATURE", 0.7))
 alien_profiles_path = os.getenv("ALIEN_PROFILES_PATH", "AlienPersonalities.json")
@@ -582,6 +584,13 @@ def chat():
     if not user_input:
         return jsonify({"error": "Empty message"}), 400
 
+    try:
+        lang_code = detect(user_input)
+    except Exception:
+        lang_code = "en"
+
+    lang_hint = "Always respond in the user's language; for this turn, reply in {}.".format(lang_code)
+
     profile = ALIENS.get(alien_name)
     if profile is None:
         return jsonify({"error": f"Alien profile '{alien_name}' not found"}), 400
@@ -681,7 +690,7 @@ def chat():
         Stay in-character. {profile.get('behaviorInstruction', '')}
         Style hints: {", ".join(style_hints)}.
         {social_line}
-
+        {lang_hint}
         Player emotion: {top_emotion} ({emotion_score:.2f}); sentiment polarity: {polarity:.2f}, subjectivity: {subjectivity:.2f}.
         Player said: {redacted_input}.
         {behavior_instruction}
@@ -721,7 +730,7 @@ def chat():
         }
 
         payload = {
-            "model": "llama3-8b-8192",
+            "model": groq_model_id,
             "messages": messages,
             "temperature": temp,
             "max_tokens": max_tokens

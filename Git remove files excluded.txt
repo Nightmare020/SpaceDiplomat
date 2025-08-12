@@ -21,6 +21,7 @@ cd /opt/space-diplomat/SpaceDiplomat
 sudo rsync -av --delete OpenAI-server/ /opt/space-diplomat/app/ \ --exclude '.env'
 sudo systemctl restart space-diplomat
 sudo systemctl status space-diplomat --no-pager
+sudo journalctl -u space-diplomat -f
 
 sudo cp /opt/space-diplomat/SpaceDiplomat/OpenAI-server/chat_server.py /opt/space-diplomat/app/
 less -N chat_server.py
