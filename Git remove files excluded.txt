@@ -1,0 +1,26 @@
+git rm -r --cached .
+git add .
+git commit -m "Cleaned tracked files now in .gitignore"
+
+
+
+
+
+
+
+
+cd /opt/space-diplomat/SpaceDiplomat
+git fetch origin
+git status           # see which branch you’re on (e.g., main)
+git pull --ff-only   # or: git pull origin main
+
+
+
+
+cd /opt/space-diplomat/SpaceDiplomat
+sudo rsync -av --delete OpenAI-server/ /opt/space-diplomat/app/ \ --exclude '.env'
+sudo systemctl restart space-diplomat
+sudo systemctl status space-diplomat --no-pager
+
+sudo cp /opt/space-diplomat/SpaceDiplomat/OpenAI-server/chat_server.py /opt/space-diplomat/app/
+less -N chat_server.py
