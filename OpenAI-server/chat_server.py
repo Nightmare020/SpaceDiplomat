@@ -575,6 +575,10 @@ def chat():
     alien_name = data.get("alienName", "Z1A-X0N")
     session_id = (data.get("sessionId") or "").strip()    # from client
 
+    # snapshot affect before this turn
+    alien_before = dict(alien_affect[alien_name])         # joy/anger for target alien
+    penbol_before = dict(alien_affect["PENBOL"])          # joy/anger for Penbol (social mood)
+
     if not user_input:
         return jsonify({"error": "Empty message"}), 400
 
@@ -853,12 +857,17 @@ def chat():
     Q_prev = Q[rl_state][rl_action]
     Q[rl_state][rl_action] = Q_prev + ALPHA * (rl_reward - Q_prev)
 
+    # Snapshot affect after this turn
+    alien_after = dict(alien_affect[alien_name])
+    penbol_after = dict(alien_affect["PENBOL"])
+
     try:
         append_rl_log({
             "ts": datetime.utcnow().isoformat(timespec="seconds")+"Z",
             "sessionId": session_id,
             "alien": alien_name,
             "userInputRedacted": redacted_input,       # keep PII out
+            "reply" : reply,
             "topEmotion": top_emotion,
             "emotionScore": emotion_score,
             "dist": dict(zip(canon_order, vals)),
@@ -872,8 +881,10 @@ def chat():
                 "qAfter": Q[rl_state][rl_action]
             },
             "affect": {
-                "joy": alien_affect[alien_name]["joy"],
-                "anger": alien_affect[alien_name]["anger"]
+                "alienBefore": alien_before,
+                "alien_after": alien_after,
+                "penbolBefore": penbol_before,
+                "penbolAfter": penbol_after
             },
             "success": success,
             "failure": failure
