@@ -980,44 +980,51 @@ def reset_affect():
 
 @app.route('/alien_state', methods=['POST'])
 def alien_state():
-    data = request.get_json() or {}
-    name = (data.get("alienName") or "").strip().upper()
-    profile = ALIENS.get(name)
-    if not profile:
-        return jsonify({"error": f"Alien profile '{name}' not found"}), 400
+    try:
+        data = request.get_json() or {}
+        name = (data.get("alienName") or "").strip().upper()
+        profile = ALIENS.get(name)
+        if not profile:
+            return jsonify({"error": f"Alien profile '{name}' not found"}), 400
 
-    # keep Penbol's running mood up-to-date
-    if name == "PENBOL":
-        penbol_social_cascade()
+        # keep Penbol's running mood up-to-date
+        if name == "PENBOL":
+            penbol_social_cascade() # keep Penbol's social mood fresh
 
-    # Base display distribution (neutral prior)
-    canon_order = ["disgust", "fear", "anger", "sadness", "joy"]
+        # Base display distribution (neutral prior)
+        canon_order = ["disgust", "fear", "anger", "sadness", "joy"]
 
-    # use last display_display_dist if we have it; otherwise neutral
-    base = last_display_dist[name](name, {"keys": canon_order, "values": [0.2,0.2,0.2,0.2,0.2]})
-    display_vals = list(base["values"])
+        # use last display_display_dist if we have it; otherwise neutral
+        base = last_display_dist.get(
+            name,
+            {"keys": canon_order, "values": [0.2, 0.2, 0.2, 0.2, 0.2]}
+        )
+        display_vals = list(base["values"])
 
-    # Overlay running mood
-    joy_i = canon_order.index("joy")
-    anger_i = canon_order.index("anger")
-    aa = alien_affect[name]
-    overlay = float(profile.get("socialOverlay", 0.5)) if name == "PENBOL" else 0.0
-    display_vals[joy_i] += overlay * float(aa.get("joy", 0.0))
-    display_vals[anger_i] += overlay * float(aa.get("anger", 0.0))
+        # Add Penbol's social overlay (additive), the renormalize
+        if name == "PENBOL":
+            overlay = float(profile.get("socialOverlay", 0.5))
+            joy_i = canon_order.index("joy")
+            anger_i = canon_order.index("anger")
+            display_vals[joy_i] += overlay * float(aa.get("joy", 0.0))
+            display_vals[anger_i] += overlay * float(aa.get("anger", 0.0))
 
-    s = sum(display_vals) or 1.0
-    display_vals = [v / s for v in display_vals]
+        s = sum(display_vals) or 1.0
+        display_vals = [v / s for v in display_vals]
 
-    return jsonify({
-        "alien": name,
-        "state": {"joy": aa.get("joy", 0.0), "anger": aa.get("anger", 0.0)},
-        "distributionJson": json.dumps({
-            "keys": canon_order,
-            "values": display_vals
-        }),
-        "joyThreshold": float(profile.get("joyThreshold", 0.9)),
-        "angerTolerance": float(profile.get("angerTolerance", 0.3)),
-    })
+        return jsonify({
+            "alien": name,
+            "state": {"joy": aa.get("joy", 0.0), "anger": aa.get("anger", 0.0)},
+            "distributionJson": json.dumps({
+                "keys": canon_order,
+                "values": display_vals
+            }),
+            "joyThreshold": float(profile.get("joyThreshold", 0.9)),
+            "angerTolerance": float(profile.get("angerTolerance", 0.3)),
+        })
+    except Exception as e:
+        app.logger.exception("alien_state error")
+        return jsonify({"error": "server", "detail": str(e)}), 500
 
 @app.route("/rl/best_actions", methods=["POST"])
 def rl_best_actions():
