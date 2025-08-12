@@ -1906,8 +1906,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -155.3, y: 97.981}
-  m_SizeDelta: {x: 30, y: 30}
+  m_AnchoredPosition: {x: -154.20349, y: 96.05294}
+  m_SizeDelta: {x: 35, y: 35}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1260460381
 MonoBehaviour:
@@ -1934,10 +1934,9 @@ MonoBehaviour:
     img: {fileID: 6920836}
   centerMask: {fileID: 1848203936}
   chartRoot: {fileID: 1260460380}
-  diameter: 30
+  diameter: 35
   innerHoleRatio: 0.58
-  autoPoll: 0
-  pollInterval: 1.2
+  targetAlienOverride: 
 --- !u!1 &1291124213
 GameObject:
   m_ObjectHideFlags: 0
@@ -2293,8 +2292,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: Press 'Esc' to return to ship
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: dc36b3fdc14f47ebb36fd484a67e268a, type: 2}
-  m_sharedMaterial: {fileID: 2140032, guid: dc36b3fdc14f47ebb36fd484a67e268a, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -2809,7 +2808,7 @@ MonoBehaviour:
   m_CaretWidth: 1
   m_ReadOnly: 0
   m_RichText: 1
-  m_GlobalFontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_GlobalFontAsset: {fileID: 11400000, guid: dc36b3fdc14f47ebb36fd484a67e268a, type: 2}
   m_OnFocusSelectAll: 1
   m_ResetOnDeActivation: 1
   m_KeepTextSelectionVisible: 0

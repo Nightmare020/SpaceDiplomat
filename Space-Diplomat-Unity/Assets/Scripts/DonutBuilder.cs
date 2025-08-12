@@ -57,6 +57,7 @@ public class DonutBuilder : MonoBehaviour
     [SerializeField] float diameter = 600f; // pixels (befire CanvasScaler)
     [Range(0.1f, 0.9f)]
     [SerializeField] float innerHoleRatio = 0.58f; // inner hole = diameter * this
+    [SerializeField] private string targetAlienOverride;
 
     // Fixed order around the circle (clockwise)
     static readonly string[] Order = { "disgust", "fear", "anger", "sadness", "joy"};
@@ -73,7 +74,7 @@ public class DonutBuilder : MonoBehaviour
         NormalizeRects();
 
         // Try to get a fresh snapshot from server, the refresh UI
-        if (string.Equals(PlayerData.SelectedAlienName, "PENBOL", System.StringComparison.OrdinalIgnoreCase))
+        if (string.Equals(TargetAlienName, "PENBOL", System.StringComparison.OrdinalIgnoreCase))
             StartCoroutine(InitPenbolChart());
 
         GameState.EmotionsChanged += OnEmotionsChanged;
@@ -82,6 +83,15 @@ public class DonutBuilder : MonoBehaviour
     private void OnDisable()
     {
         GameState.EmotionsChanged -= OnEmotionsChanged;
+    }
+
+    private string TargetAlienName
+    {
+        get 
+        { 
+            var n = (targetAlienOverride ?? "").Trim();
+            return string.IsNullOrEmpty(n) ? PlayerData.SelectedAlienName : n;
+        }
     }
 
     // Force identical anchors/size/position for all chart pieces
@@ -112,7 +122,7 @@ public class DonutBuilder : MonoBehaviour
 
     private IEnumerator FetchAndApplyState()
     {
-        string alien = PlayerData.SelectedAlienName;
+        string alien = TargetAlienName;
         if (string.IsNullOrEmpty(alien)) yield break;
 
         var payload = JsonUtility.ToJson(new AlienNamePayload { alienName = alien });
@@ -156,7 +166,7 @@ public class DonutBuilder : MonoBehaviour
 
     public void Refresh()
     {
-        string alien = PlayerData.SelectedAlienName; // Get the selected alien name from PlayerData
+        string alien = TargetAlienName; // Get the selected alien name from PlayerData
         if (string.IsNullOrEmpty(alien))
         {
             // No alien selected -> Hide the center mask completely
@@ -261,7 +271,11 @@ public class DonutBuilder : MonoBehaviour
 
     private void OnEmotionsChanged(string alienName)
     {
-        string current = PlayerData.SelectedAlienName;
+        string current = TargetAlienName;
+        if (string.IsNullOrEmpty(current))
+        {
+            return;
+        }
 
         // if this donut is for Penbol, any alien change could affect it via social cascade -> fetch
         if (string.Equals(current, "PENBOL", System.StringComparison.OrdinalIgnoreCase))

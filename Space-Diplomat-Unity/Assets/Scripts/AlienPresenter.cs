@@ -5,20 +5,50 @@ public class AlienPresenter : MonoBehaviour
 {
     public Image alienImage; // Image component to display the alien sprite
 
+    [SerializeField] private string overrideAlienName;
+
+    private string MyAlien =>
+        string.IsNullOrEmpty(overrideAlienName) ? PlayerData.SelectedAlienName : overrideAlienName;
+
+    private void OnEnable()
+    {
+        GameState.EmotionsChanged += OnEmotionsChanged;
+        RefreshSprite();
+    }
+
+    private void OnDisable()
+    {
+        GameState.EmotionsChanged -= OnEmotionsChanged;
+    }
+
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        string alienName = PlayerData.SelectedAlienName; // Get the selected alien name from PlayerData
+        RefreshSprite();
+    }
 
+    private void RefreshSprite()
+    {
+        string alienName = MyAlien;
         if (string.IsNullOrEmpty(alienName) || alienImage == null)
         {
-            // No alien selected -> Hide the image completely
-            alienImage.enabled = false;
+            if (alienImage)
+                alienImage.enabled = false;
             return;
         }
 
-        var alienData = GameState.Instance.GetAlienData(alienName); // Get the alien data for the selected alien
-        alienImage.sprite = Resources.Load<Sprite>($"AlienEmotions/{alienName}/{alienData.lastEmotionKey}");
-        alienImage.enabled = alienImage.sprite; // Show the image if an alien is selected
+        var data = GameState.Instance.GetAlienData(alienName);
+        alienImage.sprite = Resources.Load<Sprite>($"AlienEmotions/{alienName}/{data.lastEmotionKey}");
+        alienImage.enabled = alienImage.sprite != null;
+    }
+
+    private void OnEmotionsChanged(string changedAlien)
+    {
+        // Update only when alien changed or on a broadcast (null)
+        if (changedAlien == null || 
+            string.Equals(changedAlien, MyAlien, System.StringComparison.OrdinalIgnoreCase))
+        {
+            RefreshSprite();
+        }
     }
 }

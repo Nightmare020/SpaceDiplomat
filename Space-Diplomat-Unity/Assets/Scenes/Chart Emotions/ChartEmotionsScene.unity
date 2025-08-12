@@ -186,8 +186,9 @@ MonoBehaviour:
     img: {fileID: 1683346692}
   centerMask: {fileID: 1197876422}
   chartRoot: {fileID: 46329387}
-  diameter: 250
+  diameter: 104
   innerHoleRatio: 0.58
+  targetAlienOverride: PENBOL
 --- !u!1 &65248085
 GameObject:
   m_ObjectHideFlags: 0
@@ -709,8 +710,9 @@ MonoBehaviour:
     img: {fileID: 1933369153}
   centerMask: {fileID: 1300442013}
   chartRoot: {fileID: 370340907}
-  diameter: 250
+  diameter: 104
   innerHoleRatio: 0.58
+  targetAlienOverride: BRAXIM
 --- !u!1 &419150644
 GameObject:
   m_ObjectHideFlags: 0
@@ -761,6 +763,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   alienImage: {fileID: 1537601578}
+  overrideAlienName: ZAXIN
 --- !u!1 &429873418
 GameObject:
   m_ObjectHideFlags: 0
@@ -962,6 +965,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   alienImage: {fileID: 1035025470}
+  overrideAlienName: BRAXIM
 --- !u!1 &474082730
 GameObject:
   m_ObjectHideFlags: 0
@@ -1727,8 +1731,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: Press 'Esc' to return to ship
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: dc36b3fdc14f47ebb36fd484a67e268a, type: 2}
-  m_sharedMaterial: {fileID: 2140032, guid: dc36b3fdc14f47ebb36fd484a67e268a, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -2865,8 +2869,9 @@ MonoBehaviour:
     img: {fileID: 770205291}
   centerMask: {fileID: 429873420}
   chartRoot: {fileID: 1175689754}
-  diameter: 250
+  diameter: 104
   innerHoleRatio: 0.58
+  targetAlienOverride: ZAXIN
 --- !u!1 &1185254126
 GameObject:
   m_ObjectHideFlags: 0
@@ -2917,6 +2922,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   alienImage: {fileID: 736275578}
+  overrideAlienName: PENBOL
 --- !u!1 &1197876420
 GameObject:
   m_ObjectHideFlags: 0
@@ -3400,7 +3406,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: ANger
+  m_text: Anger
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: dc36b3fdc14f47ebb36fd484a67e268a, type: 2}
   m_sharedMaterial: {fileID: 2140032, guid: dc36b3fdc14f47ebb36fd484a67e268a, type: 2}
@@ -3734,8 +3740,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 304, y: 0}
-  m_SizeDelta: {x: -618.5725, y: -128.4095}
+  m_AnchoredPosition: {x: 299, y: -14.2}
+  m_SizeDelta: {x: -618.5725, y: -46.061}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1597249108
 MonoBehaviour:
