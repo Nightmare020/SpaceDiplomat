@@ -2493,7 +2493,7 @@ MonoBehaviour:
   contentArea: {fileID: 956744451}
   scrollRect: {fileID: 1692972083}
   fillBar: {fileID: 297037421}
-  maxChars: 100
+  maxChars: 10000
   alienEmotionImage: {fileID: 1212812773}
 --- !u!1 &1514912987
 GameObject:
