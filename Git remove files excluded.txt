@@ -18,7 +18,6 @@ git pull --ff-only   # or: git pull origin main
 
 
 cd /opt/space-diplomat/SpaceDiplomat
-sudo rsync -av --delete OpenAI-server/ /opt/space-diplomat/app/ \ --exclude '.env'
 sudo systemctl restart space-diplomat
 sudo systemctl status space-diplomat --no-pager
 sudo journalctl -u space-diplomat -f
