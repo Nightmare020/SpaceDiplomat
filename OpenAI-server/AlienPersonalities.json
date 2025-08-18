@@ -13,7 +13,14 @@
             "neuroticism": 0.25
         },
         "joyThreshold": "0.93",
-        "angerTolerance": "0.28"
+        "angerTolerance": "0.28",
+
+        "relations": {
+            "PENBOL": 0.7,
+            "ZAXIN": 0.8
+        },
+        "socialK": 0.20,
+        "socialOverlay":  0.60
     },
 
     {
@@ -30,7 +37,14 @@
             "neuroticism": 0.60
         },
         "joyThreshold": "0.85",
-        "angerTolerance": "0.22"
+        "angerTolerance": "0.22",
+
+        "relations": {
+            "PENBOL": -0.4,
+            "BRAXIM": -0.8
+        },
+        "socialK": 0.15,
+        "socialOverlay": 0.50
     },
 
     {

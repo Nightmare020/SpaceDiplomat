@@ -74,8 +74,7 @@ public class DonutBuilder : MonoBehaviour
         NormalizeRects();
 
         // Try to get a fresh snapshot from server, the refresh UI
-        if (string.Equals(TargetAlienName, "PENBOL", System.StringComparison.OrdinalIgnoreCase))
-            StartCoroutine(InitPenbolChart());
+        StartCoroutine(InitSocialChart());
 
         GameState.EmotionsChanged += OnEmotionsChanged;
     }
@@ -276,27 +275,12 @@ public class DonutBuilder : MonoBehaviour
         {
             return;
         }
-
-        // if this donut is for Penbol, any alien change could affect it via social cascade -> fetch
-        if (string.Equals(current, "PENBOL", System.StringComparison.OrdinalIgnoreCase))
-        {
-            // If another alien changed, Penbol may be socially affected -> fetch
-            if (!string.Equals(alienName, "PENBOL", System.StringComparison.OrdinalIgnoreCase))
-                StartCoroutine(FetchAndApplyState());
-            else
-                Refresh();
-            return;
-        }
-
-        // if this donut is for the same alien that just spoke...
-        if (string.Equals(current, alienName, System.StringComparison.OrdinalIgnoreCase))
-        {
-            // Non-Penbol: we already have the latest counts locally, so just repaint
-            Refresh();
-        }
+        
+        StartCoroutine(FetchAndApplyState());
+        Refresh();
     }
 
-    IEnumerator InitPenbolChart()
+    IEnumerator InitSocialChart()
     {
         if (!GameState.Instance.serverAffectResetDone)
         {
