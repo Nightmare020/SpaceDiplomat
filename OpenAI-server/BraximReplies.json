@@ -1,0 +1,3041 @@
+[
+    {
+        "intent": "close_treaty",
+        "keywords": [
+            "exchange",
+            "final",
+            "ratify",
+            "accompany",
+            "present",
+            "signature",
+            "treaty",
+            "conclude",
+            "finalize"
+        ],
+        "text": "Our delegation is ready to ratify—present the signature page. Escrow receipts should accompany the final exchange."
+    },
+    {
+        "intent": "share_plan",
+        "keywords": [
+            "neutral",
+            "certify",
+            "plan",
+            "throughout",
+            "invite",
+            "district",
+            "proposal",
+            "patrols",
+            "owner"
+        ],
+        "text": "Invite a neutral observer to certify compliance throughout. Pilot the plan in a low‑risk district before scale‑up."
+    },
+    {
+        "intent": "offer_trade",
+        "keywords": [
+            "persistent",
+            "defects",
+            "friction",
+            "kind",
+            "reduce",
+            "define",
+            "warranty",
+            "terms",
+            "offer"
+        ],
+        "text": "Leasing may reduce friction; detail conversion ratios if in‑kind. Define termination conditions to handle persistent defects."
+    },
+    {
+        "intent": "close_treaty",
+        "keywords": [
+            "instruments",
+            "agreement",
+            "joint",
+            "clarify",
+            "expectations",
+            "prepared",
+            "treaty",
+            "monitoring",
+            "finalize"
+        ],
+        "text": "We are prepared to exchange instruments of agreement. A joint statement can clarify expectations for the public."
+    },
+    {
+        "intent": "build_rapport",
+        "keywords": [
+            "suggests",
+            "chance",
+            "tone",
+            "incidents",
+            "good",
+            "abstractions",
+            "courtesy",
+            "cooperate",
+            "good-faith"
+        ],
+        "text": "Your tone suggests good‑faith; let us convert that into concrete steps. Please avoid abstractions; clarity reduces the chance of incidents."
+    },
+    {
+        "intent": "offer_trade",
+        "keywords": [
+            "verifiable",
+            "clauses",
+            "critical",
+            "hardware",
+            "warranty",
+            "counter",
+            "collateral",
+            "reserves",
+            "offer"
+        ],
+        "text": "Our counter will follow after you disclose verifiable reserves. Warranty and return clauses must be explicit for critical hardware."
+    },
+    {
+        "intent": "apologize",
+        "keywords": [
+            "safeguard",
+            "remorse",
+            "credible",
+            "recurrence",
+            "documenting",
+            "prevent",
+            "amends",
+            "regret",
+            "incursion"
+        ],
+        "text": "Remorse is credible when followed by proportional remediation. Prevent recurrence by documenting a specific safeguard."
+    },
+    {
+        "intent": "share_plan",
+        "keywords": [
+            "sync",
+            "sides",
+            "shared",
+            "milestones",
+            "avoid",
+            "devices",
+            "roadmap",
+            "protocol",
+            "milestone"
+        ],
+        "text": "Adopt a shared dashboard so both sides track milestones. Time‑sync all devices to avoid telemetry disputes."
+    },
+    {
+        "intent": "seek_clarity",
+        "keywords": [
+            "include",
+            "timing",
+            "provide",
+            "them",
+            "specify",
+            "locations",
+            "nonnegotiable",
+            "inspection",
+            "authority"
+        ],
+        "text": "Specify quantities, locations, and timing for your request. Include evidence requirements and who will provide them."
+    },
+    {
+        "intent": "offer_trade",
+        "keywords": [
+            "define",
+            "persistent",
+            "authorized",
+            "sample",
+            "primary",
+            "termination",
+            "trade",
+            "delivery",
+            "bid"
+        ],
+        "text": "Provide a sample batch before the primary transfer is authorized. Define termination conditions to handle persistent defects."
+    },
+    {
+        "intent": "seek_clarity",
+        "keywords": [
+            "case",
+            "condition",
+            "slip",
+            "fallback",
+            "window",
+            "unit",
+            "evidence",
+            "nonnegotiable",
+            "terms"
+        ],
+        "text": "Define the resource, the unit, and the delivery window you propose. Add a fallback condition in case schedules slip unexpectedly."
+    },
+    {
+        "intent": "close_treaty",
+        "keywords": [
+            "baseline",
+            "clarify",
+            "verifications",
+            "once",
+            "confirmed",
+            "statement",
+            "monitoring",
+            "agreement",
+            "ratify"
+        ],
+        "text": "We will seal the pact once baseline verifications are confirmed. A joint statement can clarify expectations for the public."
+    },
+    {
+        "intent": "build_rapport",
+        "keywords": [
+            "paired",
+            "improves",
+            "testable",
+            "measurable",
+            "claims",
+            "courteous",
+            "stability",
+            "customs",
+            "respect"
+        ],
+        "text": "Dialogue is welcome; substance improves when claims are testable. Our preference is courteous speech paired with measurable outcomes."
+    },
+    {
+        "intent": "apologize",
+        "keywords": [
+            "requires",
+            "window",
+            "dates",
+            "rights",
+            "remedy",
+            "accountability",
+            "apologize",
+            "withdrawal"
+        ],
+        "text": "Accountability requires dates, owners, and inspection rights. Attach an inspection window so the remedy can be verified."
+    },
+    {
+        "intent": "share_plan",
+        "keywords": [
+            "plan",
+            "pilot",
+            "propose",
+            "named",
+            "timelines",
+            "owners",
+            "owner",
+            "audit",
+            "timeline"
+        ],
+        "text": "Propose a three‑phase plan with timelines and named owners. Pilot the plan in a low‑risk district before scale‑up."
+    },
+    {
+        "intent": "seek_clarity",
+        "keywords": [
+            "request",
+            "quantities",
+            "specify",
+            "locations",
+            "them",
+            "timing",
+            "authority",
+            "terms",
+            "metric"
+        ],
+        "text": "Specify quantities, locations, and timing for your request. Include evidence requirements and who will provide them."
+    },
+    {
+        "intent": "share_plan",
+        "keywords": [
+            "devices",
+            "disputes",
+            "incident",
+            "avoid",
+            "notice",
+            "hotline",
+            "roadmap",
+            "owner",
+            "corridor"
+        ],
+        "text": "Publish a public notice and activate an incident hotline. Time‑sync all devices to avoid telemetry disputes."
+    },
+    {
+        "intent": "seek_clarity",
+        "keywords": [
+            "unnecessary",
+            "case",
+            "items",
+            "prevent",
+            "fallback",
+            "delay",
+            "constraints",
+            "protocol",
+            "authority"
+        ],
+        "text": "List any non‑negotiable items to prevent unnecessary delay. Add a fallback condition in case schedules slip unexpectedly."
+    },
+    {
+        "intent": "offer_trade",
+        "keywords": [
+            "explicit",
+            "critical",
+            "warranty",
+            "counter",
+            "disclose",
+            "track",
+            "escrow",
+            "exchange",
+            "swap"
+        ],
+        "text": "Our counter will follow after you disclose verifiable reserves. Warranty and return clauses must be explicit for critical hardware. Track delivery variance to judge progress."
+    },
+    {
+        "intent": "close_treaty",
+        "keywords": [
+            "activate",
+            "monitoring",
+            "immediately",
+            "appear",
+            "preserve",
+            "aligned",
+            "sign",
+            "ratify",
+            "authentication"
+        ],
+        "text": "We appear aligned; it is feasible to formalize the accord now. Monitoring should activate immediately to preserve momentum."
+    },
+    {
+        "intent": "close_treaty",
+        "keywords": [
+            "ratify",
+            "delegation",
+            "confirm",
+            "authority",
+            "ready",
+            "page",
+            "signature",
+            "treaty",
+            "sign"
+        ],
+        "text": "Our delegation is ready to ratify—present the signature page. Confirm delegation authority to avoid procedural challenge."
+    },
+    {
+        "intent": "build_rapport",
+        "keywords": [
+            "cultural",
+            "small",
+            "norms",
+            "safety",
+            "verifiable",
+            "propose",
+            "protocol",
+            "respect",
+            "harmony"
+        ],
+        "text": "We esteem cultural differences provided essential safety norms are upheld. Let us each propose one small, verifiable step to begin."
+    },
+    {
+        "intent": "share_plan",
+        "keywords": [
+            "route",
+            "throughout",
+            "invite",
+            "them",
+            "compliance",
+            "neutral",
+            "inspection",
+            "milestone",
+            "hotline"
+        ],
+        "text": "Invite a neutral observer to certify compliance throughout. Map hazards now so teams can route around them safely."
+    },
+    {
+        "intent": "share_plan",
+        "keywords": [
+            "public",
+            "avoid",
+            "notice",
+            "devices",
+            "hotline",
+            "activate",
+            "milestone",
+            "evacuation",
+            "corridor"
+        ],
+        "text": "Publish a public notice and activate an incident hotline. Time‑sync all devices to avoid telemetry disputes."
+    },
+    {
+        "intent": "apologize",
+        "keywords": [
+            "verified",
+            "attach",
+            "repair",
+            "recognize",
+            "window",
+            "statements",
+            "apologize",
+            "contrition",
+            "atone"
+        ],
+        "text": "We recognize contrition that results in material repair, not statements. Attach an inspection window so the remedy can be verified."
+    },
+    {
+        "intent": "build_rapport",
+        "keywords": [
+            "suggests",
+            "faith",
+            "chance",
+            "incidents",
+            "concrete",
+            "tone",
+            "restraint",
+            "boundaries",
+            "values"
+        ],
+        "text": "Your tone suggests good‑faith; let us convert that into concrete steps. Please avoid abstractions; clarity reduces the chance of incidents."
+    },
+    {
+        "intent": "close_treaty",
+        "keywords": [
+            "momentum",
+            "preserve",
+            "dispute",
+            "intact",
+            "monitoring",
+            "immediately",
+            "authentication",
+            "sign",
+            "keys"
+        ],
+        "text": "We accept conclusion contingent on intact dispute clauses. Monitoring should activate immediately to preserve momentum."
+    },
+    {
+        "intent": "apologize",
+        "keywords": [
+            "execute",
+            "relief",
+            "include",
+            "fund",
+            "task",
+            "received",
+            "accountability",
+            "fault",
+            "redress"
+        ],
+        "text": "Your message is received; propose a withdrawal or relief schedule. Include who will fund and execute each corrective task."
+    },
+    {
+        "intent": "share_plan",
+        "keywords": [
+            "telemetry",
+            "sector",
+            "schedule",
+            "safely",
+            "mirrored",
+            "hazards",
+            "milestone",
+            "timeline",
+            "beacons"
+        ],
+        "text": "Schedule mirrored withdrawals by sector under camera telemetry. Map hazards now so teams can route around them safely."
+    },
+    {
+        "intent": "seek_clarity",
+        "keywords": [
+            "expect",
+            "precision",
+            "outcome",
+            "provide",
+            "ambiguity",
+            "relief",
+            "question",
+            "terms",
+            "inspection"
+        ],
+        "text": "What outcome do you expect within the next cycle? Provide a metric. Ambiguity slows relief; precision accelerates benefits to civilians."
+    },
+    {
+        "intent": "apologize",
+        "keywords": [
+            "oversight",
+            "stabilize",
+            "safeguards",
+            "outline",
+            "apology",
+            "looking",
+            "contrition",
+            "mistake",
+            "regret"
+        ],
+        "text": "An apology is a start; outline forward‑looking safeguards. Acknowledge oversight rights until trust metrics stabilize."
+    },
+    {
+        "intent": "apologize",
+        "keywords": [
+            "statements",
+            "include",
+            "results",
+            "material",
+            "corrective",
+            "repair",
+            "incursion",
+            "withdrawal",
+            "audit"
+        ],
+        "text": "We recognize contrition that results in material repair, not statements. Include who will fund and execute each corrective task."
+    },
+    {
+        "intent": "share_plan",
+        "keywords": [
+            "daily",
+            "situation",
+            "owners",
+            "sides",
+            "three",
+            "timelines",
+            "evacuation",
+            "audit",
+            "inspection"
+        ],
+        "text": "Propose a three‑phase plan with timelines and named owners. Daily situation reports will keep both sides synchronized."
+    },
+    {
+        "intent": "apologize",
+        "keywords": [
+            "oversight",
+            "remorse",
+            "proportional",
+            "until",
+            "acknowledge",
+            "remediation",
+            "contrition",
+            "accountability",
+            "apologize"
+        ],
+        "text": "Remorse is credible when followed by proportional remediation. Acknowledge oversight rights until trust metrics stabilize."
+    },
+    {
+        "intent": "offer_trade",
+        "keywords": [
+            "neutral",
+            "signed",
+            "synchronized",
+            "audits",
+            "simplify",
+            "settlement",
+            "collateral",
+            "warranty",
+            "deal"
+        ],
+        "text": "Settlement improves when manifests are synchronized and signed. We recommend neutral brokers to simplify settlement and audits."
+    },
+    {
+        "intent": "seek_clarity",
+        "keywords": [
+            "include",
+            "evidence",
+            "provide",
+            "them",
+            "logged",
+            "demonstrated",
+            "clarify",
+            "terms",
+            "explain"
+        ],
+        "text": "Explain how compliance will be demonstrated and logged. Include evidence requirements and who will provide them."
+    },
+    {
+        "intent": "build_rapport",
+        "keywords": [
+            "interest",
+            "chance",
+            "please",
+            "incidents",
+            "stability",
+            "avoid",
+            "mutual",
+            "culture"
+        ],
+        "text": "We note your courteous approach and share an interest in regional stability. Please avoid abstractions; clarity reduces the chance of incidents."
+    },
+    {
+        "intent": "apologize",
+        "keywords": [
+            "prevent",
+            "credible",
+            "documenting",
+            "remorse",
+            "remediation",
+            "proportional",
+            "sorry",
+            "fault",
+            "compensation"
+        ],
+        "text": "Remorse is credible when followed by proportional remediation. Prevent recurrence by documenting a specific safeguard."
+    },
+    {
+        "intent": "apologize",
+        "keywords": [
+            "recognize",
+            "documenting",
+            "prevent",
+            "contrition",
+            "recurrence",
+            "safeguard",
+            "accountability",
+            "mistake",
+            "fault"
+        ],
+        "text": "We recognize contrition that results in material repair, not statements. Prevent recurrence by documenting a specific safeguard."
+    },
+    {
+        "intent": "build_rapport",
+        "keywords": [
+            "differences",
+            "provided",
+            "safety",
+            "cultural",
+            "speech",
+            "norms",
+            "harmony",
+            "civility",
+            "boundaries"
+        ],
+        "text": "We esteem cultural differences provided essential safety norms are upheld. Our preference is courteous speech paired with measurable outcomes."
+    },
+    {
+        "intent": "seek_clarity",
+        "keywords": [
+            "verifiable",
+            "request",
+            "signal",
+            "metric",
+            "provide",
+            "essentials",
+            "clarify",
+            "constraints"
+        ],
+        "text": "Provide one verifiable metric that would signal success. Limit your request to essentials so evaluation is swift."
+    },
+    {
+        "intent": "offer_trade",
+        "keywords": [
+            "destination",
+            "probability",
+            "specify",
+            "star",
+            "thresholds",
+            "energy",
+            "reserves",
+            "delivery",
+            "deal"
+        ],
+        "text": "energy cells for star charts is plausible. Specify volume and purity thresholds. Inspections at origin and destination reduce dispute probability."
+    },
+    {
+        "intent": "share_plan",
+        "keywords": [
+            "route",
+            "civilian",
+            "safely",
+            "hazards",
+            "judge",
+            "teams",
+            "proposal",
+            "timeline",
+            "audit"
+        ],
+        "text": "Define go/no‑go criteria to minimize later disputes. Map hazards now so teams can route around them safely. Track civilian incidents to judge progress."
+    },
+    {
+        "intent": "apologize",
+        "keywords": [
+            "attach",
+            "progress",
+            "validate",
+            "submit",
+            "inspection",
+            "brief",
+            "sorry",
+            "amends",
+            "apologize"
+        ],
+        "text": "Submit a brief corrective protocol so we can validate progress. Attach an inspection window so the remedy can be verified."
+    },
+    {
+        "intent": "build_rapport",
+        "keywords": [
+            "conduct",
+            "match",
+            "each",
+            "subsequent",
+            "grows",
+            "small",
+            "civility",
+            "culture",
+            "customs"
+        ],
+        "text": "Mutual trust grows when declarations match subsequent conduct. Let us each propose one small, verifiable step to begin."
+    },
+    {
+        "intent": "offer_trade",
+        "keywords": [
+            "probability",
+            "destination",
+            "signed",
+            "origin",
+            "settlement",
+            "improves",
+            "offer",
+            "reserves",
+            "rates"
+        ],
+        "text": "Settlement improves when manifests are synchronized and signed. Inspections at origin and destination reduce dispute probability."
+    },
+    {
+        "intent": "build_rapport",
+        "keywords": [
+            "courteous",
+            "obligations",
+            "speech",
+            "respect",
+            "preference",
+            "outcomes",
+            "customs",
+            "verifiable",
+            "trust"
+        ],
+        "text": "Respect is mutual when obligations are precise and observable. Our preference is courteous speech paired with measurable outcomes."
+    },
+    {
+        "intent": "close_treaty",
+        "keywords": [
+            "enforceable",
+            "public",
+            "expectations",
+            "statement",
+            "dated",
+            "clarify",
+            "countersign",
+            "signature",
+            "agreement"
+        ],
+        "text": "Let us conclude with a dated, enforceable instrument. A joint statement can clarify expectations for the public."
+    },
+    {
+        "intent": "close_treaty",
+        "keywords": [
+            "register",
+            "discoverability",
+            "dated",
+            "enforceable",
+            "pact",
+            "arbiter",
+            "keys",
+            "registry",
+            "monitoring"
+        ],
+        "text": "Let us conclude with a dated, enforceable instrument. Register the pact with the arbiter to ensure discoverability."
+    },
+    {
+        "intent": "seek_clarity",
+        "keywords": [
+            "slows",
+            "relief",
+            "civilians",
+            "signal",
+            "metric",
+            "ambiguity",
+            "clarify",
+            "verification",
+            "constraints"
+        ],
+        "text": "Provide one verifiable metric that would signal success. Ambiguity slows relief; precision accelerates benefits to civilians."
+    },
+    {
+        "intent": "offer_trade",
+        "keywords": [
+            "provide",
+            "batch",
+            "transfer",
+            "writing",
+            "agreed",
+            "authorized",
+            "warranty",
+            "pricing",
+            "deal"
+        ],
+        "text": "Provide a sample batch before the primary transfer is authorized. Delivery cadence and buffer stock should be agreed in writing."
+    },
+    {
+        "intent": "build_rapport",
+        "keywords": [
+            "dialogue",
+            "friction",
+            "prevent",
+            "process",
+            "testable",
+            "later",
+            "respect",
+            "stability",
+            "verifiable"
+        ],
+        "text": "Dialogue is welcome; substance improves when claims are testable. Documenting expectations will prevent friction later in the process."
+    },
+    {
+        "intent": "share_plan",
+        "keywords": [
+            "ceasefire",
+            "route",
+            "them",
+            "workable",
+            "teams",
+            "followed",
+            "proposal",
+            "owner"
+        ],
+        "text": "A limited ceasefire followed by inspection may be workable. Map hazards now so teams can route around them safely."
+    },
+    {
+        "intent": "share_plan",
+        "keywords": [
+            "situation",
+            "mirrored",
+            "telemetry",
+            "sides",
+            "reports",
+            "withdrawals",
+            "proposal",
+            "corridor",
+            "audit"
+        ],
+        "text": "Schedule mirrored withdrawals by sector under camera telemetry. Daily situation reports will keep both sides synchronized."
+    },
+    {
+        "intent": "apologize",
+        "keywords": [
+            "noted",
+            "each",
+            "include",
+            "specify",
+            "corrective",
+            "execute",
+            "contrition",
+            "amends",
+            "atone"
+        ],
+        "text": "Admission is noted; specify a corrective action with a near‑term deadline. Include who will fund and execute each corrective task."
+    },
+    {
+        "intent": "close_treaty",
+        "keywords": [
+            "final",
+            "receipts",
+            "accept",
+            "contingent",
+            "dispute",
+            "conclusion",
+            "monitoring",
+            "registry",
+            "keys"
+        ],
+        "text": "We accept conclusion contingent on intact dispute clauses. Escrow receipts should accompany the final exchange."
+    },
+    {
+        "intent": "close_treaty",
+        "keywords": [
+            "joint",
+            "transmit",
+            "signature",
+            "follow",
+            "public",
+            "clarify",
+            "seal",
+            "annex",
+            "treaty"
+        ],
+        "text": "Transmit signature keys and escrow proof; acknowledgement will follow. A joint statement can clarify expectations for the public."
+    },
+    {
+        "intent": "seek_clarity",
+        "keywords": [
+            "outcome",
+            "provide",
+            "reported",
+            "expect",
+            "quarter",
+            "breaches",
+            "protocol",
+            "evidence",
+            "verification"
+        ],
+        "text": "What outcome do you expect within the current quarter? Provide a metric. State how breaches will be reported and remedied."
+    },
+    {
+        "intent": "share_plan",
+        "keywords": [
+            "reports",
+            "track",
+            "synchronized",
+            "named",
+            "both",
+            "daily",
+            "owner",
+            "audit",
+            "proposal"
+        ],
+        "text": "Propose a three‑phase plan with timelines and named owners. Daily situation reports will keep both sides synchronized. Track delivery variance to judge progress."
+    },
+    {
+        "intent": "build_rapport",
+        "keywords": [
+            "shared",
+            "norms",
+            "match",
+            "consistent",
+            "mutual",
+            "trust",
+            "boundaries",
+            "customs",
+            "dialogue"
+        ],
+        "text": "Mutual trust grows when declarations match subsequent conduct. Shared norms are meaningful only when followed by consistent practice."
+    },
+    {
+        "intent": "apologize",
+        "keywords": [
+            "inspection",
+            "relief",
+            "attach",
+            "remedy",
+            "verified",
+            "window",
+            "contrition",
+            "accountability",
+            "regret"
+        ],
+        "text": "Your message is received; propose a withdrawal or relief schedule. Attach an inspection window so the remedy can be verified."
+    },
+    {
+        "intent": "offer_trade",
+        "keywords": [
+            "escrow",
+            "arrangement",
+            "price",
+            "neutral",
+            "simplify",
+            "brokers",
+            "bid",
+            "collateral"
+        ],
+        "text": "Propose price bands, collateral, and an escrow arrangement. We recommend neutral brokers to simplify settlement and audits."
+    },
+    {
+        "intent": "close_treaty",
+        "keywords": [
+            "authority",
+            "delegation",
+            "proceed",
+            "challenge",
+            "avoid",
+            "procedural",
+            "registry",
+            "ratify",
+            "arbiter"
+        ],
+        "text": "All terms reconciled; proceed to authentication and registry entry. Confirm delegation authority to avoid procedural challenge."
+    },
+    {
+        "intent": "share_plan",
+        "keywords": [
+            "variance",
+            "judge",
+            "sync",
+            "track",
+            "devices",
+            "progress",
+            "milestone",
+            "roadmap",
+            "hotline"
+        ],
+        "text": "A limited ceasefire followed by inspection may be workable. Time‑sync all devices to avoid telemetry disputes. Track delivery variance to judge progress."
+    },
+    {
+        "intent": "build_rapport",
+        "keywords": [
+            "risk",
+            "intent",
+            "clarifies",
+            "reduces",
+            "propose",
+            "each",
+            "boundaries",
+            "esteem",
+            "verifiable"
+        ],
+        "text": "We value restraint; it reduces risk and clarifies intent. Let us each propose one small, verifiable step to begin."
+    },
+    {
+        "intent": "offer_trade",
+        "keywords": [
+            "stock",
+            "cadence",
+            "authorized",
+            "sample",
+            "delivery",
+            "agreed",
+            "deal",
+            "bid",
+            "warranty"
+        ],
+        "text": "Provide a sample batch before the primary transfer is authorized. Delivery cadence and buffer stock should be agreed in writing."
+    },
+    {
+        "intent": "close_treaty",
+        "keywords": [
+            "entry",
+            "terms",
+            "confirm",
+            "procedural",
+            "authentication",
+            "proceed",
+            "monitoring",
+            "signature",
+            "agreement"
+        ],
+        "text": "All terms reconciled; proceed to authentication and registry entry. Confirm delegation authority to avoid procedural challenge."
+    },
+    {
+        "intent": "share_plan",
+        "keywords": [
+            "safely",
+            "dashboard",
+            "shared",
+            "hazards",
+            "adopt",
+            "sides",
+            "inspection",
+            "proposal",
+            "observer"
+        ],
+        "text": "Adopt a shared dashboard so both sides track milestones. Map hazards now so teams can route around them safely."
+    },
+    {
+        "intent": "offer_trade",
+        "keywords": [
+            "agreed",
+            "writing",
+            "progress",
+            "stock",
+            "delivery",
+            "cadence",
+            "pricing",
+            "rates",
+            "manifests"
+        ],
+        "text": "Our counter will follow after you disclose verifiable reserves. Delivery cadence and buffer stock should be agreed in writing. Track delivery variance to judge progress."
+    },
+    {
+        "intent": "share_plan",
+        "keywords": [
+            "post",
+            "impartial",
+            "speed",
+            "suggest",
+            "publish",
+            "evacuate",
+            "milestone",
+            "hotline",
+            "timeline"
+        ],
+        "text": "We suggest a 72‑hour pause to evacuate civilians and reset posture. Publish a post‑incident template to speed impartial reviews."
+    },
+    {
+        "intent": "share_plan",
+        "keywords": [
+            "template",
+            "incident",
+            "post",
+            "speed",
+            "public",
+            "reviews",
+            "timeline",
+            "evacuation",
+            "proposal"
+        ],
+        "text": "Publish a public notice and activate an incident hotline. Publish a post‑incident template to speed impartial reviews."
+    },
+    {
+        "intent": "offer_trade",
+        "keywords": [
+            "received",
+            "audits",
+            "contingency",
+            "neutral",
+            "include",
+            "coverage",
+            "manifests",
+            "collateral",
+            "warranty"
+        ],
+        "text": "Offer received; include contingency stock for shortfall coverage. We recommend neutral brokers to simplify settlement and audits."
+    },
+    {
+        "intent": "share_plan",
+        "keywords": [
+            "speed",
+            "shared",
+            "sides",
+            "post",
+            "milestones",
+            "track",
+            "timeline",
+            "beacons",
+            "ceasefire"
+        ],
+        "text": "Adopt a shared dashboard so both sides track milestones. Publish a post‑incident template to speed impartial reviews."
+    },
+    {
+        "intent": "offer_trade",
+        "keywords": [
+            "handle",
+            "defects",
+            "define",
+            "improves",
+            "synchronized",
+            "persistent",
+            "offer",
+            "warranty",
+            "trade"
+        ],
+        "text": "Settlement improves when manifests are synchronized and signed. Define termination conditions to handle persistent defects."
+    },
+    {
+        "intent": "seek_clarity",
+        "keywords": [
+            "slows",
+            "relief",
+            "require",
+            "civilians",
+            "precision",
+            "benefits",
+            "clarify",
+            "terms",
+            "explain"
+        ],
+        "text": "State the exact conditions you require, limited to one sentence. Ambiguity slows relief; precision accelerates benefits to civilians."
+    },
+    {
+        "intent": "offer_trade",
+        "keywords": [
+            "incidents",
+            "manifests",
+            "critical",
+            "synchronized",
+            "progress",
+            "track",
+            "trade",
+            "offer",
+            "delivery"
+        ],
+        "text": "Settlement improves when manifests are synchronized and signed. Warranty and return clauses must be explicit for critical hardware. Track civilian incidents to judge progress."
+    },
+    {
+        "intent": "close_treaty",
+        "keywords": [
+            "public",
+            "reconciled",
+            "joint",
+            "registry",
+            "clarify",
+            "entry",
+            "sign",
+            "keys",
+            "pact"
+        ],
+        "text": "All terms reconciled; proceed to authentication and registry entry. A joint statement can clarify expectations for the public."
+    },
+    {
+        "intent": "close_treaty",
+        "keywords": [
+            "accord",
+            "formalize",
+            "feasible",
+            "public",
+            "joint",
+            "expectations",
+            "authentication",
+            "countersign",
+            "registry"
+        ],
+        "text": "We appear aligned; it is feasible to formalize the accord now. A joint statement can clarify expectations for the public."
+    },
+    {
+        "intent": "share_plan",
+        "keywords": [
+            "corridors",
+            "patrols",
+            "neutral",
+            "template",
+            "reviews",
+            "impartial",
+            "protocol",
+            "timeline"
+        ],
+        "text": "We can mark neutral corridors with beacons and joint patrols. Publish a post‑incident template to speed impartial reviews."
+    },
+    {
+        "intent": "close_treaty",
+        "keywords": [
+            "receipts",
+            "signature",
+            "present",
+            "ready",
+            "ratify",
+            "exchange",
+            "escrow",
+            "pact"
+        ],
+        "text": "Our delegation is ready to ratify—present the signature page. Escrow receipts should accompany the final exchange."
+    },
+    {
+        "intent": "apologize",
+        "keywords": [
+            "documenting",
+            "prevent",
+            "recurrence",
+            "safeguards",
+            "specific",
+            "start",
+            "offense",
+            "redress",
+            "withdrawal"
+        ],
+        "text": "An apology is a start; outline forward‑looking safeguards. Prevent recurrence by documenting a specific safeguard."
+    },
+    {
+        "intent": "apologize",
+        "keywords": [
+            "inspection",
+            "repair",
+            "window",
+            "results",
+            "recognize",
+            "material",
+            "restitution",
+            "atone",
+            "compensation"
+        ],
+        "text": "We recognize contrition that results in material repair, not statements. Attach an inspection window so the remedy can be verified."
+    },
+    {
+        "intent": "build_rapport",
+        "keywords": [
+            "later",
+            "expectations",
+            "process",
+            "anchor",
+            "results",
+            "friction",
+            "civility",
+            "values",
+            "mutual"
+        ],
+        "text": "Cooperation is useful if both sides anchor it to measurable results. Documenting expectations will prevent friction later in the process."
+    },
+    {
+        "intent": "close_treaty",
+        "keywords": [
+            "expectations",
+            "transparency",
+            "clarify",
+            "statement",
+            "public",
+            "simultaneously",
+            "signature",
+            "keys",
+            "sign"
+        ],
+        "text": "Affix seals and publish the annexes simultaneously for transparency. A joint statement can clarify expectations for the public."
+    },
+    {
+        "intent": "offer_trade",
+        "keywords": [
+            "probability",
+            "track",
+            "contingency",
+            "inspections",
+            "dispute",
+            "sensor",
+            "exchange",
+            "reserves",
+            "delivery"
+        ],
+        "text": "Offer received; include contingency stock for shortfall coverage. Inspections at origin and destination reduce dispute probability. Track sensor uptime to judge progress."
+    },
+    {
+        "intent": "seek_clarity",
+        "keywords": [
+            "verifiable",
+            "request",
+            "metric",
+            "evaluation",
+            "signal",
+            "swift",
+            "terms",
+            "explain",
+            "question"
+        ],
+        "text": "Provide one verifiable metric that would signal success. Limit your request to essentials so evaluation is swift."
+    },
+    {
+        "intent": "seek_clarity",
+        "keywords": [
+            "breaches",
+            "accelerates",
+            "baseline",
+            "provide",
+            "quantities",
+            "relief",
+            "nonnegotiable",
+            "verification",
+            "protocol"
+        ],
+        "text": "Specify quantities, locations, and timing for your request. Ambiguity slows relief; precision accelerates benefits to civilians. Provide a baseline for border breaches."
+    },
+    {
+        "intent": "close_treaty",
+        "keywords": [
+            "avoid",
+            "escrow",
+            "proof",
+            "acknowledgement",
+            "challenge",
+            "transmit",
+            "agreement",
+            "accord",
+            "treaty"
+        ],
+        "text": "Transmit signature keys and escrow proof; acknowledgement will follow. Confirm delegation authority to avoid procedural challenge."
+    },
+    {
+        "intent": "offer_trade",
+        "keywords": [
+            "shortfall",
+            "cadence",
+            "writing",
+            "received",
+            "stock",
+            "delivery",
+            "bid",
+            "warranty",
+            "trade"
+        ],
+        "text": "Offer received; include contingency stock for shortfall coverage. Delivery cadence and buffer stock should be agreed in writing."
+    },
+    {
+        "intent": "apologize",
+        "keywords": [
+            "task",
+            "stated",
+            "each",
+            "fund",
+            "remedy",
+            "propose",
+            "withdrawal",
+            "contrition",
+            "restitution"
+        ],
+        "text": "Your acknowledgement is recorded. What remedy do you propose, stated precisely? Include who will fund and execute each corrective task."
+    },
+    {
+        "intent": "close_treaty",
+        "keywords": [
+            "confirmed",
+            "activate",
+            "verifications",
+            "preserve",
+            "pact",
+            "monitoring",
+            "countersign"
+        ],
+        "text": "We will seal the pact once baseline verifications are confirmed. Monitoring should activate immediately to preserve momentum."
+    },
+    {
+        "intent": "build_rapport",
+        "keywords": [
+            "only",
+            "shared",
+            "improves",
+            "meaningful",
+            "followed",
+            "claims",
+            "good-faith",
+            "civility",
+            "protocol"
+        ],
+        "text": "Dialogue is welcome; substance improves when claims are testable. Shared norms are meaningful only when followed by consistent practice."
+    },
+    {
+        "intent": "share_plan",
+        "keywords": [
+            "publish",
+            "hotline",
+            "public",
+            "impartial",
+            "reviews",
+            "incident",
+            "patrols",
+            "protocol",
+            "evacuation"
+        ],
+        "text": "Publish a public notice and activate an incident hotline. Publish a post‑incident template to speed impartial reviews."
+    },
+    {
+        "intent": "offer_trade",
+        "keywords": [
+            "destination",
+            "coverage",
+            "probability",
+            "dispute",
+            "reduce",
+            "stock",
+            "deal",
+            "escrow",
+            "trade"
+        ],
+        "text": "Offer received; include contingency stock for shortfall coverage. Inspections at origin and destination reduce dispute probability."
+    },
+    {
+        "intent": "seek_clarity",
+        "keywords": [
+            "outcome",
+            "metric",
+            "essentials",
+            "next",
+            "cycles",
+            "expect",
+            "terms",
+            "explain",
+            "specify"
+        ],
+        "text": "What outcome do you expect within the next two cycles? Provide a metric. Limit your request to essentials so evaluation is swift."
+    },
+    {
+        "intent": "build_rapport",
+        "keywords": [
+            "claims",
+            "dialogue",
+            "norms",
+            "meaningful",
+            "welcome",
+            "shared",
+            "cooperate",
+            "boundaries",
+            "esteem"
+        ],
+        "text": "Dialogue is welcome; substance improves when claims are testable. Shared norms are meaningful only when followed by consistent practice."
+    },
+    {
+        "intent": "close_treaty",
+        "keywords": [
+            "prepared",
+            "instruments",
+            "agreement",
+            "immediately",
+            "activate",
+            "monitoring",
+            "seal",
+            "registry",
+            "finalize"
+        ],
+        "text": "We are prepared to exchange instruments of agreement. Monitoring should activate immediately to preserve momentum."
+    },
+    {
+        "intent": "apologize",
+        "keywords": [
+            "repair",
+            "material",
+            "acknowledge",
+            "oversight",
+            "contrition",
+            "metrics",
+            "redress",
+            "restitution",
+            "atone"
+        ],
+        "text": "We recognize contrition that results in material repair, not statements. Acknowledge oversight rights until trust metrics stabilize."
+    },
+    {
+        "intent": "share_plan",
+        "keywords": [
+            "district",
+            "risk",
+            "pilot",
+            "mirrored",
+            "scale",
+            "withdrawals",
+            "corridor",
+            "protocol",
+            "schedule"
+        ],
+        "text": "Schedule mirrored withdrawals by sector under camera telemetry. Pilot the plan in a low‑risk district before scale‑up."
+    },
+    {
+        "intent": "apologize",
+        "keywords": [
+            "prevent",
+            "safeguard",
+            "documenting",
+            "paired",
+            "recurrence",
+            "specific",
+            "offense",
+            "mistake",
+            "misstep"
+        ],
+        "text": "Regret is accepted when paired with restitution and verification. Prevent recurrence by documenting a specific safeguard."
+    },
+    {
+        "intent": "build_rapport",
+        "keywords": [
+            "faith",
+            "only",
+            "concrete",
+            "tone",
+            "practice",
+            "consistent",
+            "dialogue",
+            "good-faith",
+            "customs"
+        ],
+        "text": "Your tone suggests good‑faith; let us convert that into concrete steps. Shared norms are meaningful only when followed by consistent practice."
+    },
+    {
+        "intent": "apologize",
+        "keywords": [
+            "documenting",
+            "detail",
+            "occurred",
+            "audit",
+            "prevent",
+            "compensation",
+            "remedy",
+            "amends"
+        ],
+        "text": "If harm occurred, detail compensation and the audit method. Prevent recurrence by documenting a specific safeguard."
+    },
+    {
+        "intent": "seek_clarity",
+        "keywords": [
+            "accelerates",
+            "incidents",
+            "civilian",
+            "provide",
+            "resource",
+            "benefits",
+            "inspection",
+            "metric",
+            "explain"
+        ],
+        "text": "Define the resource, the unit, and the delivery window you propose. Ambiguity slows relief; precision accelerates benefits to civilians. Provide a baseline for civilian incidents."
+    },
+    {
+        "intent": "seek_clarity",
+        "keywords": [
+            "fallback",
+            "list",
+            "prevent",
+            "unexpectedly",
+            "case",
+            "condition",
+            "clarify",
+            "nonnegotiable",
+            "constraints"
+        ],
+        "text": "List any non‑negotiable items to prevent unnecessary delay. Add a fallback condition in case schedules slip unexpectedly."
+    },
+    {
+        "intent": "build_rapport",
+        "keywords": [
+            "intent",
+            "only",
+            "risk",
+            "restraint",
+            "value",
+            "followed",
+            "esteem",
+            "cooperate",
+            "values"
+        ],
+        "text": "We value restraint; it reduces risk and clarifies intent. Shared norms are meaningful only when followed by consistent practice."
+    },
+    {
+        "intent": "build_rapport",
+        "keywords": [
+            "explicit",
+            "verifiable",
+            "honored",
+            "begin",
+            "propose",
+            "small",
+            "protocol",
+            "mutual",
+            "customs"
+        ],
+        "text": "Harmony follows when boundaries are explicit and consistently honored. Let us each propose one small, verifiable step to begin."
+    },
+    {
+        "intent": "apologize",
+        "keywords": [
+            "oversight",
+            "requires",
+            "trust",
+            "accountability",
+            "dates",
+            "metrics",
+            "atone",
+            "regret",
+            "offense"
+        ],
+        "text": "Accountability requires dates, owners, and inspection rights. Acknowledge oversight rights until trust metrics stabilize."
+    },
+    {
+        "intent": "build_rapport",
+        "keywords": [
+            "tone",
+            "expectations",
+            "suggests",
+            "good",
+            "friction",
+            "later",
+            "values",
+            "good-faith",
+            "harmony"
+        ],
+        "text": "Your tone suggests good‑faith; let us convert that into concrete steps. Documenting expectations will prevent friction later in the process."
+    },
+    {
+        "intent": "share_plan",
+        "keywords": [
+            "incident",
+            "reviews",
+            "invite",
+            "publish",
+            "post",
+            "speed",
+            "patrols",
+            "owner",
+            "evacuation"
+        ],
+        "text": "Invite a neutral observer to certify compliance throughout. Publish a post‑incident template to speed impartial reviews."
+    },
+    {
+        "intent": "build_rapport",
+        "keywords": [
+            "note",
+            "step",
+            "interest",
+            "share",
+            "small",
+            "approach",
+            "harmony",
+            "boundaries",
+            "cooperate"
+        ],
+        "text": "We note your courteous approach and share an interest in regional stability. Let us each propose one small, verifiable step to begin."
+    },
+    {
+        "intent": "offer_trade",
+        "keywords": [
+            "tied",
+            "delivery",
+            "stock",
+            "verification",
+            "milestone",
+            "cadence",
+            "terms",
+            "barter",
+            "reserves"
+        ],
+        "text": "We can consider staged delivery tied to milestone verification. Delivery cadence and buffer stock should be agreed in writing."
+    },
+    {
+        "intent": "build_rapport",
+        "keywords": [
+            "interest",
+            "only",
+            "courteous",
+            "approach",
+            "practice",
+            "followed",
+            "harmony",
+            "boundaries",
+            "mutual"
+        ],
+        "text": "We note your courteous approach and share an interest in regional stability. Shared norms are meaningful only when followed by consistent practice."
+    },
+    {
+        "intent": "seek_clarity",
+        "keywords": [
+            "reported",
+            "state",
+            "remedied",
+            "require",
+            "exact",
+            "latency",
+            "explain",
+            "constraints",
+            "evidence"
+        ],
+        "text": "State the exact conditions you require, limited to one sentence. State how breaches will be reported and remedied. Provide a baseline for response latency."
+    },
+    {
+        "intent": "close_treaty",
+        "keywords": [
+            "clarify",
+            "public",
+            "accord",
+            "expectations",
+            "appear",
+            "joint",
+            "authentication",
+            "finalize",
+            "pact"
+        ],
+        "text": "We appear aligned; it is feasible to formalize the accord now. A joint statement can clarify expectations for the public."
+    },
+    {
+        "intent": "share_plan",
+        "keywords": [
+            "later",
+            "minimize",
+            "district",
+            "define",
+            "risk",
+            "plan",
+            "beacons",
+            "observer",
+            "proposal"
+        ],
+        "text": "Define go/no‑go criteria to minimize later disputes. Pilot the plan in a low‑risk district before scale‑up."
+    },
+    {
+        "intent": "share_plan",
+        "keywords": [
+            "avoid",
+            "sync",
+            "disputes",
+            "devices",
+            "followed",
+            "limited",
+            "inspection",
+            "protocol",
+            "owner"
+        ],
+        "text": "A limited ceasefire followed by inspection may be workable. Time‑sync all devices to avoid telemetry disputes."
+    },
+    {
+        "intent": "close_treaty",
+        "keywords": [
+            "final",
+            "pact",
+            "confirmed",
+            "verifications",
+            "baseline",
+            "accompany",
+            "monitoring",
+            "countersign",
+            "keys"
+        ],
+        "text": "We will seal the pact once baseline verifications are confirmed. Escrow receipts should accompany the final exchange."
+    },
+    {
+        "intent": "apologize",
+        "keywords": [
+            "execute",
+            "detail",
+            "audit",
+            "fund",
+            "task",
+            "harm",
+            "sorry",
+            "offense",
+            "incursion"
+        ],
+        "text": "If harm occurred, detail compensation and the audit method. Include who will fund and execute each corrective task."
+    },
+    {
+        "intent": "seek_clarity",
+        "keywords": [
+            "propose",
+            "delivery",
+            "resource",
+            "define",
+            "include",
+            "evidence",
+            "details",
+            "nonnegotiable"
+        ],
+        "text": "Define the resource, the unit, and the delivery window you propose. Include evidence requirements and who will provide them."
+    },
+    {
+        "intent": "apologize",
+        "keywords": [
+            "compensation",
+            "audit",
+            "verified",
+            "method",
+            "occurred",
+            "detail",
+            "sorry",
+            "fault",
+            "amends"
+        ],
+        "text": "If harm occurred, detail compensation and the audit method. Attach an inspection window so the remedy can be verified."
+    },
+    {
+        "intent": "build_rapport",
+        "keywords": [
+            "verifiable",
+            "step",
+            "enforcement",
+            "small",
+            "remains",
+            "principles",
+            "protocol",
+            "good-faith",
+            "customs"
+        ],
+        "text": "We can align principles if enforcement remains practical and fair. Let us each propose one small, verifiable step to begin."
+    },
+    {
+        "intent": "apologize",
+        "keywords": [
+            "recognize",
+            "window",
+            "repair",
+            "results",
+            "statements",
+            "material",
+            "mistake",
+            "sorry",
+            "atone"
+        ],
+        "text": "We recognize contrition that results in material repair, not statements. Attach an inspection window so the remedy can be verified."
+    },
+    {
+        "intent": "offer_trade",
+        "keywords": [
+            "reserves",
+            "disclose",
+            "civilian",
+            "persistent",
+            "counter",
+            "defects",
+            "exchange",
+            "terms",
+            "manifests"
+        ],
+        "text": "Our counter will follow after you disclose verifiable reserves. Define termination conditions to handle persistent defects. Track civilian incidents to judge progress."
+    },
+    {
+        "intent": "seek_clarity",
+        "keywords": [
+            "mitigate",
+            "variance",
+            "delivery",
+            "first",
+            "slows",
+            "baseline",
+            "question",
+            "terms",
+            "deadline"
+        ],
+        "text": "Which single risk should we mitigate first? Be explicit. Ambiguity slows relief; precision accelerates benefits to civilians. Provide a baseline for delivery variance."
+    },
+    {
+        "intent": "seek_clarity",
+        "keywords": [
+            "provide",
+            "uptime",
+            "baseline",
+            "breaches",
+            "state",
+            "single",
+            "deadline",
+            "nonnegotiable",
+            "specify"
+        ],
+        "text": "Which single risk should we mitigate first? Be explicit. State how breaches will be reported and remedied. Provide a baseline for sensor uptime."
+    },
+    {
+        "intent": "build_rapport",
+        "keywords": [
+            "follows",
+            "propose",
+            "begin",
+            "small",
+            "boundaries",
+            "verifiable",
+            "stability",
+            "trust"
+        ],
+        "text": "Harmony follows when boundaries are explicit and consistently honored. Let us each propose one small, verifiable step to begin."
+    },
+    {
+        "intent": "seek_clarity",
+        "keywords": [
+            "slows",
+            "relief",
+            "ambiguity",
+            "benefits",
+            "empowered",
+            "identify",
+            "deadline",
+            "clarify",
+            "authority"
+        ],
+        "text": "Identify the authority under which you are empowered to negotiate. Ambiguity slows relief; precision accelerates benefits to civilians."
+    },
+    {
+        "intent": "build_rapport",
+        "keywords": [
+            "verifiable",
+            "convert",
+            "begin",
+            "propose",
+            "faith",
+            "good",
+            "civility",
+            "trust"
+        ],
+        "text": "Your tone suggests good‑faith; let us convert that into concrete steps. Let us each propose one small, verifiable step to begin."
+    },
+    {
+        "intent": "share_plan",
+        "keywords": [
+            "district",
+            "incident",
+            "plan",
+            "activate",
+            "scale",
+            "public",
+            "protocol",
+            "hotline",
+            "inspection"
+        ],
+        "text": "Publish a public notice and activate an incident hotline. Pilot the plan in a low‑risk district before scale‑up."
+    },
+    {
+        "intent": "build_rapport",
+        "keywords": [
+            "match",
+            "documenting",
+            "declarations",
+            "trust",
+            "later",
+            "prevent",
+            "respect",
+            "boundaries",
+            "peace"
+        ],
+        "text": "Mutual trust grows when declarations match subsequent conduct. Documenting expectations will prevent friction later in the process."
+    },
+    {
+        "intent": "offer_trade",
+        "keywords": [
+            "state",
+            "inspections",
+            "dispute",
+            "origin",
+            "timing",
+            "exchange",
+            "collateral",
+            "rates",
+            "delivery"
+        ],
+        "text": "A structured exchange is negotiable. State units and timing. Inspections at origin and destination reduce dispute probability."
+    },
+    {
+        "intent": "seek_clarity",
+        "keywords": [
+            "border",
+            "state",
+            "provide",
+            "remedied",
+            "breaches",
+            "compliance",
+            "metric",
+            "evidence",
+            "terms"
+        ],
+        "text": "Explain how compliance will be demonstrated and logged. State how breaches will be reported and remedied. Provide a baseline for border breaches."
+    },
+    {
+        "intent": "build_rapport",
+        "keywords": [
+            "later",
+            "testable",
+            "improves",
+            "claims",
+            "documenting",
+            "welcome",
+            "esteem",
+            "protocol",
+            "dialogue"
+        ],
+        "text": "Dialogue is welcome; substance improves when claims are testable. Documenting expectations will prevent friction later in the process."
+    },
+    {
+        "intent": "offer_trade",
+        "keywords": [
+            "collateral",
+            "price",
+            "buffer",
+            "writing",
+            "stock",
+            "delivery",
+            "bid",
+            "swap"
+        ],
+        "text": "Propose price bands, collateral, and an escrow arrangement. Delivery cadence and buffer stock should be agreed in writing."
+    },
+    {
+        "intent": "offer_trade",
+        "keywords": [
+            "neutral",
+            "reserves",
+            "recommend",
+            "verifiable",
+            "disclose",
+            "follow",
+            "exchange",
+            "pricing",
+            "deal"
+        ],
+        "text": "Our counter will follow after you disclose verifiable reserves. We recommend neutral brokers to simplify settlement and audits."
+    },
+    {
+        "intent": "apologize",
+        "keywords": [
+            "include",
+            "schedule",
+            "corrective",
+            "received",
+            "propose",
+            "fund",
+            "compensation",
+            "contrition",
+            "atone"
+        ],
+        "text": "Your message is received; propose a withdrawal or relief schedule. Include who will fund and execute each corrective task."
+    },
+    {
+        "intent": "seek_clarity",
+        "keywords": [
+            "precision",
+            "window",
+            "define",
+            "resource",
+            "ambiguity",
+            "propose",
+            "protocol",
+            "question",
+            "inspection"
+        ],
+        "text": "Define the resource, the unit, and the delivery window you propose. Ambiguity slows relief; precision accelerates benefits to civilians."
+    },
+    {
+        "intent": "seek_clarity",
+        "keywords": [
+            "first",
+            "mitigate",
+            "benefits",
+            "slows",
+            "single",
+            "risk",
+            "protocol",
+            "constraints",
+            "question"
+        ],
+        "text": "Which single risk should we mitigate first? Be explicit. Ambiguity slows relief; precision accelerates benefits to civilians."
+    },
+    {
+        "intent": "share_plan",
+        "keywords": [
+            "devices",
+            "followed",
+            "disputes",
+            "avoid",
+            "workable",
+            "limited",
+            "ceasefire",
+            "plan",
+            "evacuation"
+        ],
+        "text": "A limited ceasefire followed by inspection may be workable. Time‑sync all devices to avoid telemetry disputes."
+    },
+    {
+        "intent": "seek_clarity",
+        "keywords": [
+            "request",
+            "evaluation",
+            "essentials",
+            "limit",
+            "swift",
+            "window",
+            "verification",
+            "deadline",
+            "conditions"
+        ],
+        "text": "Define the resource, the unit, and the delivery window you propose. Limit your request to essentials so evaluation is swift."
+    },
+    {
+        "intent": "offer_trade",
+        "keywords": [
+            "escrow",
+            "arrangement",
+            "price",
+            "propose",
+            "cadence",
+            "agreed",
+            "warranty",
+            "barter",
+            "swap"
+        ],
+        "text": "Propose price bands, collateral, and an escrow arrangement. Delivery cadence and buffer stock should be agreed in writing."
+    },
+    {
+        "intent": "share_plan",
+        "keywords": [
+            "scale",
+            "risk",
+            "ceasefire",
+            "limited",
+            "inspection",
+            "workable",
+            "observer",
+            "plan",
+            "corridor"
+        ],
+        "text": "A limited ceasefire followed by inspection may be workable. Pilot the plan in a low‑risk district before scale‑up."
+    },
+    {
+        "intent": "close_treaty",
+        "keywords": [
+            "transparency",
+            "public",
+            "joint",
+            "publish",
+            "clarify",
+            "statement",
+            "countersign",
+            "conclude",
+            "registry"
+        ],
+        "text": "Affix seals and publish the annexes simultaneously for transparency. A joint statement can clarify expectations for the public."
+    },
+    {
+        "intent": "build_rapport",
+        "keywords": [
+            "friction",
+            "process",
+            "harmony",
+            "follows",
+            "documenting",
+            "honored",
+            "restraint",
+            "verifiable",
+            "dialogue"
+        ],
+        "text": "Harmony follows when boundaries are explicit and consistently honored. Documenting expectations will prevent friction later in the process."
+    },
+    {
+        "intent": "build_rapport",
+        "keywords": [
+            "harmony",
+            "follows",
+            "process",
+            "explicit",
+            "later",
+            "friction",
+            "dialogue",
+            "cooperate",
+            "verifiable"
+        ],
+        "text": "Harmony follows when boundaries are explicit and consistently honored. Documenting expectations will prevent friction later in the process."
+    },
+    {
+        "intent": "close_treaty",
+        "keywords": [
+            "dated",
+            "confirm",
+            "avoid",
+            "challenge",
+            "authority",
+            "conclude",
+            "treaty",
+            "signature",
+            "arbiter"
+        ],
+        "text": "Let us conclude with a dated, enforceable instrument. Confirm delegation authority to avoid procedural challenge."
+    },
+    {
+        "intent": "offer_trade",
+        "keywords": [
+            "recommend",
+            "simplify",
+            "audits",
+            "purity",
+            "neutral",
+            "settlement",
+            "delivery",
+            "reserves",
+            "swap"
+        ],
+        "text": "medical kits for mineral rights is plausible. Specify volume and purity thresholds. We recommend neutral brokers to simplify settlement and audits."
+    },
+    {
+        "intent": "close_treaty",
+        "keywords": [
+            "annexes",
+            "affix",
+            "receipts",
+            "publish",
+            "simultaneously",
+            "transparency",
+            "arbiter",
+            "finalize",
+            "accord"
+        ],
+        "text": "Affix seals and publish the annexes simultaneously for transparency. Escrow receipts should accompany the final exchange."
+    },
+    {
+        "intent": "offer_trade",
+        "keywords": [
+            "persistent",
+            "conversion",
+            "define",
+            "reduce",
+            "friction",
+            "judge",
+            "proposal",
+            "barter",
+            "swap"
+        ],
+        "text": "Leasing may reduce friction; detail conversion ratios if in‑kind. Define termination conditions to handle persistent defects. Track delivery variance to judge progress."
+    },
+    {
+        "intent": "build_rapport",
+        "keywords": [
+            "speech",
+            "upheld",
+            "provided",
+            "preference",
+            "differences",
+            "measurable",
+            "values",
+            "stability",
+            "courtesy"
+        ],
+        "text": "We esteem cultural differences provided essential safety norms are upheld. Our preference is courteous speech paired with measurable outcomes."
+    },
+    {
+        "intent": "close_treaty",
+        "keywords": [
+            "registry",
+            "exchange",
+            "reconciled",
+            "escrow",
+            "authentication",
+            "proceed",
+            "finalize",
+            "signature",
+            "treaty"
+        ],
+        "text": "All terms reconciled; proceed to authentication and registry entry. Escrow receipts should accompany the final exchange."
+    },
+    {
+        "intent": "seek_clarity",
+        "keywords": [
+            "state",
+            "success",
+            "breaches",
+            "signal",
+            "remedied",
+            "verifiable",
+            "deadline",
+            "details",
+            "explain"
+        ],
+        "text": "Provide one verifiable metric that would signal success. State how breaches will be reported and remedied."
+    },
+    {
+        "intent": "share_plan",
+        "keywords": [
+            "time",
+            "disputes",
+            "propose",
+            "avoid",
+            "named",
+            "timelines",
+            "ceasefire",
+            "observer",
+            "patrols"
+        ],
+        "text": "Propose a three‑phase plan with timelines and named owners. Time‑sync all devices to avoid telemetry disputes."
+    },
+    {
+        "intent": "offer_trade",
+        "keywords": [
+            "settlement",
+            "civilian",
+            "authorized",
+            "progress",
+            "transfer",
+            "incidents",
+            "swap",
+            "logistics",
+            "exchange"
+        ],
+        "text": "Provide a sample batch before the primary transfer is authorized. We recommend neutral brokers to simplify settlement and audits. Track civilian incidents to judge progress."
+    },
+    {
+        "intent": "share_plan",
+        "keywords": [
+            "them",
+            "safely",
+            "audit",
+            "around",
+            "route",
+            "teams",
+            "patrols",
+            "deconfliction",
+            "milestone"
+        ],
+        "text": "Phase I: deconfliction; Phase II: audit; Phase III: exchange. Map hazards now so teams can route around them safely."
+    },
+    {
+        "intent": "offer_trade",
+        "keywords": [
+            "dispute",
+            "seals",
+            "transit",
+            "data",
+            "inspections",
+            "access",
+            "manifests",
+            "collateral",
+            "terms"
+        ],
+        "text": "Transit access against sensor data is acceptable with seals and audits. Inspections at origin and destination reduce dispute probability."
+    },
+    {
+        "intent": "apologize",
+        "keywords": [
+            "message",
+            "specific",
+            "received",
+            "withdrawal",
+            "schedule",
+            "prevent",
+            "atone",
+            "offense",
+            "regret"
+        ],
+        "text": "Your message is received; propose a withdrawal or relief schedule. Prevent recurrence by documenting a specific safeguard."
+    },
+    {
+        "intent": "share_plan",
+        "keywords": [
+            "hazards",
+            "track",
+            "reset",
+            "around",
+            "delivery",
+            "hour",
+            "beacons",
+            "owner",
+            "ceasefire"
+        ],
+        "text": "We suggest a 48‑hour pause to evacuate civilians and reset posture. Map hazards now so teams can route around them safely. Track delivery variance to judge progress."
+    },
+    {
+        "intent": "offer_trade",
+        "keywords": [
+            "thresholds",
+            "recommend",
+            "data",
+            "purity",
+            "audits",
+            "access",
+            "offer",
+            "pricing",
+            "rates"
+        ],
+        "text": "sensor data for transit access is plausible. Specify volume and purity thresholds. We recommend neutral brokers to simplify settlement and audits."
+    },
+    {
+        "intent": "seek_clarity",
+        "keywords": [
+            "ambiguity",
+            "empowered",
+            "authority",
+            "relief",
+            "precision",
+            "identify",
+            "deadline",
+            "details",
+            "verification"
+        ],
+        "text": "Identify the authority under which you are empowered to negotiate. Ambiguity slows relief; precision accelerates benefits to civilians."
+    },
+    {
+        "intent": "close_treaty",
+        "keywords": [
+            "preserve",
+            "momentum",
+            "present",
+            "immediately",
+            "delegation",
+            "page",
+            "countersign",
+            "accord",
+            "monitoring"
+        ],
+        "text": "Our delegation is ready to ratify—present the signature page. Monitoring should activate immediately to preserve momentum."
+    },
+    {
+        "intent": "seek_clarity",
+        "keywords": [
+            "provide",
+            "delay",
+            "proceed",
+            "please",
+            "evidence",
+            "request",
+            "explain",
+            "protocol",
+            "deadline"
+        ],
+        "text": "Please clarify your request so our council can proceed without delay. Include evidence requirements and who will provide them."
+    },
+    {
+        "intent": "close_treaty",
+        "keywords": [
+            "annexes",
+            "publish",
+            "transparency",
+            "avoid",
+            "challenge",
+            "confirm",
+            "ratify",
+            "keys",
+            "escrow"
+        ],
+        "text": "Affix seals and publish the annexes simultaneously for transparency. Confirm delegation authority to avoid procedural challenge."
+    },
+    {
+        "intent": "seek_clarity",
+        "keywords": [
+            "provide",
+            "variance",
+            "state",
+            "items",
+            "breaches",
+            "delivery",
+            "clarify",
+            "verification",
+            "question"
+        ],
+        "text": "List any non‑negotiable items to prevent unnecessary delay. State how breaches will be reported and remedied. Provide a baseline for delivery variance."
+    },
+    {
+        "intent": "share_plan",
+        "keywords": [
+            "time",
+            "inspection",
+            "ceasefire",
+            "disputes",
+            "avoid",
+            "limited",
+            "owner",
+            "milestone",
+            "roadmap"
+        ],
+        "text": "A limited ceasefire followed by inspection may be workable. Time‑sync all devices to avoid telemetry disputes."
+    },
+    {
+        "intent": "apologize",
+        "keywords": [
+            "deadline",
+            "action",
+            "near",
+            "inspection",
+            "term",
+            "noted",
+            "remedy",
+            "redress",
+            "withdrawal"
+        ],
+        "text": "Admission is noted; specify a corrective action with a near‑term deadline. Attach an inspection window so the remedy can be verified."
+    },
+    {
+        "intent": "apologize",
+        "keywords": [
+            "window",
+            "attach",
+            "withdrawal",
+            "remedy",
+            "verified",
+            "inspection",
+            "atone",
+            "compensation"
+        ],
+        "text": "Your message is received; propose a withdrawal or relief schedule. Attach an inspection window so the remedy can be verified."
+    },
+    {
+        "intent": "share_plan",
+        "keywords": [
+            "incident",
+            "publish",
+            "public",
+            "post",
+            "notice",
+            "reviews",
+            "roadmap",
+            "plan",
+            "timeline"
+        ],
+        "text": "Publish a public notice and activate an incident hotline. Publish a post‑incident template to speed impartial reviews."
+    },
+    {
+        "intent": "close_treaty",
+        "keywords": [
+            "final",
+            "proceed",
+            "exchange",
+            "entry",
+            "escrow",
+            "registry",
+            "treaty",
+            "sign",
+            "agreement"
+        ],
+        "text": "All terms reconciled; proceed to authentication and registry entry. Escrow receipts should accompany the final exchange."
+    },
+    {
+        "intent": "apologize",
+        "keywords": [
+            "claims",
+            "followed",
+            "remediation",
+            "other",
+            "remorse",
+            "prioritize",
+            "incursion",
+            "atone",
+            "audit"
+        ],
+        "text": "Remorse is credible when followed by proportional remediation. Relief should prioritize affected civilians before other claims."
+    },
+    {
+        "intent": "offer_trade",
+        "keywords": [
+            "conditions",
+            "data",
+            "transit",
+            "sensor",
+            "seals",
+            "handle",
+            "trade",
+            "proposal",
+            "rates"
+        ],
+        "text": "Transit access against sensor data is acceptable with seals and audits. Define termination conditions to handle persistent defects."
+    },
+    {
+        "intent": "offer_trade",
+        "keywords": [
+            "rights",
+            "thresholds",
+            "plausible",
+            "neutral",
+            "orbital",
+            "audits",
+            "rates",
+            "delivery",
+            "warranty"
+        ],
+        "text": "water rights for orbital safe‑passage is plausible. Specify volume and purity thresholds. We recommend neutral brokers to simplify settlement and audits."
+    },
+    {
+        "intent": "seek_clarity",
+        "keywords": [
+            "delay",
+            "unnecessary",
+            "prevent",
+            "negotiable",
+            "list",
+            "state",
+            "constraints",
+            "specify",
+            "explain"
+        ],
+        "text": "List any non‑negotiable items to prevent unnecessary delay. State how breaches will be reported and remedied."
+    },
+    {
+        "intent": "apologize",
+        "keywords": [
+            "stated",
+            "claims",
+            "prioritize",
+            "recorded",
+            "propose",
+            "remedy",
+            "misstep",
+            "compensation",
+            "mistake"
+        ],
+        "text": "Your acknowledgement is recorded. What remedy do you propose, stated precisely? Relief should prioritize affected civilians before other claims."
+    },
+    {
+        "intent": "offer_trade",
+        "keywords": [
+            "defects",
+            "persistent",
+            "reduce",
+            "termination",
+            "detail",
+            "kind",
+            "manifests",
+            "bid",
+            "warranty"
+        ],
+        "text": "Leasing may reduce friction; detail conversion ratios if in‑kind. Define termination conditions to handle persistent defects."
+    },
+    {
+        "intent": "build_rapport",
+        "keywords": [
+            "small",
+            "step",
+            "mutual",
+            "verifiable",
+            "observable",
+            "begin",
+            "customs"
+        ],
+        "text": "Respect is mutual when obligations are precise and observable. Let us each propose one small, verifiable step to begin."
+    },
+    {
+        "intent": "close_treaty",
+        "keywords": [
+            "aligned",
+            "exchange",
+            "accord",
+            "formalize",
+            "escrow",
+            "receipts",
+            "countersign",
+            "authentication",
+            "monitoring"
+        ],
+        "text": "We appear aligned; it is feasible to formalize the accord now. Escrow receipts should accompany the final exchange."
+    },
+    {
+        "intent": "build_rapport",
+        "keywords": [
+            "regional",
+            "shared",
+            "note",
+            "courteous",
+            "practice",
+            "interest",
+            "values",
+            "respect",
+            "restraint"
+        ],
+        "text": "We note your courteous approach and share an interest in regional stability. Shared norms are meaningful only when followed by consistent practice."
+    },
+    {
+        "intent": "close_treaty",
+        "keywords": [
+            "aligned",
+            "formalize",
+            "appear",
+            "final",
+            "feasible",
+            "receipts",
+            "finalize",
+            "authentication",
+            "seal"
+        ],
+        "text": "We appear aligned; it is feasible to formalize the accord now. Escrow receipts should accompany the final exchange."
+    },
+    {
+        "intent": "close_treaty",
+        "keywords": [
+            "proof",
+            "exchange",
+            "receipts",
+            "escrow",
+            "follow",
+            "acknowledgement",
+            "arbiter",
+            "signature"
+        ],
+        "text": "Transmit signature keys and escrow proof; acknowledgement will follow. Escrow receipts should accompany the final exchange."
+    },
+    {
+        "intent": "apologize",
+        "keywords": [
+            "rights",
+            "window",
+            "attach",
+            "owners",
+            "verified",
+            "requires",
+            "contrition",
+            "apologize",
+            "fault"
+        ],
+        "text": "Accountability requires dates, owners, and inspection rights. Attach an inspection window so the remedy can be verified."
+    },
+    {
+        "intent": "share_plan",
+        "keywords": [
+            "devices",
+            "later",
+            "criteria",
+            "telemetry",
+            "define",
+            "avoid",
+            "roadmap",
+            "audit",
+            "ceasefire"
+        ],
+        "text": "Define go/no‑go criteria to minimize later disputes. Time‑sync all devices to avoid telemetry disputes."
+    },
+    {
+        "intent": "close_treaty",
+        "keywords": [
+            "delegation",
+            "instruments",
+            "avoid",
+            "confirm",
+            "procedural",
+            "authority",
+            "annex",
+            "pact",
+            "keys"
+        ],
+        "text": "We are prepared to exchange instruments of agreement. Confirm delegation authority to avoid procedural challenge."
+    },
+    {
+        "intent": "build_rapport",
+        "keywords": [
+            "results",
+            "sides",
+            "shared",
+            "meaningful",
+            "anchor",
+            "cooperation",
+            "trust",
+            "courtesy",
+            "dialogue"
+        ],
+        "text": "Cooperation is useful if both sides anchor it to measurable results. Shared norms are meaningful only when followed by consistent practice."
+    },
+    {
+        "intent": "share_plan",
+        "keywords": [
+            "incident",
+            "notice",
+            "judge",
+            "track",
+            "impartial",
+            "uptime",
+            "audit",
+            "proposal",
+            "deconfliction"
+        ],
+        "text": "Publish a public notice and activate an incident hotline. Publish a post‑incident template to speed impartial reviews. Track sensor uptime to judge progress."
+    },
+    {
+        "intent": "close_treaty",
+        "keywords": [
+            "receipts",
+            "accompany",
+            "dispute",
+            "conclusion",
+            "exchange",
+            "accept",
+            "arbiter",
+            "annex",
+            "registry"
+        ],
+        "text": "We accept conclusion contingent on intact dispute clauses. Escrow receipts should accompany the final exchange."
+    },
+    {
+        "intent": "share_plan",
+        "keywords": [
+            "shared",
+            "telemetry",
+            "sync",
+            "disputes",
+            "sides",
+            "devices",
+            "roadmap",
+            "evacuation",
+            "audit"
+        ],
+        "text": "Adopt a shared dashboard so both sides track milestones. Time‑sync all devices to avoid telemetry disputes."
+    },
+    {
+        "intent": "apologize",
+        "keywords": [
+            "corrective",
+            "affected",
+            "brief",
+            "claims",
+            "submit",
+            "protocol",
+            "accountability",
+            "contrition",
+            "atone"
+        ],
+        "text": "Submit a brief corrective protocol so we can validate progress. Relief should prioritize affected civilians before other claims."
+    },
+    {
+        "intent": "apologize",
+        "keywords": [
+            "accountability",
+            "recurrence",
+            "requires",
+            "rights",
+            "dates",
+            "prevent",
+            "mistake",
+            "redress",
+            "sorry"
+        ],
+        "text": "Accountability requires dates, owners, and inspection rights. Prevent recurrence by documenting a specific safeguard."
+    },
+    {
+        "intent": "apologize",
+        "keywords": [
+            "relief",
+            "propose",
+            "stated",
+            "precisely",
+            "prioritize",
+            "civilians",
+            "audit",
+            "restitution",
+            "compensation"
+        ],
+        "text": "Your acknowledgement is recorded. What remedy do you propose, stated precisely? Relief should prioritize affected civilians before other claims."
+    },
+    {
+        "intent": "offer_trade",
+        "keywords": [
+            "reserves",
+            "reduce",
+            "progress",
+            "border",
+            "disclose",
+            "follow",
+            "trade",
+            "swap"
+        ],
+        "text": "Our counter will follow after you disclose verifiable reserves. Inspections at origin and destination reduce dispute probability. Track border breaches to judge progress."
+    },
+    {
+        "intent": "seek_clarity",
+        "keywords": [
+            "limit",
+            "swift",
+            "clarify",
+            "evaluation",
+            "council",
+            "breaches",
+            "metric",
+            "constraints",
+            "specify"
+        ],
+        "text": "Please clarify your request so our council can proceed without delay. Limit your request to essentials so evaluation is swift. Provide a baseline for border breaches."
+    },
+    {
+        "intent": "apologize",
+        "keywords": [
+            "recurrence",
+            "restitution",
+            "documenting",
+            "verification",
+            "accepted",
+            "prevent",
+            "accountability",
+            "amends",
+            "withdrawal"
+        ],
+        "text": "Regret is accepted when paired with restitution and verification. Prevent recurrence by documenting a specific safeguard."
+    },
+    {
+        "intent": "seek_clarity",
+        "keywords": [
+            "accelerates",
+            "provide",
+            "precision",
+            "benefits",
+            "delivery",
+            "relief",
+            "clarify",
+            "metric",
+            "details"
+        ],
+        "text": "What outcome do you expect within the present orbit? Provide a metric. Ambiguity slows relief; precision accelerates benefits to civilians. Provide a baseline for delivery variance."
+    },
+    {
+        "intent": "build_rapport",
+        "keywords": [
+            "norms",
+            "respect",
+            "consistent",
+            "mutual",
+            "precise",
+            "only",
+            "verifiable",
+            "peace",
+            "culture"
+        ],
+        "text": "Respect is mutual when obligations are precise and observable. Shared norms are meaningful only when followed by consistent practice."
+    },
+    {
+        "intent": "seek_clarity",
+        "keywords": [
+            "provide",
+            "authority",
+            "negotiate",
+            "empowered",
+            "requirements",
+            "them",
+            "nonnegotiable",
+            "conditions"
+        ],
+        "text": "Identify the authority under which you are empowered to negotiate. Include evidence requirements and who will provide them."
+    },
+    {
+        "intent": "apologize",
+        "keywords": [
+            "acknowledge",
+            "rights",
+            "deadline",
+            "action",
+            "specify",
+            "oversight",
+            "compensation",
+            "contrition",
+            "regret"
+        ],
+        "text": "Admission is noted; specify a corrective action with a near‑term deadline. Acknowledge oversight rights until trust metrics stabilize."
+    },
+    {
+        "intent": "offer_trade",
+        "keywords": [
+            "return",
+            "settlement",
+            "signed",
+            "explicit",
+            "warranty",
+            "critical",
+            "pricing",
+            "proposal",
+            "swap"
+        ],
+        "text": "Settlement improves when manifests are synchronized and signed. Warranty and return clauses must be explicit for critical hardware."
+    },
+    {
+        "intent": "seek_clarity",
+        "keywords": [
+            "benefits",
+            "slows",
+            "relief",
+            "ambiguity",
+            "accelerates",
+            "state",
+            "details",
+            "terms",
+            "authority"
+        ],
+        "text": "State the exact conditions you require, limited to one sentence. Ambiguity slows relief; precision accelerates benefits to civilians."
+    },
+    {
+        "intent": "seek_clarity",
+        "keywords": [
+            "demonstrated",
+            "compliance",
+            "ambiguity",
+            "slows",
+            "explain",
+            "benefits",
+            "inspection",
+            "details",
+            "constraints"
+        ],
+        "text": "Explain how compliance will be demonstrated and logged. Ambiguity slows relief; precision accelerates benefits to civilians."
+    },
+    {
+        "intent": "build_rapport",
+        "keywords": [
+            "obligations",
+            "expectations",
+            "prevent",
+            "friction",
+            "mutual",
+            "precise",
+            "respect",
+            "trust",
+            "good-faith"
+        ],
+        "text": "Respect is mutual when obligations are precise and observable. Documenting expectations will prevent friction later in the process."
+    },
+    {
+        "intent": "close_treaty",
+        "keywords": [
+            "final",
+            "text",
+            "countersign",
+            "exchange",
+            "annexes",
+            "promptly",
+            "annex",
+            "finalize"
+        ],
+        "text": "Submit the final text and annexes; our council will countersign promptly. Escrow receipts should accompany the final exchange."
+    },
+    {
+        "intent": "offer_trade",
+        "keywords": [
+            "stock",
+            "timing",
+            "state",
+            "writing",
+            "units",
+            "agreed",
+            "swap",
+            "deal",
+            "offer"
+        ],
+        "text": "A structured exchange is negotiable. State units and timing. Delivery cadence and buffer stock should be agreed in writing."
+    },
+    {
+        "intent": "build_rapport",
+        "keywords": [
+            "reduces",
+            "regional",
+            "courteous",
+            "share",
+            "clarity",
+            "abstractions",
+            "boundaries",
+            "protocol",
+            "mutual"
+        ],
+        "text": "We note your courteous approach and share an interest in regional stability. Please avoid abstractions; clarity reduces the chance of incidents."
+    }
+]

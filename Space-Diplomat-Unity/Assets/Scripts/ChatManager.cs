@@ -347,8 +347,13 @@ public class ChatManager : MonoBehaviour
             }
 
             // Notify UI that emotion counts changed for this alien
-            // Social cascade might have changed due to this turn
             GameState.Instance.RaiseEmotionsChanged(currentAlienName);
+
+            // Penbol's social cascade might have changed due to this turn
+            if (!string.Equals(currentAlienName, "PENBOL", System.StringComparison.OrdinalIgnoreCase))
+            {
+                GameState.Instance.RaiseEmotionsChanged("PENBOL");
+            }
         }
         else
         {
