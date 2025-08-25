@@ -26,10 +26,12 @@ groq_model_id = os.getenv("GROQ_MODEL_ID", "llama3-8b-8192")
 max_tokens = int(os.getenv("MAX_TOKENS", 150))
 base_temperature = float(os.getenv("TEMPERATURE", 0.7))
 alien_profiles_path = os.getenv("ALIEN_PROFILES_PATH", "AlienPersonalities.json")
+braxim_replies_path = os.getenv("BRAXIM_REPLIES_PATH", "BraximReplies.json")
 
 print(f"MAX TOKENS:", max_tokens)
 print(f"TEMPERATURE:", base_temperature)
 print(f"ALIEN PROFILES PATH:", alien_profiles_path)
+print(f"BRAXIM REPLIES PATH:", braxim_replies_path)
 
 last_display_dist = defaultdict(lambda: {"keys": ["disgust", "fear", "anger", "sadness", "joy"], 
                                          "values":[0.2,0.2,0.2,0.2,0.2]})
@@ -272,11 +274,41 @@ def load_alien_profiles(path: str):
         arr = json.load(f)
         return {a["name"]: a for a in arr}
 
+def load_braxim_replies(path):
+    if not os.path.exists(path):
+        return[]
+    try:
+        with open(path, "r", encoding="utf-8") as f:
+            data = json.load(f)
+
+        # Normalize Braxim replies to a list of dictionaries
+        out = []
+        for item in data:
+            intent = (item.get("intent") or "").strip()
+            text = (item.get("text") or "").strip()
+            kw = [k.lower() for k in (item.get("keywords") or [])]
+            if text:
+                out.append({ 
+                    "intent": intent, 
+                    "keywords": kw, 
+                    "text": text
+                })
+
+        print(f"[Braxim] Loaded {len(out)} replies from {path}")
+        return out
+
+    except Exception as e:
+        print(f"Error loading Braxim replies from {path}: {e}")
+        return []
+
 ALIENS = load_alien_profiles(alien_profiles_path)
 
 # ======================================
-# Player role filter
+# Braxim Static Replies Behaviour
 # ======================================
+BRAXIM_REPLIES = load_braxim_replies(braxim_replies_path)
+
+_braxim_last_idx = None  # Last used Braxim reply index
 
 _world_re = re.compile(r"[a-z']+")
 
@@ -299,59 +331,100 @@ def _guess_intent_from_text(st: str):
         return "build_rapport"
     return None
 
-# ======================================
-# Social Behaviour
-# ======================================
-def social_cascade():
+def choose_braxim_reply(user_input: str, rl_intent: str, topk: int = 6):
+    """ 
+    Pick the best static line by (overlap + substring + RL bonus + heuristic guess).
+    Then sample from the top-k best matches.
     """
-    Recompute each alien's running mood from the current network.
-    Each alien i aggregates (joy - anger) of others j weighted by relations [i][j].
-    Then I apply a gentle decay and add a gain scaled by socialK
+    global _braxim_last_idx
+    if not BRAXIM_REPLIES:
+        return "We will reply formally once your terms are specific."
+
+    U = _tokens(user_input)
+    guess = _guess_intent_from_text(user_input)
+
+    scored = []
+    for i, item in enumerate(BRAXIM_REPLIES):
+        kw = set(item["keywords"])
+
+        #token overlap
+        overlap = len(U & kw)
+
+        # substring hits
+        substr = sum(1 for k in kw if k in (user_input or "").lower())
+
+        # bonuses
+        rl_bonus = 0.4 if item["intent"] and item["intent"] == rl_intent else 0.0
+        guess_bonus = 0.6 if guess and item["intent"] == guess else 0.0
+        score = 1.0 * overlap + 0.3 * substr + rl_bonus + guess_bonus
+        scored.append((score, i))
+
+    scored.sort(key=lambda x: x[0], reverse=True)
+    
+    # Take top-k best matches
+    top = [i for st, i in scored[:max(1, topk)] if st > 0]
+    if not top:
+        # still nothing matched; prefer guessed intent, then RL intent
+        if guess:
+            cand = [i for i, it in enumerate(BRAXIM_REPLIES) if it["intent"] == guess]
+            if cand:
+                top = cand
+        if not top and rl_intent:
+            cand = [i for i, it in enumerate(BRAXIM_REPLIES) if it["intent"] == rl_intent]
+            if cand:
+                top = cand
+
+    if not top:
+        # absolute fallback
+        return "We will reply formally once your terms are specific."
+
+    # avoid repeating the same exact line twice
+    choices = [i for i in top if i != _braxim_last_idx] or [top[0]]
+    idx = random.choice(choices)
+    _braxim_last_idx = idx  # remember last used index
+    return BRAXIM_REPLIES[idx]["text"]
+
+# ======================================
+# Penbol Social Behaviour
+# ======================================
+def penbol_social_cascade():
     """
-    DECAY = 0.90
+    Recompute Penbol's mood from current network,
+    even if we didn't talk with Penbol.
+    """
+    name = "PENBOL"
+    profile = ALIENS.get(name)
+    if not profile:
+        return
 
-    # Build a stable list so updates don't affect neighbors within this tick
-    names = list(ALIENS.keys())
+    rel = profile.get("relations", {}) or {}
+    SOCIAL_K = float(profile.get("socialK", 0.15))
+    DECAY = 0.90  # decay factor for Penbol's mood
 
-    # Snapshot current affects to compute neighbor contributions
-    snapshot = {n: {"joy": float(alien_affect[n].get("joy", 0.0)),
-                    "anger": float(alien_affect[n].get("anger", 0.0))}
-                for n in names}
+    aa = alien_affect[name] # running affect
+    joy_gain = 0.0
+    anger_gain = 0.0
 
-    for name in names:
-        profile = ALIENS.get(name) or {}
-        rel = profile.get("relations", {}) or {}
-        k = float(profile.get("socialK", 0.0))
-        if k <= 0.0:
-            # decay only-introverts can still slowly settle
-            aa = alien_affect[name]
-            aa["joy"] = max(0.0, min(1.0, aa["joy"] * DECAY))
-            aa["anger"] = max(0.0, min(1.0, aa["anger"] * DECAY))
-            continue
+    friend_score = 0.0
+    for other, w in rel.items():
+        # defaultdict gives 0.0 if missing
+        other_affect = alien_affect[(other or "").upper()]
+        other_joy = float(other_affect.get("joy", 0.0))
+        other_anger = float(other_affect.get("anger", 0.0))
+        friend_score += float(w) * (other_joy - other_anger)
 
-        # accumulate neighbor influence
-        score = 0.0
-        for other, w in rel.items():
-            o = snapshot.get(other.upper())
-            if not o:
-                continue
-            score += float(w) * (o["joy"] - o["anger"])
+    # Clamp and convert to gains
+    friend_score = max(-1.0, min(1.0, friend_score))  # clamp to [-1, 1]
+    if friend_score > 0:
+        joy_gain = friend_score * SOCIAL_K
+    elif friend_score < 0:
+        anger_gain = (-friend_score) * SOCIAL_K
 
-        # clamp influence into [-1, 1]
-        score = max(-1.0, min(1.0, score))
+    # Apply with decay
+    aa["joy"] = min(1.0, max(0.0, aa["joy"] * DECAY + joy_gain))
+    aa["anger"] = min(1.0, max(0.0, aa["anger"] * DECAY + anger_gain))
 
-        # apply
-        aa = alien_affect[name]
-        joy_new = aa["joy"] * DECAY
-        anger_new = aa["anger"] * DECAY
-
-        if score > 0:
-            joy_new += score * k
-        elif score < 0:
-            anger_new += (- score) * k
-
-        aa["joy"] = max(0.0, min (1.0, joy_new))
-        aa["anger"] = max(0.0, min (1.0, anger_new))
+    print(f"[Penbol cascade] friend_score={friend_score:.3f} joy->{aa['joy']:.3f} anger->{aa['anger']:.3f}")
 
 # Running affect per alien
 alien_affect = defaultdict(lambda: {"joy": 0.0, "anger": 0.0})
@@ -506,6 +579,7 @@ def chat():
 
     # snapshot affect before this turn
     alien_before = dict(alien_affect[alien_name])         # joy/anger for target alien
+    penbol_before = dict(alien_affect["PENBOL"])          # joy/anger for Penbol (social mood)
 
     if not user_input:
         return jsonify({"error": "Empty message"}), 400
@@ -584,6 +658,9 @@ def chat():
     rl_state = encode_state(dist_map)
     rl_action = choose_intent(rl_state)
 
+    # Braxim uses static replies, while Zaxim/Penbol use LLM
+    is_braxim = alien_name.upper() == "BRAXIM"
+
     distribution_json = json.dumps({
         "keys": canon_order,
         "values": vals
@@ -593,95 +670,100 @@ def chat():
     style_hints, eo, na, c = style_hints_from_traits(profile.get("traits", {}))
     behavior_instruction = behavior_from_emotion(top_emotion, emotion_score)
     temp = adjusted_temperature(base_temperature, c)
+
+    if not is_braxim:
+        # --- System prompt ---
+        social_line = ""
+        if alien_name.upper() == "PENBOL":
+            rel = profile.get("relations", {}) or {}
+            likes = [k for k,v in rel.items() if v > 0]
+            dislikes = [k for k, v in rel.items() if v < 0]
+            if likes or dislikes:
+                social_line = ("social context: you currently like " + ", ".join(likes) if likes else "") + \
+                    ((" and dislike " if likes and dislikes else "dislike ") + ", ".join(dislikes) if dislikes else "") + \
+                    ". Let this subtly color your tone."
+        system_prompt = f"""
+        You are {profile['name']}, the alien leader.
+        Persona: {profile.get('personalityType','')}.
+        Description: {profile.get('description', '')}.
+        Culture: {profile.get('culture', '')}.
+        Stay in-character. {profile.get('behaviorInstruction', '')}
+        Style hints: {", ".join(style_hints)}.
+        {social_line}
+        {lang_hint}
+        Player emotion: {top_emotion} ({emotion_score:.2f}); sentiment polarity: {polarity:.2f}, subjectivity: {subjectivity:.2f}.
+        Player said: {redacted_input}.
+        {behavior_instruction}
+        Current diplomatic intent: {rl_action}.
+        Keep your answer concise and very briefly. Use up to {max_tokens} tokens. 
+        Always end your response with a complete sentence.
+        """.strip()
+
+        # ---- Conversation history from client ----
+        raw_hist = data.get("history", []) or []
+
+        # Santize and clip (defensive)
+        hist = []
+        if isinstance(raw_hist, (list, tuple)):
+            for t in list(raw_hist)[-16:]:
+                role = (t.get("role") or "").strip()
+                content = (t.get("content") or "").strip()
+                if not content:
+                    continue
+                if role not in ("user", "assistant"): # Keep history simple; drop extra roles
+                    continue
+                hist.append({"role": role, "content": content})
+
+        messages = [{"role": "system", "content": system_prompt}]
+        messages.extend(hist)
+        messages.append({"role": "user", "content": redacted_input})
     
-    # --- System prompt ---
-    social_line = ""
-    rel = profile.get("relations", {}) or {}
-    likes = [k for k,v in rel.items() if v > 0]
-    dislikes = [k for k, v in rel.items() if v < 0]
-    if likes or dislikes:
-        social_line = ("social context: you currently like " + ", ".join(likes) if likes else "") + \
-            ((" and dislike " if likes and dislikes else "dislike ") + ", ".join(dislikes) if dislikes else "") + \
-            ". Let this subtly color your tone." 
-    system_prompt = f"""
-    You are {profile['name']}, the alien leader.
-    Persona: {profile.get('personalityType','')}.
-    Description: {profile.get('description', '')}.
-    Culture: {profile.get('culture', '')}.
-    Stay in-character. {profile.get('behaviorInstruction', '')}
-    Style hints: {", ".join(style_hints)}.
-    {social_line}
-    {lang_hint}
-    Player emotion: {top_emotion} ({emotion_score:.2f}); sentiment polarity: {polarity:.2f}, subjectivity: {subjectivity:.2f}.
-    Player said: {redacted_input}.
-    {behavior_instruction}
-    Current diplomatic intent: {rl_action}.
-    Keep your answer concise and very briefly. Use up to {max_tokens} tokens. 
-    Always end your response with a complete sentence.
-    """.strip()
-
-    # ---- Conversation history from client ----
-    raw_hist = data.get("history", []) or []
-
-    # Santize and clip (defensive)
-    hist = []
-    if isinstance(raw_hist, (list, tuple)):
-        for t in list(raw_hist)[-16:]:
-            role = (t.get("role") or "").strip()
-            content = (t.get("content") or "").strip()
-            if not content:
-                continue
-            if role not in ("user", "assistant"): # Keep history simple; drop extra roles
-                continue
-            hist.append({"role": role, "content": content})
-
-    messages = [{"role": "system", "content": system_prompt}]
-    messages.extend(hist)
-    messages.append({"role": "user", "content": redacted_input})
-    
-    print(f"==== System prompt ====")
-    print(system_prompt)
-    print(f"=====================")
+        print(f"==== System prompt ====")
+        print(system_prompt)
+        print(f"=====================")
 
 
-    # --- Call Groq API ---
-    headers = {
-        "Authorization": f"Bearer {groq_api_key}",
-        "Content-Type": "application/json"
-    }
+        # --- Call Groq API ---
+        headers = {
+            "Authorization": f"Bearer {groq_api_key}",
+            "Content-Type": "application/json"
+        }
 
-    payload = {
-        "model": groq_model_id,
-        "messages": messages,
-        "temperature": temp,
-        "max_tokens": max_tokens
-    }
+        payload = {
+            "model": groq_model_id,
+            "messages": messages,
+            "temperature": temp,
+            "max_tokens": max_tokens
+        }
 
-    response = None
-    try:
-        response = requests.post(
-            "https://api.groq.com/openai/v1/chat/completions",
-            headers=headers,
-            json=payload,
-            timeout=30  # Set a timeout for the request
-        )
-        response.raise_for_status()
-        reply = response.json()["choices"][0]["message"]["content"]
-
-        
-    except requests.exceptions.HTTPError as err:
-        status = err.response.status_code if err.response is not None else None
-        detail = ""
+        response = None
         try:
-            detail = err.response.text[:400] if err.response is not None else ""
-        except Exception:
-            pass
-        app.logger.error("Groq HTTP %s: %s", status, detail)
-        return jsonify({"error":"groq_http_error","status":status,"detail":detail}), 502
+            response = requests.post(
+                "https://api.groq.com/openai/v1/chat/completions",
+                headers=headers,
+                json=payload,
+                timeout=30  # Set a timeout for the request
+            )
+            response.raise_for_status()
+            reply = response.json()["choices"][0]["message"]["content"]
+
         
-    except Exception as e:
-        app.logger.exception("Groq request error")
-        return jsonify({"error":"groq_request_error","detail":str(e)}), 502
+        except requests.exceptions.HTTPError as err:
+            status = err.response.status_code if err.response is not None else None
+            detail = ""
+            try:
+                detail = err.response.text[:400] if err.response is not None else ""
+            except Exception:
+                pass
+            app.logger.error("Groq HTTP %s: %s", status, detail)
+            return jsonify({"error":"groq_http_error","status":status,"detail":detail}), 502
+        
+        except Exception as e:
+            app.logger.exception("Groq request error")
+            return jsonify({"error":"groq_request_error","detail":str(e)}), 502
+
+    else:
+        reply = choose_braxim_reply(user_input, rl_action)
 
     # ======================================
     # AFFECT DYNAMICS (per alien)
@@ -698,7 +780,7 @@ def chat():
     # Personality-biased gains
     anger_gain = 0.0
     if top_emotion in ("anger", "sadness", "fear", "disgust"):
-        # treat any non-joy as negative for rules
+        # treat any non-joy as negative for Penbol rules
         anger_gain = emotion_score * ANGER_STEP * (0.8 + 0.6 * na - 0.4 * ag)
 
     joy_gain = 0.0
@@ -710,30 +792,31 @@ def chat():
         anger_gain *= 0.25
         joy_gain *= 0.25
 
-    # Social influence: friends' moods sway
-    rel = profile.get("relations", {}) or {}
+    # Social influence (Penbol only): friends' moods sway Penbol
+    if alien_name.upper() == "PENBOL":
+        rel = profile.get("relations", {}) or {}
 
-    # How much alien cares about friends' moods
-    SOCIAL_K = float(profile.get("socialK", 0.35))
+        # How much Penbol cares about friends' moods)
+        SOCIAL_K = float(profile.get("socialK", 0.35))
 
-    # friend_score > 0 if liked aliens are joyful (or disliked rivals are misserable)
-    friend_score = 0.0
-    for other_name, w in rel.items():
-        other_key = (other_name or "").upper()
+        # friend_score > 0 if liked aliens are joyful (or disliked rivals are misserable)
+        friend_score = 0.0
+        for other_name, w in rel.items():
+            other_key = (other_name or "").upper()
 
-        #defaultdict gives 0.0 if missing
-        other_affect = alien_affect[other_key]
+            #defaultdict gives 0.0 if missing
+            other_affect = alien_affect[other_key]
 
-        other_joy = float(other_affect.get("joy", 0.0))
-        other_anger = float(other_affect.get("anger", 0.0))
-        friend_score += float(w) * (other_joy - other_anger)
+            other_joy = float(other_affect.get("joy", 0.0))
+            other_anger = float(other_affect.get("anger", 0.0))
+            friend_score += float(w) * (other_joy - other_anger)
 
-    friend_score = max(-1.0, min(1.0, friend_score))  # clamp to [-1, 1]
-    # Apply social influence
-    if friend_score > 0:
-        joy_gain += friend_score * SOCIAL_K
-    elif friend_score < 0:
-        anger_gain += (-friend_score) * SOCIAL_K
+        friend_score = max(-1.0, min(1.0, friend_score))  # clamp to [-1, 1]
+        # Apply social influence
+        if friend_score > 0:
+            joy_gain += friend_score * SOCIAL_K
+        elif friend_score < 0:
+            anger_gain += (-friend_score) * SOCIAL_K
 
 
     # Passive decay towards 0 (feelings fade)
@@ -770,8 +853,9 @@ def chat():
             "message": "Negotiation failed. The alien refuses to continue."
         }
 
-    # Keep alien socially up-to-date when we talk to other aliens
-    social_cascade()
+    # keep Penbol socially up-to-date when we talk to other aliens
+    if alien_name.upper() != "PENBOL":
+        penbol_social_cascade()
 
     # Log current state
     print(f"[{alien_name}] joy={alien_affect[alien_name]['joy']:.3f} / thr={joy_threshold} | "
@@ -784,6 +868,7 @@ def chat():
 
     # Snapshot affect after this turn
     alien_after = dict(alien_affect[alien_name])
+    penbol_after = dict(alien_affect["PENBOL"])
 
     try:
         append_rl_log({
@@ -807,6 +892,8 @@ def chat():
             "affect": {
                 "alienBefore": alien_before,
                 "alien_after": alien_after,
+                "penbolBefore": penbol_before,
+                "penbolAfter": penbol_after
             },
             "success": success,
             "failure": failure
@@ -819,24 +906,27 @@ def chat():
     except Exception as e:
         app.logger.exception("Q-table save failed: %s", e)
 
-    # Build the distribution to send back to Unity (with social overlay)
+    # Build the distribution to send back to Unity (with Penbol social overlay)
     display_vals = list(vals)  # copy to avoid mutation
     joy_i = canon_order.index("joy")
     anger_i = canon_order.index("anger")
     fear_i = canon_order.index("fear")
     sad_i = canon_order.index("sadness")
     disgust_i = canon_order.index("disgust")
-    
-    aa = alien_affect[alien_name] # Alien's running mood after social influence/math above
-    overlay_strength = float(profile.get("socialOverlay", 0.0))
-    
-    # Lift joy/anger visually to reflect current mood (gentle, not overriding)
-    display_vals[joy_i] += overlay_strength * float(aa.get("joy", 0.0))
-    display_vals[anger_i] += overlay_strength * float(aa.get("anger", 0.0))
-    
-    # Renormalize to sum to 1
-    s = sum(display_vals) or 1.0
-    display_vals = [v / s for v in display_vals]
+
+    if alien_name.upper() == "PENBOL":
+        aa = alien_affect[alien_name] # Penbol's running mood after social influence/math above
+        overlay_strength = float(profile.get("socialOverlay", 0.5))
+
+        # Lift joy/anger visually to reflect current mood (gentle, not overriding)
+        display_vals[joy_i] += overlay_strength * float(aa.get("joy", 0.0))
+        display_vals[anger_i] += overlay_strength * float(aa.get("anger", 0.0))
+
+        # Renormalize to sum to 1
+        s = sum(display_vals) or 1.0
+        display_vals = [v / s for v in display_vals]
+    else:
+        display_vals = list(vals)  # just copy the original values
 
     distribution_json = json.dumps({"keys": canon_order, "values": display_vals})
    
@@ -917,8 +1007,9 @@ def alien_state():
         if not profile:
             return jsonify({"error": f"Alien profile '{name}' not found"}), 400
 
-        # keep alien's running mood up-to-date
-        social_cascade()
+        # keep Penbol's running mood up-to-date
+        if name == "PENBOL":
+            penbol_social_cascade() # keep Penbol's social mood fresh
 
         # Base display distribution (neutral prior)
         canon_order = ["disgust", "fear", "anger", "sadness", "joy"]
@@ -930,14 +1021,14 @@ def alien_state():
         )
         display_vals = list(base["values"])
 
-        # Add social overlay (additive), then renormalize
+        # Add Penbol's social overlay (additive), the renormalize
         aa = alien_affect[name]
-        
-        overlay = float(profile.get("socialOverlay", 0.0))
-        joy_i = canon_order.index("joy")
-        anger_i = canon_order.index("anger")
-        display_vals[joy_i] += overlay * float(aa.get("joy", 0.0))
-        display_vals[anger_i] += overlay * float(aa.get("anger", 0.0))
+        if name == "PENBOL":
+            overlay = float(profile.get("socialOverlay", 0.5))
+            joy_i = canon_order.index("joy")
+            anger_i = canon_order.index("anger")
+            display_vals[joy_i] += overlay * float(aa.get("joy", 0.0))
+            display_vals[anger_i] += overlay * float(aa.get("anger", 0.0))
 
         s = sum(display_vals) or 1.0
         display_vals = [v / s for v in display_vals]
