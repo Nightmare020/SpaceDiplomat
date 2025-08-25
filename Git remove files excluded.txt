@@ -66,9 +66,3 @@ jq -r '."JOYHIGH_ANGERLOW_FEARLOW_SADLOW_DISGUSTLOW"' /opt/space-diplomat/app/da
 curl -sS https://aispacediplomat.com/admin/q_table/size | jq
 curl -sS https://aispacediplomat.com/admin/q_table | jq 'to_entries | .[:3]'
 curl -sS "https://aispacediplomat.com/admin/rl/logs?date=$(date -u +%Y%m%d)" | head -n 2
-
-
-Reunion Button Colours
-Zaxin -> 00654A
-Braxim -> 650003
-Penbol -> 656400
