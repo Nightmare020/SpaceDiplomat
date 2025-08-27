@@ -28,44 +28,48 @@ less -N chat_server.py
 # list
 ls -lh /opt/space-diplomat/app/data/logs
 
-# peek first 3 lines of today's log
+# Count interactions today
 today=$(date -u +"%Y%m%d")
-head -n 3 /opt/space-diplomat/app/data/logs/rl_interactions_${today}.jsonl
-
-# how many interactions today?
 jq -s 'length' /opt/space-diplomat/app/data/logs/rl_interactions_${today}.jsonl
 
-# top RL actions chosen today
-jq -r '.rl.action' /opt/space-diplomat/app/data/logs/rl_interactions_${today}.jsonl | sort | uniq -c | sort -nr
+LOGDIR=/opt/space-diplomat/app/data/logs for d in {20250813..20250824}; do f="$LOGDIR/rl_interactions_${d}.jsonl" if [ -s "$f" ]; then printf "%s  size=%s  lines=%s\n" "$d" "$(ls -lh "$f" | awk '{print $5}')" "$(wc -l < "$f")" else echo "$d  (no file)" fi done
 
-# average reward by action
-jq -r '.rl | "\(.action) \(.reward)"' "$file" \ | awk '{sum[$1]+=$2; n[$1]++} END{for(k in sum) printf "%s %.4f (n=%d)\n",k,sum[k]/n[k],n[k]}'
-jq -r '[.affect.penbolAfter.joy - .affect.penbolBefore.joy, .affect.penbolAfter.anger - .affect.penbolBefore.anger] | @tsv' "$file" \ | awk '{jy+=$1; ag+=$2; n++} END{printf "avg ΔPenbol: joy=%.4f anger=%.4f (n=%d)\n", jy/n, ag/n, n}'
-jq 'keys | length' /opt/space-diplomat/app/data/q_table.json      # how many states?
+# Top RL actions (today)
+file=/opt/space-diplomat/app/data/logs/rl_interactions_${today}.jsonl
+jq -r 'select(.rl and .rl.action) | .rl.action' "$file" | sort | uniq -c | sort -nr
 
-# show a specific state if you have its key
-jq -r '."JOYHIGH_ANGERLOW_FEARLOW_SADLOW_DISGUSTLOW"' /opt/space-diplomat/app/data/q_table.json
+# Average reward by action (today)  — pure jq (no awk)
+jq -s ' map(select(.rl and .rl.action and (.rl.reward|type=="number"))) | group_by(.rl.action) | map({action: .[0].rl.action, n: length, avg_reward: (map(.rl.reward)|add/length)}) | sort_by(-.avg_reward)' "$file"
 
-# ask for best actions for a given distribution
-curl -sS https://aispacediplomat.com/rl/best_actions \ -H 'Content-Type: application/json' \ -d '{"distribution":{"joy":0.7,"sadness":0.1,"anger":0.05,"fear":0.1,"disgust":0.05}}' | jq
-curl -sS -D - -o /tmp/out.txt https://aispacediplomat.com/rl/best_actions \ -H 'Content-Type: application/json' \ -d '{"distribution":{"joy":0.7,"sadness":0.1,"anger":0.05,"fear":0.1,"disgust":0.05}}'
+# Average ΔPenbol joy/anger (today)
+jq -r 'select(.affect.penbolBefore and .affect.penbolAfter) | "\((.affect.penbolAfter.joy - .affect.penbolBefore.joy))\t\((.affect.penbolAfter.anger - .affect.penbolBefore.anger))"' "$file" \ | awk '{jy+=$1; ag+=$2; n++} END{printf "avg ΔPenbol: joy=%.4f anger=%.4f (n=%d)\n", jy/n, ag/n, n}'
 
-head -c 200 /tmp/out.txt | cat -v
 
-curl -s https://aispacediplomat.com/admin/q_table/size | jq
-curl -s https://aispacediplomat.com/admin/q_table | jq '.| to_entries | .[:5]'   # first 5 states
+# Q-table size / peek
+curl -s http://127.0.0.1:8000/admin/q_table/size | jq
+curl -s http://127.0.0.1:8000/admin/q_table | jq 'to_entries | .[:5]'
 
-jq 'keys | length' /opt/space-diplomat/app/data/q_table.json         # number of states
+# Best actions for a distribution
+curl -s http://127.0.0.1:8000/rl/best_actions \ -H 'Content-Type: application/json' \ -d '{"distribution":{"joy":0.7,"sadness":0.1,"anger":0.05,"fear":0.1,"disgust":0.05}}' | jq
 
-# peek a few entries
-jq 'to_entries | .[:3]' /opt/space-diplomat/app/data/q_table.json
+# size and a few sample states, locally (no DNS needed)
+curl -s http://127.0.0.1:8000/admin/q_table/size | jq
+curl -s http://127.0.0.1:8000/admin/q_table | jq 'to_entries | .[:5]'
 
-# pretty print one specific state if you know the key
-jq -r '."JOYHIGH_ANGERLOW_FEARLOW_SADLOW_DISGUSTLOW"' /opt/space-diplomat/app/data/q_table.json
 
-curl -sS https://aispacediplomat.com/admin/q_table/size | jq
-curl -sS https://aispacediplomat.com/admin/q_table | jq 'to_entries | .[:3]'
-curl -sS "https://aispacediplomat.com/admin/rl/logs?date=$(date -u +%Y%m%d)" | head -n 2
+jq -s 'split("\n")[:-1] | map(fromjson) | map(select(.rl and .rl.state and .rl.action and (.rl.reward|type=="number"))) | group_by({s:.rl.state, a:.rl.action}) | map({state: (.[0].rl.state), action:(.[0].rl.action), n:length, avg:(map(.rl.reward)|add/length)}) | group_by(.state) | map({state: (.[0].state), best: (max_by(.avg)|{action,avg,n}), k:(sort_by(-.avg)|.[0:3])})' /opt/space-diplomat/app/data/logs/rl_interactions_20250817.jsonl
+
+# cron daily at 23:59 UTC
+59 23 * * * cp /opt/space-diplomat/app/data/q_table.json /opt/space-diplomat/app/data/q_table_$(date -u +\%Y\%m\%d).json
+
+
+# health
+curl -s http://127.0.0.1:8000/health | jq
+
+# daily logs via API (JSONL)
+day=$(date -u -d "2025-08-17" +%Y%m%d)
+curl -s "http://127.0.0.1:8000/admin/rl/logs?date=${day}" \
+| jq -s 'split("\n")[:-1] | map(fromjson) | length'
 
 
 Reunion Button Colours

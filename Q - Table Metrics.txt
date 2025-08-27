@@ -1,23 +1,261 @@
-# 13/08/2025
+>   f="$LOGDIR/rl_interactions_${d}.jsonl"
+> 
+>   if [ -s "$f" ]; then
+> 
+>     printf "%s  size=%s  lines=%s\n" "$d" "$(ls -lh "$f" | awk '{print $5}')" "$(wc -l <
+ "$f")"
+> 
+>   else
+> 
+>     echo "$d  (no file)"
+> 
+>   fi
+> 
+> done
 
-# 14/08/2025
+20250813  size=580K  lines=455
+20250814  size=123K  lines=94
+20250815  size=21K  lines=15
+20250816  (no file)
+20250817  (no file)
+20250818  size=18K  lines=16
+20250819  size=57K  lines=50
+20250820  (no file)
+20250821  (no file)
+20250822  (no file)
+20250823  (no file)
+20250824  size=32K  lines=28
 
-# 15/08/2025
+________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
 
-# 16/08/2025
+set -euo pipefail
 
-# 17/08/2025
+LOGDIR=${LOGDIR:-/opt/space-diplomat/app/data/logs}
+DATES=${DATES:-"20250813 20250814 20250815 20250818 20250819 20250824"}
 
-# 18/08/2025
+for d in $DATES; do
+  f="$LOGDIR/rl_interactions_${d}.jsonl"
+  if [ ! -s "$f" ]; then
+    echo "===== $d (no file) ====="
+    continue
+  fi
 
-# 19/08/2025
+  echo "===== $d ====="
+  echo "- interactions: $(wc -l < "$f")"
 
-# 20/08/2025
+  echo "- actions (count):"
+  jq -r '.rl.action // empty' "$f" | sort | uniq -c | sort -nr
 
-# 21/08/2025
+  echo "- avg reward by action:"
+  jq -r '. as $x | "\($x.rl.action // "NA") \($x.rl.reward // 0)"' "$f" | awk '{sum[$1]+=$2; n[$1]++} END{for(k in sum) printf "  %s %.4f (n=%d)\n",k,sum[k]/n[k],n[k]}' | sort
 
-# 22/08/2025
+  echo "- avg ΔPenbol (joy, anger):"
+  jq -r '[(.affect.penbolAfter.joy //0) - (.affect.penbolBefore.joy //0), (.affect.penbolAfter.anger //0) - (.affect.penbolBefore.anger //0)] | @tsv' "$f" | awk -F'\t' '{jy+=$1; ag+=$2; n++} END{if(n) printf "  joy=%.4f anger=%.4f (n=%d)\n", jy/n, ag/n, n; else print "  (no rows)"}'
 
-# 23/08/2025
+  echo "- avg ΔCurrent alien (joy, anger):"
+  jq -r '[(.affect.currentAfter.joy //0) - (.affect.currentBefore.joy //0), (.affect.currentAfter.anger //0) - (.affect.currentBefore.anger //0)] | @tsv' "$f" | awk -F'\t' '{jy+=$1; ag+=$2; n++} END{if(n) printf "  joy=%.4f anger=%.4f (n=%d)\n", jy/n, ag/n, n; else print "  (no rows)"}'
 
-# 24/08/2025
+  echo "- top states visited:"
+  jq -r '.rl.state // .rl.state_key // .stateKey // empty' "$f" | sort | uniq -c | sort -nr | head -10
+  echo
+done
+SH
+
+===== 20250813 =====
+- interactions: 455
+- actions (count):
+     88 apologize
+     86 offer_trade
+     79 build_rapport
+     71 share_plan
+     66 seek_clarity
+     65 close_treaty
+- avg reward by action:
+  apologize -0.7685 (n=88)
+  build_rapport -0.5941 (n=79)
+  close_treaty -1.0846 (n=65)
+  offer_trade -0.2873 (n=86)
+  seek_clarity -0.9494 (n=66)
+  share_plan -0.9151 (n=71)
+- avg ΔPenbol (joy, anger):
+  joy=0.0042 anger=0.0016 (n=455)
+- avg ΔCurrent alien (joy, anger):
+  joy=0.0000 anger=0.0000 (n=455)
+- top states visited:
+     45 anger:2|disgust:1
+     38 disgust:1|anger:1
+     38 anger:1|disgust:1
+     24 sadness:1|anger:1
+     23 joy:3|sadness:0
+     22 anger:2|disgust:0
+     22 anger:1|sadness:1
+     15 sadness:1|disgust:1
+     15 joy:3|anger:0
+     14 anger:1|joy:1
+
+===== 20250814 =====
+- interactions: 94
+- actions (count):
+     22 offer_trade
+     18 seek_clarity
+     18 apologize
+     16 close_treaty
+     12 build_rapport
+      8 share_plan
+- avg reward by action:
+  apologize -0.1216 (n=18)
+  build_rapport -0.1632 (n=12)
+  close_treaty -0.9069 (n=16)
+  offer_trade 0.4287 (n=22)
+  seek_clarity -0.3878 (n=18)
+  share_plan -1.2700 (n=8)
+- avg ΔPenbol (joy, anger):
+  joy=0.0087 anger=0.0067 (n=94)
+- avg ΔCurrent alien (joy, anger):
+  joy=0.0000 anger=0.0000 (n=94)
+- top states visited:
+     10 joy:3|sadness:0
+      6 disgust:1|anger:1
+      6 anger:2|disgust:1
+      5 sadness:1|disgust:1
+      4 joy:2|sadness:1
+      4 joy:2|sadness:0
+      4 joy:2|anger:0
+      4 joy:1|sadness:1
+      3 sadness:3|joy:0
+      3 sadness:1|anger:1
+
+===== 20250815 =====
+- interactions: 15
+- actions (count):
+      6 build_rapport
+      3 seek_clarity
+      2 share_plan
+      2 close_treaty
+      1 offer_trade
+      1 apologize
+- avg reward by action:
+  apologize -1.0854 (n=1)
+  build_rapport -0.4679 (n=6)
+  close_treaty -0.6361 (n=2)
+  offer_trade -0.9686 (n=1)
+  seek_clarity 1.5593 (n=3)
+  share_plan -1.3431 (n=2)
+- avg ΔPenbol (joy, anger):
+  joy=0.0131 anger=0.0181 (n=15)
+- avg ΔCurrent alien (joy, anger):
+  joy=0.0000 anger=0.0000 (n=15)
+- top states visited:
+      2 joy:3|disgust:0
+      2 disgust:2|anger:0
+      2 anger:1|disgust:1
+      1 sadness:2|joy:1
+      1 joy:3|anger:0
+      1 joy:2|sadness:0
+      1 joy:1|sadness:1
+      1 fear:1|anger:1
+      1 disgust:2|fear:0
+      1 disgust:1|sadness:1
+
+===== 20250818 =====
+- interactions: 16
+- actions (count):
+      5 offer_trade
+      4 apologize
+      3 build_rapport
+      2 seek_clarity
+      1 share_plan
+      1 close_treaty
+- avg reward by action:
+  apologize -0.7463 (n=4)
+  build_rapport -0.1813 (n=3)
+  close_treaty -0.1385 (n=1)
+  offer_trade -0.4621 (n=5)
+  seek_clarity 0.8415 (n=2)
+  share_plan -1.2050 (n=1)
+- avg ΔPenbol (joy, anger):
+  joy=0.0023 anger=0.0045 (n=16)
+- avg ΔCurrent alien (joy, anger):
+  joy=0.0000 anger=0.0000 (n=16)
+- top states visited:
+      3 joy:2|sadness:0
+      1 sadness:3|joy:0
+      1 sadness:2|joy:1
+      1 sadness:1|fear:1
+      1 sadness:1|disgust:1
+      1 joy:3|sadness:0
+      1 joy:3|anger:0
+      1 joy:1|sadness:1
+      1 fear:1|sadness:1
+      1 fear:1|anger:0
+
+===== 20250819 =====
+- interactions: 50
+- actions (count):
+     15 close_treaty
+     12 seek_clarity
+      9 build_rapport
+      6 offer_trade
+      5 share_plan
+      3 apologize
+- avg reward by action:
+  apologize -0.6455 (n=3)
+  build_rapport -0.6503 (n=9)
+  close_treaty -0.8643 (n=15)
+  offer_trade 0.6821 (n=6)
+  seek_clarity -0.2591 (n=12)
+  share_plan -1.1532 (n=5)
+- avg ΔPenbol (joy, anger):
+  joy=0.0072 anger=0.0002 (n=50)
+- avg ΔCurrent alien (joy, anger):
+  joy=0.0000 anger=0.0000 (n=50)
+- top states visited:
+      7 sadness:1|anger:1
+      5 joy:1|sadness:1
+      4 joy:2|sadness:0
+      4 anger:2|disgust:0
+      3 sadness:1|joy:1
+      3 joy:3|sadness:0
+      3 disgust:1|anger:1
+      2 disgust:1|fear:1
+      2 anger:2|disgust:1
+      1 sadness:2|joy:1
+
+===== 20250824 =====
+- interactions: 28
+- actions (count):
+      9 offer_trade
+      6 share_plan
+      4 apologize
+      3 seek_clarity
+      3 close_treaty
+      3 build_rapport
+- avg reward by action:
+  apologize -0.7110 (n=4)
+  build_rapport -0.4291 (n=3)
+  close_treaty -1.3012 (n=3)
+  offer_trade 0.5454 (n=9)
+  seek_clarity -0.9425 (n=3)
+  share_plan -0.9135 (n=6)
+- avg ΔPenbol (joy, anger):
+  joy=0.0076 anger=0.0055 (n=28)
+- avg ΔCurrent alien (joy, anger):
+  joy=0.0000 anger=0.0000 (n=28)
+- top states visited:
+      5 joy:3|sadness:0
+      3 sadness:1|disgust:1
+      2 sadness:3|anger:0
+      2 sadness:1|joy:1
+      2 joy:1|disgust:1
+      2 anger:2|disgust:0
+      1 sadness:3|joy:0
+      1 sadness:2|joy:1
+      1 sadness:2|joy:0
+      1 joy:2|sadness:1
+
+
+
+________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+
+
+
