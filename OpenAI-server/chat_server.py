@@ -22,7 +22,7 @@ DetectorFactory.seed = 0  # stable detections
 load_dotenv()
 
 groq_api_key = os.getenv("GROQ_API_KEY")
-groq_model_id = os.getenv("GROQ_MODEL_ID", "llama3-8b-8192")
+groq_model_id = os.getenv("GROQ_MODEL_ID", "llama-3.1-8b-instant")
 max_tokens = int(os.getenv("MAX_TOKENS", 150))
 base_temperature = float(os.getenv("TEMPERATURE", 0.7))
 alien_profiles_path = os.getenv("ALIEN_PROFILES_PATH", "AlienPersonalities.json")
